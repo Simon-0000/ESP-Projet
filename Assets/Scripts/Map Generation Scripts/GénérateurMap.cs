@@ -8,14 +8,12 @@ namespace Assets
    {
       [SerializeField]
       uint longueurMap, largeurMap, nbrPiècesMin, nbrPiècesMax;
-      [SerializeField]
-      Vector2 grandeurPièceMax, grandeurPièceMin;
-      
-      [SerializeField]
-      bool fusionnerPièces = true;
 
       [SerializeField]
-      RoomBuild roomBuild;
+      Vector2 grandeurPièceMax, grandeurPièceMin;
+
+      [SerializeField]
+      ProceduralObject roomObject;
       
       int nbrPièces;
 
@@ -29,7 +27,7 @@ namespace Assets
       {
          for (int i = 0; i < transform.childCount; ++i)
             Destroy(transform.GetChild(i).gameObject);
-         GénérateurPièces bspPièces = new GénérateurPièces(new dimensionsPièce(new Vector2(longueurMap,largeurMap),transform.position), grandeurPièceMin);
+         GénérateurPièces bspPièces = new GénérateurPièces(new RectangleInfo2d(new Vector2(longueurMap,largeurMap),transform.position), grandeurPièceMin);
 
          var noeuds = bspPièces.GénérerPièces();
 
@@ -42,13 +40,14 @@ namespace Assets
          //if(fusionnerPièces == true){}
          //
       }
-      private void InstancierPièce(dimensionsPièce dimensionsPièce) //-------------------------------------------TEMP--------------------------------------------
+      private void InstancierPièce(RectangleInfo2d dimensionsPièce) //-------------------------------------------TEMP--------------------------------------------
       {
-         roomBuild.GénérerPièce(transform, new Vector3(dimensionsPièce.coordonnées.x,0,dimensionsPièce.coordonnées.y), new Vector3(dimensionsPièce.grandeur.x,1,dimensionsPièce.grandeur.y));
-         /*
-         GameObject Pièce = Instantiate(room);
+       //  roomObject.InstanciateProceduralObject();
+
+         
+         GameObject Pièce = GameObject.CreatePrimitive(PrimitiveType.Cube);
          var Renderer = Pièce.GetComponent<MeshRenderer>();
-         Pièce.transform.localPosition =new Vector3(dimensionsPièce.coordonnées.x + dimensionsPièce.grandeur.x/2, 0,dimensionsPièce.coordonnées.y + dimensionsPièce.grandeur.y/2);
+         Pièce.transform.localPosition =new Vector3(dimensionsPièce.coordonnées.x , 0,dimensionsPièce.coordonnées.y );
          //Debug.Log(Renderer.bounds.size.x);
          //Debug.Log(dimensionsPièce.grandeur.x);
          //Debug.Log(dimensionsPièce.grandeur.x / Renderer.bounds.size.x);
@@ -57,7 +56,7 @@ namespace Assets
          //Pièce.transform.localScale = new Vector3(dimensionsPièce.grandeur.x,1,dimensionsPièce.grandeur.y);
          Pièce.transform.parent = transform;
          Pièce.GetComponent<Renderer>().material.color = new Color(UnityEngine.Random.value, UnityEngine.Random.value, UnityEngine.Random.value);
-         */
+         
       }
    }
 }

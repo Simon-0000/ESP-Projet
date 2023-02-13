@@ -12,22 +12,22 @@ namespace Assets
    class GénérateurPièces
    {
       Vector2 grandeurPièce;
-      dimensionsPièce dimensionsMap;
+      RectangleInfo2d dimensionsMap;
 
-      public GénérateurPièces(dimensionsPièce dimensionMap, Vector2 grandeurPièce)
+      public GénérateurPièces(RectangleInfo2d dimensionMap, Vector2 grandeurPièce)
       {
          this.grandeurPièce = grandeurPièce;
          this.dimensionsMap = dimensionMap;
       }
-      public List<Noeud<dimensionsPièce>> GénérerPièces() 
+      public List<Noeud<RectangleInfo2d>> GénérerPièces() 
       {
-         List<Noeud<dimensionsPièce>> noeudsFeuille = BinarySpacePartitioning.FilterNoeudsFeuille(BinarySpacePartitioning.GénérerBSP(new Noeud<dimensionsPièce>(null, dimensionsMap), TryDiviserPièce));
+         List<Noeud<RectangleInfo2d>> noeudsFeuille = BinarySpacePartitioning.FilterNoeudsFeuille(BinarySpacePartitioning.GénérerBSP(new Noeud<RectangleInfo2d>(null, dimensionsMap), TryDiviserPièce));
          CréerLiaisonPhysiquePièces(noeudsFeuille);
          //DFS HERE-------------------------------------------------------------------------------------
          return noeudsFeuille;
       }
 
-      (Noeud<dimensionsPièce>, Noeud<dimensionsPièce>) TryDiviserPièce(Noeud<dimensionsPièce> noeudParent)//Divise une pièce parente en deux pièce pour être mis dans le Queue des pièce à diviser
+      (Noeud<RectangleInfo2d>, Noeud<RectangleInfo2d>) TryDiviserPièce(Noeud<RectangleInfo2d> noeudParent)//Divise une pièce parente en deux pièce pour être mis dans le Queue des pièce à diviser
       {
          Vector2 grandeurEnfantA, grandeurEnfantB;
 
@@ -46,11 +46,11 @@ namespace Assets
                return (null, null);
          }
 
-         return (new Noeud<dimensionsPièce>(noeudParent, new dimensionsPièce(grandeurEnfantA, noeudParent.Valeur.CoordonnéesBasGauche + grandeurEnfantA/2)),
-               new Noeud<dimensionsPièce>(noeudParent, new dimensionsPièce(grandeurEnfantB,  noeudParent.Valeur.CoordonnéesHautDroit - grandeurEnfantB/2)));
+         return (new Noeud<RectangleInfo2d>(noeudParent, new RectangleInfo2d(grandeurEnfantA, noeudParent.Valeur.CoordonnéesBasGauche + grandeurEnfantA/2)),
+               new Noeud<RectangleInfo2d>(noeudParent, new RectangleInfo2d(grandeurEnfantB,  noeudParent.Valeur.CoordonnéesHautDroit - grandeurEnfantB/2)));
       }
 
-      void CréerLiaisonPhysiquePièces(List<Noeud<dimensionsPièce>> piècesNonLiées)
+      void CréerLiaisonPhysiquePièces(List<Noeud<RectangleInfo2d>> piècesNonLiées)
       {
          for (int i = 0; i < piècesNonLiées.Count; ++i)
          {
@@ -73,11 +73,11 @@ namespace Assets
          return longueurParent / 2 - Random.Range(0, longueurParent / 2 - longueurMinEnfant);//- Random.Range(0, longueurParent - longueurMinEnfant * 2);
       }
 
-      Direction TrouverDirectionCoupure(dimensionsPièce dimensions)
+      Direction TrouverDirectionCoupure(RectangleInfo2d dimensions)
       {
          //pour couper verticalement ou horizontalement, les pièces résultants ne doivents pas être trop petit
-         bool coupureVerticale = dimensions.grandeur.x > grandeurPièce.x * 2;
-         bool coupureHorizontale = dimensions.grandeur.y > grandeurPièce.y * 2;
+         bool coupureVerticale = dimensions.grandeur.x >= grandeurPièce.x * 2;
+         bool coupureHorizontale = dimensions.grandeur.y >= grandeurPièce.y * 2;
 
          if (coupureVerticale && coupureHorizontale)
             return Random.Range(0, 2) == 0 ? Direction.Verticale : Direction.Horizontale;
@@ -88,7 +88,7 @@ namespace Assets
          return Direction.Aucune;
       }
 
-      static bool AreRoomsConnected(dimensionsPièce PièceA, dimensionsPièce PièceB)
+      static bool AreRoomsConnected(RectangleInfo2d PièceA, RectangleInfo2d PièceB)
       {
          Vector2 distance = PièceA.coordonnées - PièceB.coordonnées;
          distance = distance.Abs();

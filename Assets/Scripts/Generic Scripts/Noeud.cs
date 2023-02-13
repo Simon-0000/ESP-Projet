@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Assets
 {
-   class Noeud <T>
+   public class Noeud <T>
    {
       List<Noeud<T>> noeudsConnectés;
       Noeud<T> parent;

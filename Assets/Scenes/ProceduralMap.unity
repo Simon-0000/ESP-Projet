@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.18028352, g: 0.22571376, b: 0.30692244, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -731,8 +731,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 963194225}
-  m_LocalRotation: {x: -0.12092656, y: 0.8444131, z: -0.33991545, w: -0.3959809}
-  m_LocalPosition: {x: 19.163124, y: 7.4276733, z: 17.719194}
+  m_LocalRotation: {x: -0.00189735, y: 0.71069276, z: -0.7034974, w: -0.0019199252}
+  m_LocalPosition: {x: -2.0361083, y: 37.468224, z: 6.177772}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -789,5 +789,4 @@ MonoBehaviour:
   "nbrPi\xE8cesMax": 0
   "grandeurPi\xE8ceMax": {x: 0, y: 0}
   "grandeurPi\xE8ceMin": {x: 4, y: 4}
-  "fusionnerPi\xE8ces": 1
-  roomBuild: {fileID: 5462133427437357580, guid: 491c178b4b960154f86a23e6d5b8c742, type: 3}
+  roomObject: {fileID: 0}
