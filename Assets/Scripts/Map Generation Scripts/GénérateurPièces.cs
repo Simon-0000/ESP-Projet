@@ -23,7 +23,11 @@ namespace Assets
       {
          List<Noeud<RectangleInfo2d>> noeudsFeuille = BinarySpacePartitioning.FilterNoeudsFeuille(BinarySpacePartitioning.GénérerBSP(new Noeud<RectangleInfo2d>(null, dimensionsMap), TryDiviserPièce));
          CréerLiaisonPhysiquePièces(noeudsFeuille);
-         //DFS HERE-------------------------------------------------------------------------------------
+         
+         Dictionary<Noeud<RectangleInfo2d>, bool> dictionaryVisitedNodes = noeudsFeuille.ToDictionary(x=>x, val=>false);
+         //DFS ICI, utilise le dictionaryVisitedNodes qui contient tous les noeuds(représente des pièces avec leur connections) 
+         //Le dictionnaire retourne faux par défaut(non visité) et tu peut le changer pour qu'il retoure true (visité) pour faire DFS
+         
          return noeudsFeuille;
       }
 

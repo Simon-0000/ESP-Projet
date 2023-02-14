@@ -36,9 +36,6 @@ namespace Assets
          {
             InstancierPièce(noeud.Valeur);
          }
-         //BSP
-         //if(fusionnerPièces == true){}
-         //
       }
       private void InstancierPièce(RectangleInfo2d dimensionsPièce) //-------------------------------------------TEMP--------------------------------------------
       {

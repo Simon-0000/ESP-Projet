@@ -11,7 +11,7 @@ namespace Assets
         [SerializeField] ProceduralTiledObject[] roofVariations;
         [SerializeField] ProceduralTiledObject[] floorVariations;
 
-        public void InstantiateRoom(Noeud<RectangleInfo2d> noeudPièce)
+        public void InstantiateRoom(Noeud<RectangleInfo2d> roomNode)
         {
             //Instanciate each connected rooms, then instanciate each walls
         }

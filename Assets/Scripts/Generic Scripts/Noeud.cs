@@ -3,31 +3,37 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using UnityEditor;
+using UnityEngine;
+using UnityEngine.UI;
 
 
 namespace Assets
 {
    public class Noeud <T>
    {
-      List<Noeud<T>> noeudsConnectés;
+      public List<Noeud<T>> NoeudsConnectés;
       Noeud<T> parent;
       T valeur;
       public Noeud<T> Parent { get => parent; }
-      public T Valeur { get => valeur; }
-      public int connexionCount { get => noeudsConnectés.Count; }
+      public T Valeur { 
+         get => valeur;
+         set => valeur = value;
+      }
+      public int ConnexionCount { get => NoeudsConnectés.Count; }
       public Noeud(Noeud<T> parent, T valeur) 
       {
          this.parent = parent;
          this.valeur = valeur;
-         noeudsConnectés = new();
+         NoeudsConnectés = new();
       }
       public void AjouterNoeud(Noeud<T> noeud) 
       {
-         noeudsConnectés.Add(noeud);
+         NoeudsConnectés.Add(noeud);
       }
-      public void RetirerNoeud(Noeud<T> noeud)
+      public void RetirerNoeud(int index)
       {
-         noeudsConnectés.Remove(noeud);
+         NoeudsConnectés.RemoveAt(index);
       }
    }
 }

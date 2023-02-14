@@ -38,7 +38,7 @@ namespace Assets
          List<Noeud<T>> noeudsFeuille = new();
          for (int i = 0; i < bsp.Count; ++i)
          {
-            if (bsp[i].connexionCount == 0)
+            if (bsp[i].ConnexionCount == 0)
             {
                noeudsFeuille.Add(bsp[i]);
             }
