@@ -9,6 +9,7 @@ public class Walker : Zombie
 {
     const int BaseHealth = 20;
     const int BaseDamage = 5;
+    const int BaseSpeed = 10;
 
     [SerializeField] private Zombie zombie;
 
@@ -17,11 +18,11 @@ public class Walker : Zombie
        // add the attack logic...
     }
 
-    public Walker(int health, int damage) : base(health, damage) { }
+    public Walker(int health, int damage, int speed) : base(health, damage, speed) { }
     // Start is called before the first frame update
     void Start()
     {
-        zombie = new Walker(BaseHealth,BaseDamage);  
+        zombie = new Walker(BaseHealth, BaseDamage, BaseSpeed);  
     }
 
     // Update is called once per frame
