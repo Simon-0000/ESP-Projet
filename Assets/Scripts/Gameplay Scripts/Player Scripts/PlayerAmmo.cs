@@ -11,6 +11,7 @@ public class PlayerAmmo : MonoBehaviour
 {
     [SerializeField] TextMeshProUGUI text;
     [SerializeField] private GameObject bullet;
+    [SerializeField] private Transform boucheDeCanon;
 
     private List<int> ammo =new List<int>(new int[30]);
     
@@ -41,7 +42,7 @@ public class PlayerAmmo : MonoBehaviour
     {
         if (ammo.Count > 0)
         {
-             //Instantiate(direction,rotation,bullet)
+            Instantiate( bullet, boucheDeCanon.position, boucheDeCanon.rotation).GetComponent<Rigidbody>().AddRelativeForce(Vector3.forward*10);
             ammo.RemoveAt(ammo.Count-1);
         }
            
