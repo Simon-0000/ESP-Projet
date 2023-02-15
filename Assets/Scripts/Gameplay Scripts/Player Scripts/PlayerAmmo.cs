@@ -38,11 +38,15 @@ public class PlayerAmmo : MonoBehaviour
 
     }
 
+   
+    // ReSharper disable Unity.PerformanceAnalysis
     private void Shoot()
     {
         if (ammo.Count > 0)
         {
-            Instantiate( bullet, boucheDeCanon.position, boucheDeCanon.rotation).GetComponent<Rigidbody>().AddRelativeForce(Vector3.forward*10);
+            Instantiate( bullet, boucheDeCanon.position, boucheDeCanon.rotation)
+                .GetComponent<Rigidbody>().AddRelativeForce(Vector3.forward*500);
+            
             ammo.RemoveAt(ammo.Count-1);
         }
            
