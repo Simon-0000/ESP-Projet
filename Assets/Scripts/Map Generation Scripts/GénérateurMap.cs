@@ -13,7 +13,7 @@ namespace Assets
       Vector2 grandeurPièceMax, grandeurPièceMin;
 
       [SerializeField]
-      ProceduralObject roomObject;
+      ProceduralRoom roomObject;
       
       int nbrPièces;
 
@@ -34,13 +34,14 @@ namespace Assets
 
          foreach (var noeud in noeuds)
          {
+            roomObject.InstantiateRoom(noeud);
+
             InstancierPièce(noeud.Valeur);
          }
       }
       private void InstancierPièce(RectangleInfo2d dimensionsPièce) //-------------------------------------------TEMP--------------------------------------------
       {
        //  roomObject.InstanciateProceduralObject();
-
          
          GameObject Pièce = GameObject.CreatePrimitive(PrimitiveType.Cube);
          var Renderer = Pièce.GetComponent<MeshRenderer>();

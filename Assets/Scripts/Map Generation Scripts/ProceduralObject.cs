@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel.Design;
 using Assets;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -77,23 +78,37 @@ public class ProceduralObject : MonoBehaviour
     //}
     protected void SetRandomRelativePositioning(GameObject obj, GameObject parent)
     {
+        SetRandomRelativePositioning(obj, parent.GetComponent<MeshRenderer>().bounds.size, new Quaternion());
+        return;
         int index = Random.Range(0, positions.Length);
 
         obj.transform.position = GetRandomVector(positions[index].startAt, positions[index].endAt);
         obj.transform.Rotate(GetRandomVector(orientations[index].startAt, orientations[index].endAt),Space.Self);
-
+            //Erreur c'est que parent n'a pas de MeshRenderer
         obj.transform.localPosition = new Vector3(parent.GetComponent<MeshRenderer>().bounds.size.x / obj.transform.position.x,
                      parent.GetComponent<MeshRenderer>().bounds.size.y / obj.transform.position.y,
                      parent.GetComponent<MeshRenderer>().bounds.size.z / obj.transform.position.z);
-       obj.transform.localPosition = new Vector3(parent.transform.localRotation.x / obj.transform.rotation.x,
-                        parent.transform.localRotation.y / obj.transform.rotation.y,
-                        parent.transform.localRotation.z / obj.transform.rotation.z);
+       //obj.transform.localRotation = new Vector3(parent.transform.localRotation.x / obj.transform.rotation.x,
+        //                parent.transform.localRotation.y / obj.transform.rotation.y,
+          //              parent.transform.localRotation.z / obj.transform.rotation.z);
+    }
+    protected void SetRandomRelativePositioning(GameObject obj, Vector3 parentSize, Quaternion parentRotation)
+    {
+        int index = Random.Range(0, positions.Length);
+
+        obj.transform.position = GetRandomVector(positions[index].startAt, positions[index].endAt);
+        obj.transform.Rotate(GetRandomVector(orientations[index].startAt, orientations[index].endAt),Space.Self);
+        //Erreur c'est que parent n'a pas de MeshRenderer
+        obj.transform.localPosition = new Vector3(parentSize.x / obj.transform.position.x,
+            parentSize.y / obj.transform.position.y,
+            parentSize.z / obj.transform.position.z);
+       // obj.transform.localRotation = new Vector3(parentRotation.x / obj.transform.rotation.x,
+          //  parentRotation.y / obj.transform.rotation.y,
+           // parentRotation.z / obj.transform.rotation.z);
     }
 
 
-
-
-    static Vector3 GetRandomVector(Vector3 startAt, Vector3 endAt) => 
+    protected static Vector3 GetRandomVector(Vector3 startAt, Vector3 endAt) => 
         new Vector3(Random.Range(startAt.x, endAt.x),Random.Range(startAt.y,endAt.y),Random.Range(startAt.z,endAt.z));
 
 }

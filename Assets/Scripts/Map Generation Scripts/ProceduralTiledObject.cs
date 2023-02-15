@@ -8,16 +8,17 @@ public class ProceduralTiledObject : ProceduralObject
     public void InstantiateProceduralTiledObject(Vector3 grandeur, GameObject parent, byte axisA, byte axisB)
     {
         int variationIndex = Random.Range(0, objectVariations.Length);
+        Debug.Log(variationIndex);
         GameObject tuileObject = Instantiate(objectVariations[variationIndex],parent.transform);
-
-        SetRandomRelativePositioning(tuileObject, parent);
+        Vector3 i = tuileObject.transform.localPosition;
+        SetRandomRelativePositioning(tuileObject, grandeur,new Quaternion());
 
         Renderer tuileRenderer = tuileObject.GetComponent<MeshRenderer>();
 
         Vector3 grandeurGlobaleTuile = tuileRenderer.bounds.size;
         Vector3 nbrTuiles = new Vector3(grandeur.x / grandeurGlobaleTuile.x, grandeur.y / grandeurGlobaleTuile.y, grandeur.z / grandeurGlobaleTuile.z);
         tuileObject.transform.localScale = nbrTuiles;
-        //tuileObject.transform.parent = parent == null ? null : parent.transform;//Erreur possible de try to used null object....
+        tuileObject.transform.parent = parent == null ? null : parent.transform;//Erreur possible de try to used null object....
 
         //Repeat Texture
         Material newMat = new Material(tuileRenderer.material);
