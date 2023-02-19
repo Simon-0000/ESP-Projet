@@ -8,10 +8,8 @@ namespace Assets
    {
       [SerializeField]
       uint longueurMap, largeurMap, nbrPiècesMin, nbrPiècesMax;
-
       [SerializeField]
-      Vector2 grandeurPièceMax, grandeurPièceMin;
-
+      float WallSizeMin, WallSizeMax;
       [SerializeField]
       ProceduralRoom roomObject;
       
@@ -27,16 +25,16 @@ namespace Assets
       {
          for (int i = 0; i < transform.childCount; ++i)
             Destroy(transform.GetChild(i).gameObject);
-         GénérateurPièces bspPièces = new GénérateurPièces(new RectangleInfo2d(new Vector2(longueurMap,largeurMap),transform.position), grandeurPièceMin);
+         GénérateurPièces bspPièces = new GénérateurPièces(new RectangleInfo2d(new Vector2(longueurMap,largeurMap),transform.position), WallSizeMin, WallSizeMax);
 
          var noeuds = bspPièces.GénérerPièces();
 
 
          foreach (var noeud in noeuds)
          {
-            roomObject.InstantiateRoom(noeud);
+            roomObject.InstantiateRoom(noeud,transform);
 
-            InstancierPièce(noeud.Valeur);
+            //InstancierPièce(noeud.Valeur);
          }
       }
       private void InstancierPièce(RectangleInfo2d dimensionsPièce) //-------------------------------------------TEMP--------------------------------------------

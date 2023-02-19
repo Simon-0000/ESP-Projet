@@ -11,12 +11,13 @@ namespace Assets
 {
    class GénérateurPièces
    {
-      Vector2 grandeurPièce;
+      float grandeurMin,grandeurMax, grandeur;
       RectangleInfo2d dimensionsMap;
 
-      public GénérateurPièces(RectangleInfo2d dimensionMap, Vector2 grandeurPièce)
+      public GénérateurPièces(RectangleInfo2d dimensionMap, float grandeurMin,float grandeurMax)
       {
-         this.grandeurPièce = grandeurPièce;
+         this.grandeurMin = grandeurMin;
+         this.grandeurMax = grandeurMax;
          this.dimensionsMap = dimensionMap;
       }
       public List<Noeud<RectangleInfo2d>> GénérerPièces() 
@@ -38,12 +39,12 @@ namespace Assets
          switch (TrouverDirectionCoupure(noeudParent.Valeur))
          {
             case Direction.Horizontale:
-               grandeurEnfantA = new(noeudParent.Valeur.grandeur.x, TrouverCoupureAléatoire(noeudParent.Valeur.grandeur.y, grandeurPièce.y));
+               grandeurEnfantA = new(noeudParent.Valeur.grandeur.x, TrouverCoupureAléatoire(noeudParent.Valeur.grandeur.y, grandeur));
                grandeurEnfantB = new(grandeurEnfantA.x, noeudParent.Valeur.grandeur.y - grandeurEnfantA.y);
 
                break;
             case Direction.Verticale:
-               grandeurEnfantA = new(TrouverCoupureAléatoire(noeudParent.Valeur.grandeur.x, grandeurPièce.x), noeudParent.Valeur.grandeur.y);
+               grandeurEnfantA = new(TrouverCoupureAléatoire(noeudParent.Valeur.grandeur.x, grandeur), noeudParent.Valeur.grandeur.y);
                grandeurEnfantB = new(noeudParent.Valeur.grandeur.x - grandeurEnfantA.x, grandeurEnfantA.y);
                break;
             default:
@@ -74,14 +75,14 @@ namespace Assets
       {
          if (Random.Range(0, 2) == 0)
             return longueurParent / 2 + Random.Range(0, longueurParent / 2 - longueurMinEnfant);
-         return longueurParent / 2 - Random.Range(0, longueurParent / 2 - longueurMinEnfant);//- Random.Range(0, longueurParent - longueurMinEnfant * 2);
+         return longueurParent / 2 - Random.Range(0, longueurParent / 2 - longueurMinEnfant);
       }
-
       Direction TrouverDirectionCoupure(RectangleInfo2d dimensions)
       {
-         //pour couper verticalement ou horizontalement, les pièces résultants ne doivents pas être trop petit
-         bool coupureVerticale = dimensions.grandeur.x >= grandeurPièce.x * 2;
-         bool coupureHorizontale = dimensions.grandeur.y >= grandeurPièce.y * 2;
+
+         grandeur = Random.Range(grandeurMin, grandeurMax);
+         bool coupureVerticale = dimensions.grandeur.x >= grandeur  * 2;
+         bool coupureHorizontale = dimensions.grandeur.y >= grandeur * 2;
 
          if (coupureVerticale && coupureHorizontale)
             return Random.Range(0, 2) == 0 ? Direction.Verticale : Direction.Horizontale;
