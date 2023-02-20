@@ -13,21 +13,22 @@ public class PlayerAmmo : MonoBehaviour
     [SerializeField] private GameObject bullet;
     [SerializeField] private Transform boucheDeCanon;
 
-    private List<int> ammo =new List<int>(new int[30]);
+    private  int ammo =30;
+    private const int maxAmmo = 30;
     
     // Start is called before the first frame update
     void Start()
     {
         Cursor.visible = false;
         
-        text.text = ammo.Count.ToString();
+        text.text = ammo.ToString();
 
     }
 
     // Update is called once per frame
     void Update()
     {
-        text.text = ammo.Count.ToString();
+        text.text = ammo.ToString();
         if (Input.GetMouseButtonDown(0))
         {
             Shoot();
@@ -42,24 +43,23 @@ public class PlayerAmmo : MonoBehaviour
     // ReSharper disable Unity.PerformanceAnalysis
     private void Shoot()
     {
-        if (ammo.Count > 0)
+        if (ammo > 0)
         {
             Instantiate( bullet, boucheDeCanon.position, boucheDeCanon.rotation)
                 .GetComponent<Rigidbody>().AddRelativeForce(Vector3.forward*500);
-            
-            ammo.RemoveAt(ammo.Count-1);
+
+            ammo -= 1;
         }
            
     }
 
     void Reload()
     {
-        
-        for (int i = 0; ammo.Count < 30; i++)
-        {
-            ammo.Add(0);
-            
-        }
+
+        var currentAmmo = ammo;
+        var missingAmmo = maxAmmo - currentAmmo;
+        ammo += missingAmmo;    
+
     }
     
 }
