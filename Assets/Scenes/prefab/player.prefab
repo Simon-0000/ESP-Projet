@@ -172,7 +172,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 0}
+  - {fileID: 2100000, guid: a501bb00c34251540a7cffaba4f07182, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -525,6 +525,7 @@ MonoBehaviour:
   text: {fileID: 4905684689494864805}
   bullet: {fileID: 270624336992509730, guid: f51c10b8fb561144185f21fdf6e39996, type: 3}
   boucheDeCanon: {fileID: 2511378110466890716}
+  gun: {fileID: 1351738998861982765}
 --- !u!143 &4905684690062875949
 CharacterController:
   m_ObjectHideFlags: 0
@@ -600,7 +601,7 @@ Camera:
     y: 0
     width: 1
     height: 1
-  near clip plane: 0.3
+  near clip plane: 0.01
   far clip plane: 1000
   field of view: 60
   orthographic: 0
@@ -649,7 +650,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 457962, guid: 2c3055a11cb8f8540a181490a4c34b7c, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.40000004
+      value: -0.4
       objectReference: {fileID: 0}
     - target: {fileID: 457962, guid: 2c3055a11cb8f8540a181490a4c34b7c, type: 3}
       propertyPath: m_LocalPosition.z
@@ -661,7 +662,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 457962, guid: 2c3055a11cb8f8540a181490a4c34b7c, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0.00008726013
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 457962, guid: 2c3055a11cb8f8540a181490a4c34b7c, type: 3}
       propertyPath: m_LocalRotation.y
@@ -673,7 +674,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 457962, guid: 2c3055a11cb8f8540a181490a4c34b7c, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
-      value: 0.01
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 457962, guid: 2c3055a11cb8f8540a181490a4c34b7c, type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
