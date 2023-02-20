@@ -31,5 +31,4 @@ public abstract class Zombie : MonoBehaviour
        if (Team.Count != 0)
            Team[0].IsLeader = true;
     }
-
 }
