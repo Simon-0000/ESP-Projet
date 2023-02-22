@@ -49,7 +49,7 @@ namespace Assets
             {
                 GameObject door = Instantiate(openingGameObject, roomObj.transform);
                 
-                door.transform.localPosition = GetRandomWallOpeningPosition(openingGameObject.GetComponent<MeshRenderer>().bounds.size,roomNode.Valeur, roomNode.NoeudsConnectÃ©s[i].Valeur);
+                door.transform.localPosition = GetRandomWallOpeningPosition(openingGameObject.GetComponent<MeshRenderer>().bounds.size,roomNode.Valeur, roomNode.NoeudsConnectés[i].Valeur);
                 Debug.Log(door.transform.localPosition);
             }*/
         }

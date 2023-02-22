@@ -11,22 +11,41 @@ public class PlayerAmmo : MonoBehaviour
 {
     [SerializeField] TextMeshProUGUI text;
     [SerializeField] private GameObject bullet;
+    [SerializeField] private Transform boucheDeCanon;
 
-    private List<int> ammo =new List<int>(new int[30]);
+    [Header("aiming component")]
+    [SerializeField]
+    private Transform gun;
+
+    private Vector3 unAimedPosition = new Vector3(0.284f, -0.4f, 0.385f);
+    private Vector3 aimedposition = new Vector3(0.00085f, -0.16f, 0.296f);
+    private Vector3 deplacement;
+    private  int ammo =30;
+    private const int maxAmmo = 30;
     
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
         Cursor.visible = false;
-        
-        text.text = ammo.Count.ToString();
+        text.text = ammo.ToString();
+        deplacement = aimedposition - gun.transform.position;
+
 
     }
 
     // Update is called once per frame
     void Update()
     {
-        text.text = ammo.Count.ToString();
+        text.text = ammo.ToString();
+        if (Input.GetMouseButton(1))
+        {
+           gun.localPosition=(aimedposition);
+        }
+        else
+        {
+            gun.localPosition = unAimedPosition;
+
+        }
         if (Input.GetMouseButtonDown(0))
         {
             Shoot();
@@ -37,24 +56,28 @@ public class PlayerAmmo : MonoBehaviour
 
     }
 
+   
+    
+    // ReSharper disable Unity.PerformanceAnalysis
     private void Shoot()
     {
-        if (ammo.Count > 0)
+        if (ammo > 0)
         {
-             //Instantiate(direction,rotation,bullet)
-            ammo.RemoveAt(ammo.Count-1);
+            Instantiate( bullet, boucheDeCanon.position, boucheDeCanon.rotation)
+                .GetComponent<Rigidbody>().AddRelativeForce(Vector3.forward*1000);
+
+            ammo -= 1;
         }
            
     }
 
     void Reload()
     {
-        
-        for (int i = 0; ammo.Count < 30; i++)
-        {
-            ammo.Add(0);
-            
-        }
+
+        var currentAmmo = ammo;
+        var missingAmmo = maxAmmo - currentAmmo;
+        ammo += missingAmmo;    
+
     }
     
 }

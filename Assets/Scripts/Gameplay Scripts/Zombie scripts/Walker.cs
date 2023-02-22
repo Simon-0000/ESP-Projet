@@ -18,11 +18,16 @@ public class Walker : Zombie
        // add the attack logic...
     }
 
+    public Walker CreateNewWalker()
+    {
+        return new Walker(BaseHealth, BaseDamage, BaseSpeed);
+    }
+
     public Walker(int health, int damage, int speed) : base(health, damage, speed) { }
     // Start is called before the first frame update
     void Start()
     {
-        zombie = new Walker(BaseHealth, BaseDamage, BaseSpeed);  
+        zombie = CreateNewWalker();  
     }
 
     // Update is called once per frame
