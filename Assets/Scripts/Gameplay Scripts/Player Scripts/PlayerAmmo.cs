@@ -39,6 +39,11 @@ public class PlayerAmmo : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        
+        RaycastHit hit = default;
+        Ray ray  = Camera.main.ScreenPointToRay (Input.mousePosition);
+        if (Physics.Raycast (ray,out hit))
+            gun.LookAt(hit.point);
         text.text = ammo.ToString();
         if (Input.GetMouseButton(1))
         {
