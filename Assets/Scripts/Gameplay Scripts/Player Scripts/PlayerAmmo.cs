@@ -27,6 +27,7 @@ public class PlayerAmmo : MonoBehaviour
     void Awake()
     {
         Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Locked;
         text.text = ammo.ToString();
         deplacement = aimedposition - gun.transform.position;
 
