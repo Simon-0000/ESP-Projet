@@ -17,6 +17,8 @@ public class PlayerAmmo : MonoBehaviour
     [SerializeField]
     private Transform gun;
 
+    [SerializeField] private Image crosshair;
+
     private Vector3 unAimedPosition = new Vector3(0.284f, -0.4f, 0.385f);
     private Vector3 aimedposition = new Vector3(0.00085f, -0.16f, 0.296f);
     private Vector3 deplacement;
@@ -26,8 +28,8 @@ public class PlayerAmmo : MonoBehaviour
     // Start is called before the first frame update
     void Awake()
     {
-        Cursor.visible = false;
-        Cursor.lockState = CursorLockMode.Locked;
+        setCursor();
+        
         text.text = ammo.ToString();
         deplacement = aimedposition - gun.transform.position;
 
@@ -41,10 +43,12 @@ public class PlayerAmmo : MonoBehaviour
         if (Input.GetMouseButton(1))
         {
            gun.localPosition=(aimedposition);
+           crosshair.color = new Color(0, 0, 0, 0);
         }
         else
         {
             gun.localPosition = unAimedPosition;
+            crosshair.color = Color.green;
 
         }
         if (Input.GetMouseButtonDown(0))
@@ -64,8 +68,8 @@ public class PlayerAmmo : MonoBehaviour
     {
         if (ammo > 0)
         {
-            Instantiate( bullet, boucheDeCanon.position, boucheDeCanon.rotation)
-                .GetComponent<Rigidbody>().AddRelativeForce(Vector3.forward*1000);
+            Instantiate(bullet, boucheDeCanon.position, boucheDeCanon.rotation);
+                
 
             ammo -= 1;
         }
@@ -79,6 +83,12 @@ public class PlayerAmmo : MonoBehaviour
         var missingAmmo = maxAmmo - currentAmmo;
         ammo += missingAmmo;    
 
+    }
+
+    void setCursor()
+    {
+        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Locked;
     }
     
 }
