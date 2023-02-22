@@ -390,6 +390,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2479195925235544172, guid: df59ce2af26605649a337c3ec26ab484, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.1582
+      objectReference: {fileID: 0}
     - target: {fileID: 4014804487950775876, guid: df59ce2af26605649a337c3ec26ab484, type: 3}
       propertyPath: bullet
       value: 
@@ -416,7 +420,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4905684690062875945, guid: df59ce2af26605649a337c3ec26ab484, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1.185
+      value: 1.1825
       objectReference: {fileID: 0}
     - target: {fileID: 4905684690062875945, guid: df59ce2af26605649a337c3ec26ab484, type: 3}
       propertyPath: m_LocalPosition.z
