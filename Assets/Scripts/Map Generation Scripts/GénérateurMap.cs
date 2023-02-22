@@ -8,10 +8,8 @@ namespace Assets
    {
       [SerializeField]
       uint longueurMap, largeurMap, nbrPiècesMin, nbrPiècesMax;
-
       [SerializeField]
-      Vector2 grandeurPièceMax, grandeurPièceMin;
-
+      float WallSizeMin, WallSizeMax;
       [SerializeField]
       ProceduralRoom roomObject;
       
@@ -27,16 +25,15 @@ namespace Assets
       {
          for (int i = 0; i < transform.childCount; ++i)
             Destroy(transform.GetChild(i).gameObject);
-         GénérateurPièces bspPièces = new GénérateurPièces(new RectangleInfo2d(new Vector2(longueurMap,largeurMap),transform.position), grandeurPièceMin);
+         GénérateurPièces bspPièces = new GénérateurPièces(new RectangleInfo2d(new Vector2(longueurMap,largeurMap),transform.position), WallSizeMin, WallSizeMax);
 
          var noeuds = bspPièces.GénérerPièces();
 
 
          foreach (var noeud in noeuds)
          {
-            roomObject.InstantiateRoom(noeud);
-
-            InstancierPièce(noeud.Valeur);
+            roomObject.InstantiateRoom(noeud,transform);
+            //InstancierPièce(noeud.Valeur);
          }
       }
       private void InstancierPièce(RectangleInfo2d dimensionsPièce) //-------------------------------------------TEMP--------------------------------------------
@@ -45,12 +42,12 @@ namespace Assets
          
          GameObject Pièce = GameObject.CreatePrimitive(PrimitiveType.Cube);
          var Renderer = Pièce.GetComponent<MeshRenderer>();
-         Pièce.transform.localPosition =new Vector3(dimensionsPièce.coordonnées.x , 0,dimensionsPièce.coordonnées.y );
+         Pièce.transform.localPosition =new Vector3(dimensionsPièce.coordinates.x , 0,dimensionsPièce.coordinates.y );
          //Debug.Log(Renderer.bounds.size.x);
          //Debug.Log(dimensionsPièce.grandeur.x);
          //Debug.Log(dimensionsPièce.grandeur.x / Renderer.bounds.size.x);
          //Debug.Log(Pièce.transform.localScale);
-         Pièce.transform.localScale = new Vector3(dimensionsPièce.grandeur.x / Renderer.bounds.size.x, 1, dimensionsPièce.grandeur.y/ Renderer.bounds.size.z );
+         Pièce.transform.localScale = new Vector3(dimensionsPièce.Grandeur.x / Renderer.bounds.size.x, 1, dimensionsPièce.Grandeur.y/ Renderer.bounds.size.z );
          //Pièce.transform.localScale = new Vector3(dimensionsPièce.grandeur.x,1,dimensionsPièce.grandeur.y);
          Pièce.transform.parent = transform;
          Pièce.GetComponent<Renderer>().material.color = new Color(UnityEngine.Random.value, UnityEngine.Random.value, UnityEngine.Random.value);

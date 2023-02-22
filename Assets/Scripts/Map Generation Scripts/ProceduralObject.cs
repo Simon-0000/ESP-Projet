@@ -1,11 +1,7 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.ComponentModel.Design;
-using Assets;
 using UnityEngine;
 using Random = UnityEngine.Random;
-
+using Assets;
 public class ProceduralObject : MonoBehaviour
 {
     public GameObject[] objectVariations;
@@ -22,8 +18,20 @@ public class ProceduralObject : MonoBehaviour
     {
         public Vector3 startAt;
         public Vector3 endAt;
-        public bool IsRelativeTo;
-        
+        public int IsRelativeTo = 0;
+        public vectorRange()
+        {
+            startAt = Vector3.zero;
+            endAt = Vector3.zero;
+            IsRelativeTo = 0;
+        }
+
+        public vectorRange(Vector3 startVector, Vector3 endVector, int relativePosition)
+        {
+            startAt = startVector;
+            endAt = endVector;
+            IsRelativeTo = relativePosition;
+        }
     }
     
     
@@ -38,20 +46,12 @@ public class ProceduralObject : MonoBehaviour
                      orientations.Length != 0 && 
                      positions.Length == orientations.Length);
     }
+    
 
-
-
-
-    //public virtual void InstanciateProceduralObject()
-    //{
-    //    GameObject obj = Instantiate(objectVariations[Random.Range(0, objectVariations.Length)]);
-    //    SetPositionning(obj);
-    //}
-
-    public virtual void InstanciateProceduralObject(GameObject parent)
+    public virtual void InstanciateProceduralObject(Transform parentTransform)
     {
-        GameObject obj = Instantiate(objectVariations[Random.Range(0, objectVariations.Length)], parent.transform);
-        SetRandomRelativePositioning(obj, parent);
+        GameObject obj = Instantiate(objectVariations[Random.Range(0, objectVariations.Length)], parentTransform);
+        SetRandomRelativePositioning(obj, parentTransform);
     }
 
 
@@ -76,39 +76,54 @@ public class ProceduralObject : MonoBehaviour
     //   obj.transform.position = GetRandomVector(positions[index].startAt, positions[index].endAt);
     //   obj.transform.Rotate(GetRandomVector(orientations[index].startAt, orientations[index].endAt),Space.World);
     //}
-    protected void SetRandomRelativePositioning(GameObject obj, GameObject parent)
+
+
+    protected void SetRandomRelativePositioning(GameObject obj, Transform parentTransform)
     {
-        SetRandomRelativePositioning(obj, parent.GetComponent<MeshRenderer>().bounds.size, new Quaternion());
+        int index = Random.Range(0, positions.Length);
+        SetRandomRelativePositioning(obj, parentTransform.gameObject.GetComponent<MeshRenderer>().bounds.size, index);
         return;
-        int index = Random.Range(0, positions.Length);
-
-        obj.transform.position = GetRandomVector(positions[index].startAt, positions[index].endAt);
-        obj.transform.Rotate(GetRandomVector(orientations[index].startAt, orientations[index].endAt),Space.Self);
-            //Erreur c'est que parent n'a pas de MeshRenderer
-        obj.transform.localPosition = new Vector3(parent.GetComponent<MeshRenderer>().bounds.size.x / obj.transform.position.x,
-                     parent.GetComponent<MeshRenderer>().bounds.size.y / obj.transform.position.y,
-                     parent.GetComponent<MeshRenderer>().bounds.size.z / obj.transform.position.z);
-       //obj.transform.localRotation = new Vector3(parent.transform.localRotation.x / obj.transform.rotation.x,
-        //                parent.transform.localRotation.y / obj.transform.rotation.y,
-          //              parent.transform.localRotation.z / obj.transform.rotation.z);
     }
-    protected void SetRandomRelativePositioning(GameObject obj, Vector3 parentSize, Quaternion parentRotation)
+
+
+
+
+
+    protected void SetRandomRelativePositioning(GameObject obj, Vector3 parentDimensions) =>
+        SetRandomRelativePositioning(obj, parentDimensions, Random.Range(0, positions.Length));
+
+
+    protected void SetRandomRelativePositioning(GameObject obj, Vector3 parentDimensions,int placementIndex)
     {
-        int index = Random.Range(0, positions.Length);
 
-        obj.transform.position = GetRandomVector(positions[index].startAt, positions[index].endAt);
-        obj.transform.Rotate(GetRandomVector(orientations[index].startAt, orientations[index].endAt),Space.Self);
-        //Erreur c'est que parent n'a pas de MeshRenderer
-        obj.transform.localPosition = new Vector3(parentSize.x / obj.transform.position.x,
-            parentSize.y / obj.transform.position.y,
-            parentSize.z / obj.transform.position.z);
-       // obj.transform.localRotation = new Vector3(parentRotation.x / obj.transform.rotation.x,
-          //  parentRotation.y / obj.transform.rotation.y,
-           // parentRotation.z / obj.transform.rotation.z);
+        SetRandomRelativePositioning(obj, parentDimensions,(positions[placementIndex],orientations[placementIndex]));
+    }
+    protected void SetRandomRelativePositioning(GameObject obj, Vector3 parentDimensions, (vectorRange position, vectorRange orientation) placement)
+    {
+
+        Vector3 relativePosition = Algos.GetRandomVector(placement.position.startAt, placement.position.endAt);
+        Vector3 relativeOrientation = Algos.GetRandomVector(placement.orientation.startAt, placement.orientation.endAt);
+
+        obj.transform.localPosition = new Vector3(parentDimensions.x * relativePosition.x,
+            parentDimensions.y * relativePosition.y,
+            parentDimensions.z * relativePosition.z);
+         obj.transform.localRotation = Quaternion.Euler(relativeOrientation.x, relativeOrientation.y, relativeOrientation.z);
     }
 
 
-    protected static Vector3 GetRandomVector(Vector3 startAt, Vector3 endAt) => 
-        new Vector3(Random.Range(startAt.x, endAt.x),Random.Range(startAt.y,endAt.y),Random.Range(startAt.z,endAt.z));
 
+    static Transform GetParentFromIndex(Transform childTransform, int index) 
+    {
+        Transform subParent = childTransform.parent;
+        if(subParent.parent != null)
+        {
+            for (int i = 0; i < index; ++i)
+            {
+                subParent = subParent.parent;
+                if (subParent == null)
+                    break;
+            }
+        }
+        return subParent;
+    }
 }

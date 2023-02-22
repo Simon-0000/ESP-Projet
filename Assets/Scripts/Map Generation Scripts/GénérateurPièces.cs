@@ -11,12 +11,13 @@ namespace Assets
 {
    class GénérateurPièces
    {
-      Vector2 grandeurPièce;
+      float grandeurMin,grandeurMax, grandeur;
       RectangleInfo2d dimensionsMap;
 
-      public GénérateurPièces(RectangleInfo2d dimensionMap, Vector2 grandeurPièce)
+      public GénérateurPièces(RectangleInfo2d dimensionMap, float grandeurMin,float grandeurMax)
       {
-         this.grandeurPièce = grandeurPièce;
+         this.grandeurMin = grandeurMin;
+         this.grandeurMax = grandeurMax;
          this.dimensionsMap = dimensionMap;
       }
       public List<Noeud<RectangleInfo2d>> GénérerPièces() 
@@ -24,7 +25,7 @@ namespace Assets
          List<Noeud<RectangleInfo2d>> noeudsFeuille = BinarySpacePartitioning.FilterNoeudsFeuille(BinarySpacePartitioning.GénérerBSP(new Noeud<RectangleInfo2d>(null, dimensionsMap), TryDiviserPièce));
          CréerLiaisonPhysiquePièces(noeudsFeuille);
          
-         Dictionary<Noeud<RectangleInfo2d>, bool> dictionaryVisitedNodes = noeudsFeuille.ToDictionary(x=>x, val=>false);
+         //Dictionary<Noeud<RectangleInfo2d>, bool> dictionaryVisitedNodes = noeudsFeuille.ToDictionary(x=>x, val=>false);
          //DFS ICI, utilise le dictionaryVisitedNodes qui contient tous les noeuds(représente des pièces avec leur connections) 
          //Le dictionnaire retourne faux par défaut(non visité) et tu peut le changer pour qu'il retoure true (visité) pour faire DFS
          
@@ -38,30 +39,32 @@ namespace Assets
          switch (TrouverDirectionCoupure(noeudParent.Valeur))
          {
             case Direction.Horizontale:
-               grandeurEnfantA = new(noeudParent.Valeur.grandeur.x, TrouverCoupureAléatoire(noeudParent.Valeur.grandeur.y, grandeurPièce.y));
-               grandeurEnfantB = new(grandeurEnfantA.x, noeudParent.Valeur.grandeur.y - grandeurEnfantA.y);
+               grandeurEnfantA = new(noeudParent.Valeur.Grandeur.x, TrouverCoupureAléatoire(noeudParent.Valeur.Grandeur.y, grandeur));
+               grandeurEnfantB = new(grandeurEnfantA.x, noeudParent.Valeur.Grandeur.y - grandeurEnfantA.y);
 
                break;
             case Direction.Verticale:
-               grandeurEnfantA = new(TrouverCoupureAléatoire(noeudParent.Valeur.grandeur.x, grandeurPièce.x), noeudParent.Valeur.grandeur.y);
-               grandeurEnfantB = new(noeudParent.Valeur.grandeur.x - grandeurEnfantA.x, grandeurEnfantA.y);
+               grandeurEnfantA = new(TrouverCoupureAléatoire(noeudParent.Valeur.Grandeur.x, grandeur), noeudParent.Valeur.Grandeur.y);
+               grandeurEnfantB = new(noeudParent.Valeur.Grandeur.x - grandeurEnfantA.x, grandeurEnfantA.y);
                break;
             default:
                return (null, null);
          }
 
-         return (new Noeud<RectangleInfo2d>(noeudParent, new RectangleInfo2d(grandeurEnfantA, noeudParent.Valeur.CoordonnéesBasGauche + grandeurEnfantA/2)),
-               new Noeud<RectangleInfo2d>(noeudParent, new RectangleInfo2d(grandeurEnfantB,  noeudParent.Valeur.CoordonnéesHautDroit - grandeurEnfantB/2)));
+         return (new Noeud<RectangleInfo2d>(noeudParent, new RectangleInfo2d(grandeurEnfantA, noeudParent.Valeur.CoordinatesBasGauche + grandeurEnfantA/2)),
+               new Noeud<RectangleInfo2d>(noeudParent, new RectangleInfo2d(grandeurEnfantB,  noeudParent.Valeur.CoordinatesHautDroit - grandeurEnfantB/2)));
       }
 
       void CréerLiaisonPhysiquePièces(List<Noeud<RectangleInfo2d>> piècesNonLiées)
       {
+         
          for (int i = 0; i < piècesNonLiées.Count; ++i)
          {
             for (int j = i + 1; j < piècesNonLiées.Count; ++j)
             {
                if (AreRoomsConnected(piècesNonLiées[i].Valeur,piècesNonLiées[j].Valeur))
                {
+                  Debug.Log("Lien reciproque");
                   piècesNonLiées[i].AjouterNoeud(piècesNonLiées[j]);
                   piècesNonLiées[j].AjouterNoeud(piècesNonLiées[i]);
                }
@@ -74,14 +77,14 @@ namespace Assets
       {
          if (Random.Range(0, 2) == 0)
             return longueurParent / 2 + Random.Range(0, longueurParent / 2 - longueurMinEnfant);
-         return longueurParent / 2 - Random.Range(0, longueurParent / 2 - longueurMinEnfant);//- Random.Range(0, longueurParent - longueurMinEnfant * 2);
+         return longueurParent / 2 - Random.Range(0, longueurParent / 2 - longueurMinEnfant);
       }
-
       Direction TrouverDirectionCoupure(RectangleInfo2d dimensions)
       {
-         //pour couper verticalement ou horizontalement, les pièces résultants ne doivents pas être trop petit
-         bool coupureVerticale = dimensions.grandeur.x >= grandeurPièce.x * 2;
-         bool coupureHorizontale = dimensions.grandeur.y >= grandeurPièce.y * 2;
+
+         grandeur = Random.Range(grandeurMin, grandeurMax);
+         bool coupureVerticale = dimensions.Grandeur.x >= grandeur  * 2;
+         bool coupureHorizontale = dimensions.Grandeur.y >= grandeur * 2;
 
          if (coupureVerticale && coupureHorizontale)
             return Random.Range(0, 2) == 0 ? Direction.Verticale : Direction.Horizontale;
@@ -94,9 +97,9 @@ namespace Assets
 
       static bool AreRoomsConnected(RectangleInfo2d PièceA, RectangleInfo2d PièceB)
       {
-         Vector2 distance = PièceA.coordonnées - PièceB.coordonnées;
+         Vector2 distance = PièceA.coordinates - PièceB.coordinates;
          distance = distance.Abs();
-         Vector2 chevauchementDistance = new(distance.x - (PièceA.grandeur.x + PièceB.grandeur.x)/2,distance.y - (PièceA.grandeur.y + PièceB.grandeur.y)/2);
+         Vector2 chevauchementDistance = new(distance.x - (PièceA.Grandeur.x + PièceB.Grandeur.x)/2,distance.y - (PièceA.Grandeur.y + PièceB.Grandeur.y)/2);
          return chevauchementDistance.x <= 0 && chevauchementDistance.y <= 0;
       }
    }
