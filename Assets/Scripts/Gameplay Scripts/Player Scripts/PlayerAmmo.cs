@@ -22,14 +22,13 @@ public class PlayerAmmo : MonoBehaviour
     private Vector3 unAimedPosition = new Vector3(0.284f, -0.4f, 0.385f);
     private Vector3 aimedposition = new Vector3(0.00085f, -0.16f, 0.296f);
     private Vector3 deplacement;
-    private  int ammo =30;
+    private  int ammo;
     private const int maxAmmo = 30;
     
-    // Start is called before the first frame update
     void Awake()
     {
         setCursor();
-        
+        ammo = maxAmmo;
         text.text = ammo.ToString();
         deplacement = aimedposition - gun.transform.position;
 
@@ -39,12 +38,8 @@ public class PlayerAmmo : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        aimGun();
         
-        RaycastHit hit = default;
-        Ray ray  = Camera.main.ScreenPointToRay (Input.mousePosition);
-        if (Physics.Raycast (ray,out hit))
-            gun.LookAt(hit.point);
-        text.text = ammo.ToString();
         if (Input.GetMouseButton(1))
         {
            gun.localPosition=(aimedposition);
@@ -57,10 +52,7 @@ public class PlayerAmmo : MonoBehaviour
 
         }
         if (Input.GetMouseButtonDown(0))
-        {
             Shoot();
-        }
-
         if (Input.GetKeyDown("r"))
             Reload();
 
@@ -74,10 +66,9 @@ public class PlayerAmmo : MonoBehaviour
         if (ammo > 0)
         {
             Instantiate(bullet, boucheDeCanon.position, boucheDeCanon.rotation);
-                
-
             ammo -= 1;
         }
+        text.text = ammo.ToString();
            
     }
 
@@ -86,7 +77,8 @@ public class PlayerAmmo : MonoBehaviour
 
         var currentAmmo = ammo;
         var missingAmmo = maxAmmo - currentAmmo;
-        ammo += missingAmmo;    
+        ammo += missingAmmo;   
+        text.text = ammo.ToString();
 
     }
 
@@ -94,6 +86,14 @@ public class PlayerAmmo : MonoBehaviour
     {
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
+    }
+
+    void aimGun()
+    {
+        RaycastHit hit = default;
+        Ray ray  = Camera.main.ScreenPointToRay (new Vector3(Screen.width/2f,Screen.height/2f));
+        if (Physics.Raycast (ray,out hit))
+            gun.LookAt(hit.point);
     }
     
 }
