@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TheKiwiCoder;
 
 // sergio
 //gestion d'un zombie. gestion de la vie, état actif, temps de destruction, point d'entrée 
@@ -12,8 +13,9 @@ public class ZombieBehaviour : MonoBehaviour
     [SerializeField] public bool isLeader;
     [SerializeField] private int health;
     [SerializeField] private int damage;
-    [SerializeField] private int speed;
+    [SerializeField] public int speed;
     [SerializeField] public List<ZombieBehaviour> Team;
+    [SerializeField] public List<Vector3> patrolLocations;
     [SerializeField] private float inactiveTime;
     const int BaseHealth = 20;
     const int BaseDamage = 5;
@@ -40,6 +42,11 @@ public class ZombieBehaviour : MonoBehaviour
         }
     }
 
+    //besoin d'implementer le playerBehaviour
+    public void Attack()
+    {
+        //GetComponent<>
+    }
     public void TakeDamage(int damage)
     {
         health -= damage;
@@ -50,7 +57,8 @@ public class ZombieBehaviour : MonoBehaviour
     public void ManageDeath()
     {
         isActive = false;
-        if (isLeader == true)
+        Destroy(GetComponent<BehaviourTreeRunner>());
+        if (isLeader)
             ManageLeaderDeath();
     }
 

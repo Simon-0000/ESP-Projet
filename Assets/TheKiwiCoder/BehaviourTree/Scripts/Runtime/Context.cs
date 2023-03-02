@@ -11,6 +11,7 @@ namespace TheKiwiCoder {
     // Feel free to extend this class 
     public class Context {
         public GameObject gameObject;
+        public ZombieBehaviour zombie;
         public Transform transform;
         public Animator animator;
         public Rigidbody physics;
@@ -25,6 +26,7 @@ namespace TheKiwiCoder {
             // Fetch all commonly used components
             Context context = new Context();
             context.gameObject = gameObject;
+            context.zombie = gameObject.GetComponent<ZombieBehaviour>();
             context.transform = gameObject.transform;
             context.animator = gameObject.GetComponent<Animator>();
             context.physics = gameObject.GetComponent<Rigidbody>();
