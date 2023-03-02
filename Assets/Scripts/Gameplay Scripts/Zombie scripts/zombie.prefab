@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 9069341769698512697}
   - component: {fileID: 5248580425465932823}
   - component: {fileID: 2378564221067890512}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: body
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -109,8 +109,12 @@ GameObject:
   - component: {fileID: 7807824194343769619}
   - component: {fileID: -202324665651380728}
   - component: {fileID: 3840733256353320558}
+<<<<<<< HEAD
   - component: {fileID: 5895543705609376448}
   m_Layer: 0
+=======
+  m_Layer: 7
+>>>>>>> ec3dae10ea7263078fecc51135f8446798cec698
   m_Name: zombie
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -152,7 +156,10 @@ MonoBehaviour:
   damage: 0
   speed: 0
   Team: []
+<<<<<<< HEAD
   patrolLocations: []
+=======
+>>>>>>> ec3dae10ea7263078fecc51135f8446798cec698
   inactiveTime: 0
 --- !u!195 &3840733256353320558
 NavMeshAgent:
