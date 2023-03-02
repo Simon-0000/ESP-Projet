@@ -103,7 +103,12 @@ public class PlayerAmmo : MonoBehaviour
         RaycastHit hit = default;
         Ray ray = Camera.main.ScreenPointToRay(new Vector3(Screen.width / 2f, Screen.height / 2f));
         if (Physics.Raycast(ray, out hit))
+        {
             gun.LookAt(hit.point);
+           boucheDeCanon.LookAt(hit.point);
+        }
+
+    
         else
             gun.rotation = new Quaternion(0f,0f,0f,0f);
 
