@@ -13,22 +13,22 @@ public class PlayerAmmo : MonoBehaviour
     [SerializeField] private GameObject bullet;
     [SerializeField] private Transform boucheDeCanon;
 
-    [Header("aiming component")]
-    [SerializeField]
+    [Header("aiming component")] [SerializeField]
     private Transform gun;
+
+    [SerializeField] private Image crosshair;
 
     private Vector3 unAimedPosition = new Vector3(0.284f, -0.4f, 0.385f);
     private Vector3 aimedposition = new Vector3(0.00085f, -0.16f, 0.296f);
     private Vector3 deplacement;
-    private  int ammo =30;
+    private int ammo;
     private const int maxAmmo = 30;
-    
-    // Start is called before the first frame update
+    private bool isAimed=false;
+
     void Awake()
     {
-        Cursor.visible = false;
-        Cursor.lockState = CursorLockMode.Locked;
-        text.text = ammo.ToString();
+        setCursor();
+        setAmmo();
         deplacement = aimedposition - gun.transform.position;
 
 
@@ -37,39 +37,48 @@ public class PlayerAmmo : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        text.text = ammo.ToString();
+        // ReSharper disable once Unity.PerformanceCriticalCodeInvocation
+        
+
         if (Input.GetMouseButton(1))
         {
-           gun.localPosition=(aimedposition);
+            gun.localPosition = (aimedposition);
+            gun.rotation = new Quaternion(0f,0f,0f,0f);
+
+            crosshair.color = new Color(0, 0, 0, 0);
+            
         }
         else
         {
+          
+            aimGun();
+
             gun.localPosition = unAimedPosition;
+            crosshair.color = Color.green;
+
 
         }
+
         if (Input.GetMouseButtonDown(0))
-        {
             Shoot();
-        }
-
         if (Input.GetKeyDown("r"))
             Reload();
 
     }
 
-   
-    
+
+
     // ReSharper disable Unity.PerformanceAnalysis
-    private void Shoot()
+     void Shoot()
     {
         if (ammo > 0)
         {
-            Instantiate( bullet, boucheDeCanon.position, boucheDeCanon.rotation)
-                .GetComponent<Rigidbody>().AddRelativeForce(Vector3.forward*1000);
-
+            Instantiate(bullet, boucheDeCanon.position, boucheDeCanon.rotation);
             ammo -= 1;
         }
-           
+
+        text.text = ammo.ToString();
+
     }
 
     void Reload()
@@ -77,8 +86,36 @@ public class PlayerAmmo : MonoBehaviour
 
         var currentAmmo = ammo;
         var missingAmmo = maxAmmo - currentAmmo;
-        ammo += missingAmmo;    
+        ammo += missingAmmo;
+        text.text = ammo.ToString();
 
     }
+
+    void setCursor()
+    {
+        crosshair.transform.position = new Vector3(Screen.width / 2f, Screen.height / 2f);
+        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Locked;
+    }
+
+    void aimGun()
+    {
+        RaycastHit hit = default;
+        Ray ray = Camera.main.ScreenPointToRay(new Vector3(Screen.width / 2f, Screen.height / 2f));
+        if (Physics.Raycast(ray, out hit))
+        {
+            gun.LookAt(hit.point);
+           boucheDeCanon.LookAt(hit.point);
+        }
+
     
+        else
+            gun.rotation = new Quaternion(0f,0f,0f,0f);
+
+    }
+
+    void setAmmo()
+    { ammo = maxAmmo;
+        text.text = ammo.ToString();}
+
 }

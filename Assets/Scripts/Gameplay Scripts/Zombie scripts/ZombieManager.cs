@@ -3,20 +3,21 @@ using System.Collections.Generic;
 using UnityEngine;
 
 //sergio's script
-//zombie manager, it keeps track of all active zombies and severs the purpose of instantiating new ones when needed.
-//it will assign their spwan point, entry point and choose what kind of zombie to spwan based on their "rarity"
+//zombie manager est en charge de la gestion des zombies. Il garde en memoire tout les zombies qui sont actif.
+//quand un zombie n'est pas actif il est "removed" de la liste
 
 public class ZombieManager : MonoBehaviour
 {
     [SerializeField] private int nbWantedZombies = 50;
     private int nbActiveZombies;
-    private List<Zombie> ActiveZombies;
-    [SerializeField] private Walker Walker;
+    private List<GameObject> ActiveZombies;
+    [SerializeField] private GameObject zombie;
     [SerializeField] private List<Vector3> entryPoints;
     [SerializeField] private Vector3 spawnPoint;
-    private Zombie CreateNewZombie()
+    private float ellapsedTime = 0;
+    private GameObject CreateNewZombie()
     {
-        return Instantiate(Walker, spawnPoint,new Quaternion(0,0,0,0));
+        return Instantiate(zombie, spawnPoint,new Quaternion(0,0,0,0));
     }
 
     private Vector3 ChoseWindow()
@@ -26,18 +27,24 @@ public class ZombieManager : MonoBehaviour
 
     void Awake()
     {
-        ActiveZombies = new List<Zombie>(nbWantedZombies);
+        ActiveZombies = new List<GameObject>(nbWantedZombies);
+        spawnPoint = transform.position;
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (ActiveZombies.Count == nbWantedZombies)
-            return;
+        for(int i = 0; i<ActiveZombies.Count; ++i)
+        {
+            if (!ActiveZombies[i].GetComponent<ZombieBehaviour>().isActive)
+                ActiveZombies.Remove(ActiveZombies[i]);
+        }
 
-        do
+        ellapsedTime += Time.deltaTime;
+        if (ActiveZombies.Count < nbWantedZombies && ellapsedTime >= 4f)
         {
             ActiveZombies.Add(CreateNewZombie());
-        } while (ActiveZombies.Count < nbWantedZombies);
+            ellapsedTime = 0;
+        }
     }
 }

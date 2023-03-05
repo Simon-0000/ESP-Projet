@@ -526,6 +526,7 @@ MonoBehaviour:
   bullet: {fileID: 270624336992509730, guid: f51c10b8fb561144185f21fdf6e39996, type: 3}
   boucheDeCanon: {fileID: 2511378110466890716}
   gun: {fileID: 1351738998861982765}
+  crosshair: {fileID: 4905684688314579034}
 --- !u!143 &4905684690062875949
 CharacterController:
   m_ObjectHideFlags: 0
