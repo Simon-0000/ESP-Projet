@@ -5,6 +5,7 @@ using UnityEngine;
 public class ShowVerticesComponent : MonoBehaviour
 {
    private Vector3[] vertices;
+    private Vector2[] uvs;
    private int[,] positions;
    private int[,] vert2unique;
    private Color[] colours;
@@ -16,12 +17,14 @@ public class ShowVerticesComponent : MonoBehaviour
    {
       if (up)
          vertices = GetComponent<MeshFilter>().sharedMesh.vertices;
-   }
+        if (up)
+            uvs = GetComponent<MeshFilter>().sharedMesh.uv;
+    }
    private void Start()
    {
       vertices = GetComponent<MeshFilter>().sharedMesh.vertices;
-
-      int nVertices = vertices.Length;
+        uvs = GetComponent<MeshFilter>().sharedMesh.uv;
+        int nVertices = vertices.Length;
       vert2unique = new int[nVertices, 2];
       positions = new int[nVertices, 2];
       positions[0, 0] = 0;
@@ -86,7 +89,7 @@ public class ShowVerticesComponent : MonoBehaviour
          var q = vert2unique[i, 1] - 1;
          var worldPos = transform.localToWorldMatrix.MultiplyPoint3x4(vertices[i]) + Vector3.down / 7f * q + Vector3.down / 9f;
 
-         Handles.Label(worldPos, i.ToString());
+         Handles.Label(worldPos, i.ToString() + uvs[i].ToString());
       }
    }
 }

@@ -10,7 +10,24 @@ namespace Assets
 {
     static class Algos
     {
-         public static Vector3 GetRandomVector(Vector3 startAt, Vector3 endAt) =>
-            new Vector3(Random.Range(startAt.x, endAt.x), Random.Range(startAt.y, endAt.y), Random.Range(startAt.z, endAt.z));
+        
+        public static Vector3 GetVectorSign(Vector3 src)
+        {
+            return new Vector3(Mathf.Sign(src.x), Mathf.Sign(src.y), Mathf.Sign(src.z));
+        }
+        public static Vector2 GetVectorSign(Vector2 src)
+        {
+            return new Vector2(Mathf.Sign(src.x), Mathf.Sign(src.y));
+        }
+
+
+        public static Vector3 GetVectorAbs(Vector3 src)
+        {
+            return new Vector3(Mathf.Abs(src.x), Mathf.Abs(src.y), Mathf.Abs(src.z));
+        }
+        public static Vector2 GetVectorAbs(Vector2 src)
+        {
+            return new Vector2(Mathf.Abs(src.x), Mathf.Abs(src.y));
+        }
     }
 }

@@ -64,7 +64,6 @@ namespace Assets
             {
                if (AreRoomsConnected(piècesNonLiées[i].Valeur,piècesNonLiées[j].Valeur))
                {
-                  Debug.Log("Lien reciproque");
                   piècesNonLiées[i].AjouterNoeud(piècesNonLiées[j]);
                   piècesNonLiées[j].AjouterNoeud(piècesNonLiées[i]);
                }

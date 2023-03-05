@@ -8,50 +8,36 @@ public class ProceduralObject : MonoBehaviour
 
     public ProceduralObject[] childProceduralObjects;
 
-    public vectorRange[] positions;
+    public VectorRange[] positions;
 
-    public vectorRange[] orientations;
+    public VectorRange[] orientations;
+
+    public VectorRange[] offsets;
+
+    public bool XIsConstrained = true;
+    public bool YIsConstrained = true;
+    public bool ZIsConstrained = true;
 
 
-   [Serializable]
-    public class vectorRange
-    {
-        public Vector3 startAt;
-        public Vector3 endAt;
-        public int IsRelativeTo = 0;
-        public vectorRange()
-        {
-            startAt = Vector3.zero;
-            endAt = Vector3.zero;
-            IsRelativeTo = 0;
-        }
 
-        public vectorRange(Vector3 startVector, Vector3 endVector, int relativePosition)
-        {
-            startAt = startVector;
-            endAt = endVector;
-            IsRelativeTo = relativePosition;
-        }
-    }
-    
-    
 
-    private void Awake()
+    public void Awake()
     {
         for (int i = 0; i < objectVariations.Length; ++i)
             Debug.Assert(objectVariations[i].GetComponent<MeshRenderer>() != null);
 
         Debug.Assert(objectVariations.Length != 0 &&
                      positions.Length != 0 &&
-                     orientations.Length != 0 && 
+                     orientations.Length != 0 &&
                      positions.Length == orientations.Length);
     }
-    
+
 
     public virtual void InstanciateProceduralObject(Transform parentTransform)
     {
         GameObject obj = Instantiate(objectVariations[Random.Range(0, objectVariations.Length)], parentTransform);
-        SetRandomRelativePositioning(obj, parentTransform);
+
+        SetRandomRelativePlacement(obj, parentTransform);
     }
 
 
@@ -78,10 +64,10 @@ public class ProceduralObject : MonoBehaviour
     //}
 
 
-    protected void SetRandomRelativePositioning(GameObject obj, Transform parentTransform)
+    public void SetRandomRelativePlacement(GameObject obj, Transform parentTransform)
     {
         int index = Random.Range(0, positions.Length);
-        SetRandomRelativePositioning(obj, parentTransform.gameObject.GetComponent<MeshRenderer>().bounds.size, index);
+        SetRandomRelativePlacement(obj, parentTransform.gameObject.GetComponent<MeshRenderer>().bounds.size, index);
         return;
     }
 
@@ -89,41 +75,51 @@ public class ProceduralObject : MonoBehaviour
 
 
 
-    protected void SetRandomRelativePositioning(GameObject obj, Vector3 parentDimensions) =>
-        SetRandomRelativePositioning(obj, parentDimensions, Random.Range(0, positions.Length));
+    public void SetRandomRelativePlacement(GameObject obj, Vector3 parentDimensions) =>
+        SetRandomRelativePlacement(obj, parentDimensions, Random.Range(0, positions.Length));
 
 
-    protected void SetRandomRelativePositioning(GameObject obj, Vector3 parentDimensions,int placementIndex)
+    public void SetRandomRelativePlacement(GameObject obj, Vector3 parentDimensions,int placementIndex)
     {
 
-        SetRandomRelativePositioning(obj, parentDimensions,(positions[placementIndex],orientations[placementIndex]));
+        SetRandomRelativePlacement(obj, parentDimensions,(positions[placementIndex],orientations[placementIndex], offsets[placementIndex]));
     }
-    protected void SetRandomRelativePositioning(GameObject obj, Vector3 parentDimensions, (vectorRange position, vectorRange orientation) placement)
+    public void SetRandomRelativePlacement(GameObject obj, Vector3 parentDimensions, (VectorRange position, VectorRange orientation, VectorRange offset) placement)
     {
+        Vector3 relativePosition = placement.position.GetRandomVector();
 
-        Vector3 relativePosition = Algos.GetRandomVector(placement.position.startAt, placement.position.endAt);
-        Vector3 relativeOrientation = Algos.GetRandomVector(placement.orientation.startAt, placement.orientation.endAt);
+        Vector3 relativeOrientation = placement.orientation.GetRandomVector();
 
-        obj.transform.localPosition = new Vector3(parentDimensions.x * relativePosition.x,
+        TryPositionObject(obj,parentDimensions, new Vector3(parentDimensions.x * relativePosition.x,
             parentDimensions.y * relativePosition.y,
-            parentDimensions.z * relativePosition.z);
-         obj.transform.localRotation = Quaternion.Euler(relativeOrientation.x, relativeOrientation.y, relativeOrientation.z);
+            parentDimensions.z * relativePosition.z));
+        //Check if relativePosition is out of bounds depending on isConstrained--------------------------------------------------------------------------------
+        Vector3 offset =  placement.offset.GetRandomVector();
+        offset.Scale(Algos.GetVectorSign(obj.transform.localPosition));
+        obj.transform.localPosition += offset;
+        //Check if relativePosition is out of bounds depending on isConstrained--------------------------------------------------------------------------------
+
+        obj.transform.localRotation = Quaternion.Euler(relativeOrientation.x, relativeOrientation.y, relativeOrientation.z);
     }
+    private void TryPositionObject(GameObject obj, Vector3 parentDimensions, Vector3 relativePosition) =>
+            TryPositionObject(obj, parentDimensions, relativePosition, XIsConstrained, YIsConstrained, ZIsConstrained);
 
 
-
-    static Transform GetParentFromIndex(Transform childTransform, int index) 
+    private static void TryPositionObject(GameObject obj, Vector3 parentDimensions, Vector3 relativePosition, bool xIsConstrained, bool yIsConstrained, bool zIsConstrained)
     {
-        Transform subParent = childTransform.parent;
-        if(subParent.parent != null)
-        {
-            for (int i = 0; i < index; ++i)
-            {
-                subParent = subParent.parent;
-                if (subParent == null)
-                    break;
-            }
-        }
-        return subParent;
+        Vector3 objDimensions = obj.gameObject.GetComponent<MeshRenderer>().bounds.size;
+        Vector3 cornerPosition = objDimensions / 2 + Algos.GetVectorAbs(relativePosition);
+        Vector3 relativePositionSign = Algos.GetVectorSign(relativePosition);
+
+        if (cornerPosition.x > parentDimensions.x/2 && xIsConstrained)
+            relativePosition.x = relativePositionSign.x * (parentDimensions.x - objDimensions.x)/2;
+
+        if (cornerPosition.y > parentDimensions.y/2 && yIsConstrained)
+            relativePosition.y = relativePositionSign.y * (parentDimensions.y - objDimensions.y) / 2;
+
+        if (cornerPosition.z > parentDimensions.z/2 && zIsConstrained)
+            relativePosition.z = relativePositionSign.z * (parentDimensions.z - objDimensions.z) / 2;
+
+        obj.transform.localPosition = relativePosition;
     }
 }
