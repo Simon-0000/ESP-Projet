@@ -1,3 +1,4 @@
+// fait par Olivier Castonguay
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -23,40 +24,30 @@ public class PlayerAmmo : MonoBehaviour
     private Vector3 deplacement;
     private int ammo;
     private const int maxAmmo = 30;
-    private bool isAimed=false;
 
     void Awake()
     {
-        setCursor();
-        setAmmo();
+        SetCursor();
+        SetAmmo();
         deplacement = aimedposition - gun.transform.position;
-
-
     }
 
     // Update is called once per frame
     void Update()
     {
         // ReSharper disable once Unity.PerformanceCriticalCodeInvocation
-        
-
         if (Input.GetMouseButton(1))
         {
             gun.localPosition = (aimedposition);
             gun.rotation = new Quaternion(0f,0f,0f,0f);
-
             crosshair.color = new Color(0, 0, 0, 0);
             
         }
         else
         {
-          
-            aimGun();
-
+            AimGun();
             gun.localPosition = unAimedPosition;
             crosshair.color = Color.green;
-
-
         }
 
         if (Input.GetMouseButtonDown(0))
@@ -91,16 +82,16 @@ public class PlayerAmmo : MonoBehaviour
 
     }
 
-    void setCursor()
+    void SetCursor()
     {
         crosshair.transform.position = new Vector3(Screen.width / 2f, Screen.height / 2f);
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
     }
 
-    void aimGun()
+    void AimGun()
     {
-        RaycastHit hit = default;
+        RaycastHit hit;
         Ray ray = Camera.main.ScreenPointToRay(new Vector3(Screen.width / 2f, Screen.height / 2f));
         if (Physics.Raycast(ray, out hit))
         {
@@ -114,7 +105,7 @@ public class PlayerAmmo : MonoBehaviour
 
     }
 
-    void setAmmo()
+    void SetAmmo()
     { ammo = maxAmmo;
         text.text = ammo.ToString();}
 

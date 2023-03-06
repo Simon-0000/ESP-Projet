@@ -1,3 +1,4 @@
+// fait par Olivier Castonguay
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -7,7 +8,8 @@ using UnityEngine;
 public class LazerComponent : MonoBehaviour
 {
     private float floatDamage = 75f;
-    private int damage; 
+    private int damage;
+    private ZombieBehaviour zombie;
     private float n1 = 1f;
    private float n2;
    private float angelInDeg;
@@ -32,7 +34,7 @@ public class LazerComponent : MonoBehaviour
    {
        if (collision.contacts[0].otherCollider.gameObject.layer == 6)
        {
-           n2 = 1- collision.contacts[0].otherCollider.GetComponent<MeshRenderer>().materials[0].GetFloat("_Glossiness");
+           n2 = 1+collision.contacts[0].otherCollider.GetComponent<MeshRenderer>().materials[0].GetFloat("_Glossiness");
            angelInDeg = MathF.Abs(90-Vector3.Angle(rig.velocity, collision.contacts[0].normal));
            floatDamage *= Schlick(n1, n2, angelInDeg);
            damage = (int)floatDamage;
@@ -42,7 +44,8 @@ public class LazerComponent : MonoBehaviour
 
        if (collision.contacts[0].otherCollider.gameObject.layer == 7)
        {
-           collision.contacts[0].otherCollider.GetComponent<ZombieBehaviour>().TakeDamage(damage); 
+          zombie= collision.contacts[0].otherCollider.GetComponent<ZombieBehaviour>();
+          zombie.TakeDamage(damage);
            Destroy(this);
        }
 

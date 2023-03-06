@@ -4,7 +4,7 @@ using UnityEngine;
 using TheKiwiCoder;
 
 // sergio
-//gestion d'un zombie. gestion de la vie, état actif, temps de destruction, point d'entrée 
+//gestion d'un zombie. gestion de la vie, ï¿½tat actif, temps de destruction, point d'entrï¿½e 
 public class ZombieBehaviour : MonoBehaviour
 {
    // [SerializeField] public Zombie zombie;
@@ -52,6 +52,7 @@ public class ZombieBehaviour : MonoBehaviour
         health -= damage;
         if (health < 0)
             ManageDeath();
+        Debug.Log(health);
     }
 
     public void ManageDeath()
