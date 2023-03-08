@@ -1,10 +1,13 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 using TheKiwiCoder;
 
-// sergio
-//gestion d'un zombie. gestion de la vie, état actif, temps de destruction, point d'entrée 
+// sergio abreo alvarez
+//gestion d'un zombie. gestion de la vie, ï¿½tat actif, temps de destruction, point d'entrï¿½e 
+[RequireComponent(typeof(NavMeshAgent))]
 public class ZombieBehaviour : MonoBehaviour
 {
    // [SerializeField] public Zombie zombie;
@@ -24,12 +27,13 @@ public class ZombieBehaviour : MonoBehaviour
     void Start()
     {
         Team = new List<ZombieBehaviour>(3);
-        health = BaseDamage;
+        health = BaseHealth;
         damage = BaseDamage;
         speed = BaseSpeed;
         isActive = true;
         isOnTeam = false;
         isLeader = false;
+        DefinePatrolSequence();
     }
 
     private void Update()
@@ -42,6 +46,29 @@ public class ZombieBehaviour : MonoBehaviour
         }
     }
 
+    private void DefinePatrolSequence()
+    {
+        //trouver tout les GameObjects avec un EntryWaypoint ou DoorWaypoint
+        EntryWaypoint[] windows = FindObjectsOfType<EntryWaypoint>();
+        DoorWaypoint[] doors = FindObjectsOfType<DoorWaypoint>();
+
+        //choisir un point d'entrÃ© random pour que le zombie entre dans la carte de jeux
+        System.Random indexGenerator = new System.Random();
+
+        //ajouter la postion de l'entrÃ©e pour dans la liste de waypoints
+        patrolLocations.Add(windows[indexGenerator.Next(windows.Length)].entryWaypoint);
+
+        //ajouter les points de patroulle pour le zombie en ordre aleatoire,
+        //on veut remplir la liste avec toutes les positions de toutes portes de la carte et une fenÃªtre de la carte
+        do
+        {
+            int randomIndex = indexGenerator.Next(doors.Length);
+            if (!patrolLocations.Contains(doors[randomIndex].waypointLocation))
+                patrolLocations.Add(doors[randomIndex].waypointLocation);
+        } while (patrolLocations.Count <(doors.Length + 1));
+
+    }
+
     //besoin d'implementer le playerBehaviour
     public void Attack()
     {
@@ -49,15 +76,17 @@ public class ZombieBehaviour : MonoBehaviour
     }
     public void TakeDamage(int damage)
     {
-        health -= damage;
+        this.health -= damage;
         if (health < 0)
             ManageDeath();
+        Debug.Log(health);
     }
 
     public void ManageDeath()
     {
         isActive = false;
         Destroy(GetComponent<BehaviourTreeRunner>());
+        Destroy(GetComponent<NavMeshAgent>());
         if (isLeader)
             ManageLeaderDeath();
     }

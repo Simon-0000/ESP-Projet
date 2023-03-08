@@ -1,0 +1,143 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2d285eb63c2cdd74180de7cfceaa96ad, type: 3}
+  m_Name: ZombieTree
+  m_EditorClassIdentifier: 
+  rootNode:
+    rid: 710362776824971264
+  nodes:
+  - rid: 710362776824971264
+  - rid: 710362776824971265
+  - rid: 710362776824971266
+  - rid: 710362776824971267
+  - rid: 710362776824971268
+  - rid: 710362776824971269
+  - rid: 710362776824971270
+  - rid: 710362776824971271
+  treeState: 0
+  blackboard:
+    moveToPosition: {x: 0, y: 0, z: 0}
+  viewPosition: {x: 600, y: 300, z: 0}
+  viewScale: {x: 1, y: 1, z: 1}
+  references:
+    version: 2
+    RefIds:
+    - rid: 710362776824971264
+      type: {class: RootNode, ns: TheKiwiCoder, asm: Assembly-CSharp}
+      data:
+        state: 0
+        started: 0
+        guid: 4b362a1d-8682-4ee9-b2aa-2ed01718644e
+        position: {x: -119.333374, y: -218.66667}
+        blackboard:
+          moveToPosition: {x: 0, y: 0, z: 0}
+        description: 
+        drawGizmos: 0
+        child:
+          rid: 710362776824971266
+    - rid: 710362776824971265
+      type: {class: Patrol, ns: , asm: Assembly-CSharp}
+      data:
+        state: 0
+        started: 0
+        guid: 3545ba78c949a7f4eb01832bab26fb3c
+        position: {x: -451.33334, y: 54.666656}
+        blackboard:
+          moveToPosition: {x: 0, y: 0, z: 0}
+        description: "\xE9tat de patrouille"
+        drawGizmos: 0
+        fieldOfView: 90
+        target: {fileID: 4905684690062875924, guid: df59ce2af26605649a337c3ec26ab484, type: 3}
+        hostPosition: {x: 0, y: 0, z: 0}
+    - rid: 710362776824971266
+      type: {class: Sequencer, ns: TheKiwiCoder, asm: Assembly-CSharp}
+      data:
+        state: 0
+        started: 0
+        guid: 7c38adf0739918c4a9a58450be1f43da
+        position: {x: -119.333374, y: -85}
+        blackboard:
+          moveToPosition: {x: 0, y: 0, z: 0}
+        description: sequencer pour le comportement
+        drawGizmos: 0
+        children:
+        - rid: 710362776824971265
+        - rid: 710362776824971267
+    - rid: 710362776824971267
+      type: {class: Repeat, ns: TheKiwiCoder, asm: Assembly-CSharp}
+      data:
+        state: 0
+        started: 0
+        guid: d14c6d4f16b9424468be757dade4677a
+        position: {x: -119.333374, y: 63}
+        blackboard:
+          moveToPosition: {x: 0, y: 0, z: 0}
+        description: "les zombies restent dans les \xE9tats de chase et attack sans
+          jamais repartir dans un \xE9tat de patrol"
+        drawGizmos: 0
+        child:
+          rid: 710362776824971270
+        restartOnSuccess: 1
+        restartOnFailure: 0
+    - rid: 710362776824971268
+      type: {class: Chase, ns: , asm: Assembly-CSharp}
+      data:
+        state: 0
+        started: 0
+        guid: e3645eb6d6079e448b7c9bca80605506
+        position: {x: -242, y: 359.66672}
+        blackboard:
+          moveToPosition: {x: 0, y: 0, z: 0}
+        description: "\xE9tat de chase"
+        drawGizmos: 0
+        target: {fileID: 4905684690062875924, guid: df59ce2af26605649a337c3ec26ab484, type: 3}
+        hostPosition: {x: 0, y: 0, z: 0}
+    - rid: 710362776824971269
+      type: {class: Attack, ns: , asm: Assembly-CSharp}
+      data:
+        state: 0
+        started: 0
+        guid: 5135b5b2867ef0a40bceb468673455c5
+        position: {x: -30.666687, y: 359.66672}
+        blackboard:
+          moveToPosition: {x: 0, y: 0, z: 0}
+        description: "\xE9tat de attack"
+        drawGizmos: 0
+        target: {fileID: 4905684690062875924, guid: df59ce2af26605649a337c3ec26ab484, type: 3}
+        host: {fileID: 0}
+    - rid: 710362776824971270
+      type: {class: Sequencer, ns: TheKiwiCoder, asm: Assembly-CSharp}
+      data:
+        state: 0
+        started: 0
+        guid: 17b2dd34ff4d25744b0102054e276337
+        position: {x: -119.333374, y: 219.66666}
+        blackboard:
+          moveToPosition: {x: 0, y: 0, z: 0}
+        description: 'sequencer pour une loop de chase et attack '
+        drawGizmos: 0
+        children:
+        - rid: 710362776824971268
+        - rid: 710362776824971269
+        - rid: 710362776824971271
+    - rid: 710362776824971271
+      type: {class: Wait, ns: TheKiwiCoder, asm: Assembly-CSharp}
+      data:
+        state: 0
+        started: 0
+        guid: ee7a7d608c4b5004593eb0b95f09fcf0
+        position: {x: 164, y: 359.66672}
+        blackboard:
+          moveToPosition: {x: 0, y: 0, z: 0}
+        description: "temps de repos apr\xE8s avoir frapp\xE9 le joueur"
+        drawGizmos: 0
+        duration: 2
