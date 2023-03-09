@@ -1,7 +1,8 @@
-﻿//Auteurs: Simon Asmar
-//Explication: Cette classe a pour but de contenir un «Range» de vecteur (startAt, endAt) et de retourner une
-//             valeur entre ces vecteurs
-using System;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using UnityEngine;
 using Random = UnityEngine.Random;
 namespace Assets

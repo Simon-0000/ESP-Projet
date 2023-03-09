@@ -1,9 +1,10 @@
-﻿//Auteurs: Simon Asmar
-//Explication: Cette classe «static» a pour but de faire un BSP et de retourner une liste contenant tous les nœuds du 
-//             graphe. Il faut lui donner un nœud de départ et une fonction qui s'occupe de diviser un nœud en 2 
-
+﻿
 using System.Collections.Generic;
+using UnityEngine;
 using System;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 namespace Assets
 {
    static class BinarySpacePartitioning
@@ -13,18 +14,17 @@ namespace Assets
          Queue<Noeud<T>> noeudsÀDiviser = new();
          List<Noeud<T>> bspList = new();
          Noeud<T> noeudParent;
-         (Noeud<T> subNoeudA, Noeud<T> subNoeudB) subNoeuds = (null,null);//représente les nœuds résultants
-         
-         
+         (Noeud<T> subNoeudA, Noeud<T> subNoeudB) subNoeuds = (null,null);
          noeudsÀDiviser.Enqueue(NoeudRacine);
+
          while(noeudsÀDiviser.Count > 0)
          {
             noeudParent = noeudsÀDiviser.Dequeue();
             subNoeuds = TryDiviserNoeud(noeudParent);
-            if (subNoeuds != (null,null))//Condition qui est true si on a pu diviser le nœud 
+            if (subNoeuds != (null,null))
             {
-               noeudParent.NoeudsEnfants.Add(subNoeuds.subNoeudA);
-               noeudParent.NoeudsEnfants.Add(subNoeuds.subNoeudB);
+               noeudParent.AjouterNoeud(subNoeuds.subNoeudA);
+               noeudParent.AjouterNoeud(subNoeuds.subNoeudB);
                noeudsÀDiviser.Enqueue(subNoeuds.subNoeudA);
                noeudsÀDiviser.Enqueue(subNoeuds.subNoeudB);
                bspList.Add(subNoeuds.subNoeudA);
@@ -32,6 +32,18 @@ namespace Assets
             }
          }
          return bspList;
+      }
+      static public List<Noeud<T>> FilterNoeudsFeuille<T>(List<Noeud<T>> bsp)
+      {
+         List<Noeud<T>> noeudsFeuille = new();
+         for (int i = 0; i < bsp.Count; ++i)
+         {
+            if (bsp[i].ConnexionCount == 0)
+            {
+               noeudsFeuille.Add(bsp[i]);
+            }
+         }
+         return noeudsFeuille;
       }
    }
 }

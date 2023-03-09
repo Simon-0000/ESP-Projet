@@ -31,7 +31,7 @@ public static class DepthFirstSearch<T>
                 if (currentNode==endNode)
                     break;
                 
-                foreach (var childNode in currentNode.NoeudsEnfants)
+                foreach (var childNode in currentNode.NoeudsConnectés)
                 {
                     stackNode.Push(childNode);
                 }

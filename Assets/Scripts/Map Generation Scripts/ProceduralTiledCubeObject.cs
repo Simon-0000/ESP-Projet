@@ -1,9 +1,5 @@
-//Auteurs: Simon Asmar
-//Explication: Ce script est utilisé en combinaison avec «ProceduralObject» pour étirer un cube procédural selon une
-//certaine grandeur. On ne l'étire pas avec un «scale» et le «Material», mais plutôt avec les «vertices» et les «uvs»,
-//pour ne pas qu'un autre objet procédural qui dérive de celle-ci soit étiré (ex d'implémentation: faire un mur, des
-//ouvertures de grandeur différentes, etc...)
-
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using Assets;
 using System.Linq;
@@ -12,73 +8,76 @@ using System.Linq;
 public class ProceduralTiledCubeObject : MonoBehaviour
 {
     [SerializeField] 
-    VectorRange[] scales;// Les valeurs de «scales» sont utilisées comme des uvs où 0 représente une grandeur de 0
-                         // et 1 représente la grandeur du parent
+    VectorRange[] Scales, ScaleOffsets;
+    [SerializeField]
+    bool wrapsAround = true;
 
-    [SerializeField]
-    VectorRange[] scaleOffsets; //Les décalages permettent de donner une grandeur qui vaudrait par exemple,
-                                //toujours entre 1 et 2 unités. Une valeur négative va diminuer la grandeur,
-                                //une valeur positive va l'agrandir.
-    
-    [SerializeField]
-    bool wrapsAround = true;//Permet de contourner les objets qui se trouve dans le chemin (pas implémenté)
-                            //(ex: un mur qui contourne une porte)
-    
-                            
     ProceduralObject proceduralObj;
+
     public void Awake() 
     {
         proceduralObj = GetComponent<ProceduralObject>();
         proceduralObj.Awake();
-        
-        Debug.Assert(proceduralObj.positions.Length == scales.Length && 
-                     proceduralObj.positions.Length == scaleOffsets.Length);//Il doit y avoir autant de position
-                                                                            //que de «scales» et de «scaleOffsets»
-                                                                            
-        //Chaque variation de l'objet à instancier doit être un cube
-        for(int i = 0; i < proceduralObj.objectVariations.Length; ++i) 
+        Debug.Assert(proceduralObj != null);
+        Debug.Assert(proceduralObj.positions.Length == Scales.Length && 
+            proceduralObj.positions.Length == ScaleOffsets.Length);
+        for(int i = 0; i < proceduralObj.objectVariations.Length; ++i)
             Debug.Assert(proceduralObj.objectVariations[i].GetComponent<MeshFilter>().sharedMesh.name == "Cube");
     }
 
 
     public GameObject InstantiateProceduralTiledObject(Transform parent, Vector3 parentDimensions,int variationIndex)
     {
-        return InstantiateProceduralTiledObject(parent,parentDimensions,variationIndex,Random.Range(0,scales.Length));
+        return InstantiateProceduralTiledObject(parent,parentDimensions,variationIndex,Random.Range(0,Scales.Length));
     }
 
     public GameObject InstantiateProceduralTiledObject(Transform parent, Vector3 parentDimensions, int variationIndex,int placementIndex)
     {
         GameObject tuileObject = Instantiate(proceduralObj.objectVariations[variationIndex], parent);
-        Vector3 tileSize = Vector3.Scale(scales[placementIndex].GetRandomVector(),parentDimensions) + scaleOffsets[placementIndex].GetRandomVector();
-        TileUvs(tuileObject, tileSize);
+        Vector3 tileSize = Vector3.Scale(Scales[placementIndex].GetRandomVector(),parentDimensions) + ScaleOffsets[placementIndex].GetRandomVector();
+        TileMaterial(tuileObject, tileSize);
         StretchVertices(tuileObject, tileSize);
         proceduralObj.SetRandomRelativePlacement(tuileObject, parentDimensions, placementIndex);
         return tuileObject;
     }
-    
-    
-    
-    
-    private static int[] cubeAxisA = { 0, 0, 0 , 0, 2, 2 };//Représente les axes de chaque face/plan du cube Unity
+
+
+    public GameObject InstantiateProceduralTiledObject(Vector3 tileSize, Transform parent, Vector3 parentDimensions, int variationIndex,(VectorRange position, VectorRange orientation, VectorRange offset) placement)
+    {
+        GameObject tuileObject = Instantiate(proceduralObj.objectVariations[variationIndex], parent);
+
+        TileMaterial(tuileObject, tileSize);
+        StretchVertices(tuileObject, tileSize);
+        proceduralObj.SetRandomRelativePlacement(tuileObject, parentDimensions, placement);
+
+        return tuileObject;
+    }
+
+
+    private static int[] cubeAxisA = { 0, 0, 0 , 0, 2, 2 };
     private static int[] cubeAxisB = { 1, 2, 1, 2, 1, 1 };
-    private static void TileUvs(GameObject obj, Vector3 globalStretchSize)
+    private static void TileMaterial(GameObject obj, Vector3 globalStretchSize)
     {
         MeshRenderer meshRenderer = obj.GetComponent<MeshRenderer>();
-        Vector3 cubeSize = meshRenderer.bounds.size;
-        Vector3 relativeStretchSize = new Vector3(globalStretchSize.x / cubeSize.x, globalStretchSize.y / cubeSize.y, globalStretchSize.z / cubeSize.z);
+        Vector3 grandeurGlobaleTuile = meshRenderer.bounds.size;
+        Vector3 relativeStretchSize = new Vector3(globalStretchSize.x / grandeurGlobaleTuile.x, globalStretchSize.y / grandeurGlobaleTuile.y, globalStretchSize.z / grandeurGlobaleTuile.z);
+
+        /*
+        Material newMat = new Material(meshRenderer.material);
+        newMat.mainTexture.wrapMode = TextureWrapMode.Repeat;
+        newMat.mainTextureScale = new Vector2(relativeStretchSize[axisA], relativeStretchSize[axisB]);
+        newMat.mainTextureOffset = -new Vector2(obj.transform.position[axisA] + relativeStretchSize[axisA] / 2, obj.transform.position[axisB] + relativeStretchSize[axisB] / 2);
+        meshRenderer.material = newMat;
+        */
+
+        //NEED TO ADD WORLD OFFSET
         Vector2[] uvs = obj.GetComponent<MeshFilter>().mesh.uv;
-        
-        //Les «vertices» utilisées pour les «uvs» de chaque face ne sont pas en ordre croissant dans le cube de Unity,
-        //donc on utilise ce array pour obtenir l'ordre (les 4 premiers «vertices» du array nous donne la première face,
-        //4 prochains = 2e face,etc.)
-        int[] uvIndex = obj.GetComponent<MeshFilter>().mesh.triangles.Distinct().ToArray();
+        int[] uvIndex = obj.GetComponent<MeshFilter>().mesh.triangles.Distinct().ToArray();//Les vertices utilis� pour les uvs de chaques faces ne sont pas en ordre dans unity, donc on utilise ce array pour obtenir l'ordre
 
         for (int i = 0; i < 6; ++i)
         {
             for(int j = 0; j < 4; ++j)
             {
-                //Pas implémenté: «uvs» influencés par la position du monde pour ne pas avoir
-                //                des coupures de texture entre deux pièces connectées par exemple
                 uvs[uvIndex[i * 4 + j]].x *= relativeStretchSize[cubeAxisA[i]];
                 uvs[uvIndex[i * 4 + j]].y *= relativeStretchSize[cubeAxisB[i]];
             }
@@ -89,22 +88,23 @@ public class ProceduralTiledCubeObject : MonoBehaviour
     private static void StretchVertices(GameObject obj, Vector3 globalStretchSize)
     {
 
-        Vector3 cubeSize = obj.GetComponent<MeshRenderer>().bounds.size;
-        Vector3 relativeStretchSize = new Vector3(globalStretchSize.x / cubeSize.x, globalStretchSize.y / cubeSize.y, globalStretchSize.z / cubeSize.z);
+        Vector3 grandeurGlobaleTuile = obj.GetComponent<MeshRenderer>().bounds.size;
+        Vector3 relativeStretchSize = new Vector3(globalStretchSize.x / grandeurGlobaleTuile.x, globalStretchSize.y / grandeurGlobaleTuile.y, globalStretchSize.z / grandeurGlobaleTuile.z);
+
         Mesh mesh = obj.GetComponent<MeshFilter>().mesh;
-        
-        //On étire les «vertices» du cube
         Vector3[] vertices = mesh.vertices;
         for (int i = 0; i < vertices.Length; i++)
         {
             vertices[i] = Vector3.Scale(vertices[i], relativeStretchSize);
         }
 
-        //On donne les nouveaux «vertices» au «mesh» et on recalcule le «mesh»
         mesh.vertices = vertices;
         mesh.RecalculateBounds();
 
-        //On recalcule le box collider du cube
+
+        MeshCollider meshCollider = obj.GetComponent<MeshCollider>();
+        if (meshCollider != null)
+            meshCollider.sharedMesh = mesh;
         BoxCollider boxCollider = obj.GetComponent<BoxCollider>();
         if(boxCollider != null)
         {
