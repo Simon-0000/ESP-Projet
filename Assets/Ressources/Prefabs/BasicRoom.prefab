@@ -144,7 +144,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 69a8b6581df607649aaaca89d7ef7751, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Scales:
+  scales:
   - startAt: {x: 1, y: 1, z: 0}
     endAt: {x: 1, y: 1, z: 0}
   - startAt: {x: 1, y: 1, z: 0}
@@ -153,7 +153,7 @@ MonoBehaviour:
     endAt: {x: 0, y: 1, z: 1}
   - startAt: {x: 0, y: 1, z: 1}
     endAt: {x: 0, y: 1, z: 1}
-  ScaleOffsets:
+  scaleOffsets:
   - startAt: {x: -0.1, y: 0, z: 0.1}
     endAt: {x: -0.1, y: 0, z: 0.1}
   - startAt: {x: -0.1, y: 0, z: 0.1}
@@ -162,6 +162,7 @@ MonoBehaviour:
     endAt: {x: 0.1, y: 0, z: -0.1}
   - startAt: {x: 0.1, y: 0, z: -0.1}
     endAt: {x: 0.1, y: 0, z: -0.1}
+  wrapsAround: 1
 --- !u!114 &1018625573218568548
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -177,8 +178,6 @@ MonoBehaviour:
   objectVariations:
   - {fileID: 197103788244837383}
   - {fileID: 6903633704133454978}
-  childProceduralObjects:
-  - {fileID: 0}
   positions:
   - startAt: {x: 0, y: 0.5, z: 0.5}
     endAt: {x: 0, y: 0.5, z: 0.5}
@@ -354,7 +353,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   objectVariations: []
-  childProceduralObjects: []
   positions: []
   orientations: []
   offsets: []
@@ -364,7 +362,7 @@ MonoBehaviour:
   wallObject: {fileID: 3183394960504068209}
   roofObject: {fileID: 0}
   floorObject: {fileID: 1902440217402886749}
-  openingGameObject: {fileID: 2441169238406979505}
+  childObjects: []
 --- !u!1 &3519388266173174634
 GameObject:
   m_ObjectHideFlags: 0
@@ -412,7 +410,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   objectVariations:
   - {fileID: 878791202345868086}
-  childProceduralObjects: []
   positions:
   - startAt: {x: -0.6, y: -1, z: 0}
     endAt: {x: 0.6, y: -1, z: 0}
@@ -568,12 +565,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 69a8b6581df607649aaaca89d7ef7751, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Scales:
+  scales:
   - startAt: {x: 1, y: 0, z: 1}
     endAt: {x: 1, y: 0, z: 1}
-  ScaleOffsets:
-  - startAt: {x: 0, y: 0.1, z: 0}
-    endAt: {x: 0, y: 0.1, z: 0}
+  scaleOffsets:
+  - startAt: {x: 0, y: 0.05, z: 0}
+    endAt: {x: 0, y: 0.05, z: 0}
+  wrapsAround: 1
 --- !u!114 &2956627328167554219
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -588,8 +586,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   objectVariations:
   - {fileID: 4998183169681510225}
-  childProceduralObjects:
-  - {fileID: 0}
   positions:
   - startAt: {x: 0, y: 0, z: 0}
     endAt: {x: 0, y: 0, z: 0}
