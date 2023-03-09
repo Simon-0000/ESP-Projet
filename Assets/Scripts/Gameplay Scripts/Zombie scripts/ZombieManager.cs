@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-//sergio's script
+//sergio abreo alvarez
 //zombie manager est en charge de la gestion des zombies. Il garde en memoire tout les zombies qui sont actif.
 //quand un zombie n'est pas actif il est "removed" de la liste
 
