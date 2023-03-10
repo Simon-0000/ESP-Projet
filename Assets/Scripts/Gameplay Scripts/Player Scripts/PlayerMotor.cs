@@ -46,7 +46,7 @@ public class PlayerMotor : MonoBehaviour
     public void Jump()
     {
         if(isgrounded)
-            velocity.y = Mathf.Sqrt(jumpHeigth * -3f*gravity);
+            velocity.y = Mathf.Sqrt(-1*gravity);
           
         
     }

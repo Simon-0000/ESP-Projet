@@ -23,6 +23,7 @@ public class ZombieBehaviour : MonoBehaviour
     const int BaseHealth = 20;
     const int BaseDamage = 5;
     const int BaseSpeed = 10;
+    private LazerComponent lazer;
 
     void Start()
     {
@@ -45,6 +46,8 @@ public class ZombieBehaviour : MonoBehaviour
                 Destroy(gameObject);
         }
     }
+
+    
 
     private void DefinePatrolSequence()
     {
@@ -76,10 +79,11 @@ public class ZombieBehaviour : MonoBehaviour
     }
     public void TakeDamage(int damage)
     {
-        this.health -= damage;
-        if (health < 0)
-            ManageDeath();
+        health -= damage;
         Debug.Log(health);
+        if (health <= 0)
+            ManageDeath();
+        
     }
 
     public void ManageDeath()

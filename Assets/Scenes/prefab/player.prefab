@@ -494,6 +494,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cam: {fileID: 4905684690193178111}
+  crosshair: {fileID: 4905684688314579034}
   xSensitivity: 30
   ySensitivity: 30
 --- !u!114 &4905684690062875950
@@ -522,11 +523,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d9a8e2b5039e3564094bde5d9bbffc06, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  crosshair: {fileID: 4905684688314579034}
   text: {fileID: 4905684689494864805}
   bullet: {fileID: 270624336992509730, guid: f51c10b8fb561144185f21fdf6e39996, type: 3}
   boucheDeCanon: {fileID: 2511378110466890716}
   gun: {fileID: 1351738998861982765}
-  crosshair: {fileID: 4905684688314579034}
 --- !u!143 &4905684690062875949
 CharacterController:
   m_ObjectHideFlags: 0
