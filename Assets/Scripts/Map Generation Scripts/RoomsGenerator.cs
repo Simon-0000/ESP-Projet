@@ -4,8 +4,6 @@
 //connecter toute la carte.
 
 using System.Collections.Generic;
-using TheKiwiCoder;
-using Unity.VisualScripting;
 using UnityEngine;
 using Random = UnityEngine.Random;
 namespace Assets
@@ -25,8 +23,10 @@ namespace Assets
       {
          List<Noeud<RectangleInfo2d>> leafNodes = Algos.FilterNoeudsFeuilles(BinarySpacePartitioning.GénérerBSP(new Noeud<RectangleInfo2d>(null, mapDimensions), TrySplitRoom));
          LinkRoomsByPhysicalConnections(leafNodes);
-         
-         //DFS ici(la classe existe, mais elle n'est pas utilisée pour le moment)
+            //DFS ici(la classe existe, mais elle n'est pas utilisée pour le moment)
+         //leafNodes = DepthFirstSearch.GetPath<RectangleInfo2d>(leafNodes[0], null);
+         //foreach (Noeud<RectangleInfo2d> leaf in leafNodes)
+             //Debug.Log(leaf.NoeudsEnfants.Count);
          return leafNodes;
       }
       
@@ -94,7 +94,7 @@ namespace Assets
       static bool AreRoomsConnected(RectangleInfo2d roomA, RectangleInfo2d roomB)
       {
          Vector2 distance = roomA.coordinates - roomB.coordinates;
-         distance = distance.Abs();
+         distance = Algos.GetVectorAbs(distance);
          Vector2 roomOverlap = new(distance.x - (roomA.size.x + roomB.size.x)/2,distance.y - (roomA.size.y + roomB.size.y)/2);
          return roomOverlap.x <= 0 && roomOverlap.y <= 0;
       }

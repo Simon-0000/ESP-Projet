@@ -5,7 +5,7 @@
 using System;
 using UnityEngine;
 using Random = UnityEngine.Random;
-
+using Parabox.CSG;
 using Assets;
 
 namespace Assets
@@ -44,11 +44,12 @@ namespace Assets
             
             //Instancier le sol:
             floorObject.InstantiateProceduralTiledObject(roomObj.transform, RoomDimensions,0);
-            
+
             //Instancier le plafond (pas implémenté pour les tests)
-            
+
             //Instancier les objets de la pièce (pas implémenté)
-            
+
+
         }
     }
 }

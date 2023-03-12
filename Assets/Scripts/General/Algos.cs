@@ -56,5 +56,35 @@ namespace Assets
             }
             return noeudsFeuilles;
         }
+
+        static public Mesh CenterVertices(Mesh src) 
+        {
+
+            Vector3[] vertices = src.vertices;
+            Vector3 MinVertices = vertices[0], MaxVertices = MinVertices, Offset;
+            for (int i = 0; i < vertices.Length; ++i)
+            {
+                for (int j = 0; j < 3; ++j)
+                {
+                    if (vertices[i][j] < MinVertices[j])
+                        MinVertices[j] = vertices[i][j];
+                    else if (vertices[i][j] > MaxVertices[j])
+                        MaxVertices[j] = vertices[i][j];
+                }
+            }
+            Offset.x = -MinVertices.x - Mathf.Abs(MinVertices.x - MaxVertices.x) / 2;
+            Offset.y = -MinVertices.y - Mathf.Abs(MinVertices.y - MaxVertices.y) / 2;
+            Offset.z = -MinVertices.z - Mathf.Abs(MinVertices.z - MaxVertices.z) / 2;
+            for (int i = 0; i < vertices.Length; ++i)
+            {
+                vertices[i] += Offset;
+            }
+            Mesh mesh = src;
+            mesh.vertices = vertices;
+            mesh.RecalculateBounds();
+            mesh.RecalculateNormals();
+            return mesh;
+        }
+
     }
 }

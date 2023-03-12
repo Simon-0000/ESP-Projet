@@ -7,10 +7,15 @@
 using UnityEngine;
 using Assets;
 using System.Linq;
+using System.Collections.Generic;
+using Parabox.CSG;
+
 
 [RequireComponent(typeof(ProceduralObject))]
 public class ProceduralTiledCubeObject : MonoBehaviour
 {
+    const float OVERLAP_TOLERANCE = -0.002f;
+
     [SerializeField] 
     VectorRange[] scales;// Les valeurs de «scales» sont utilisées comme des uvs où 0 représente une grandeur de 0
                          // et 1 représente la grandeur du parent
@@ -23,11 +28,12 @@ public class ProceduralTiledCubeObject : MonoBehaviour
     [SerializeField]
     bool wrapsAround = true;//Permet de contourner les objets qui se trouve dans le chemin (pas implémenté)
                             //(ex: un mur qui contourne une porte)
-    
+   
                             
     ProceduralObject proceduralObj;
     public void Awake() 
     {
+        
         proceduralObj = GetComponent<ProceduralObject>();
         proceduralObj.Awake();
         
@@ -38,9 +44,10 @@ public class ProceduralTiledCubeObject : MonoBehaviour
         //Chaque variation de l'objet à instancier doit être un cube
         for(int i = 0; i < proceduralObj.objectVariations.Length; ++i) 
             Debug.Assert(proceduralObj.objectVariations[i].GetComponent<MeshFilter>().sharedMesh.name == "Cube");
+        CSG.epsilon = Mathf.Abs(OVERLAP_TOLERANCE);
     }
 
-
+    
     public GameObject InstantiateProceduralTiledObject(Transform parent, Vector3 parentDimensions,int variationIndex)
     {
         return InstantiateProceduralTiledObject(parent,parentDimensions,variationIndex,Random.Range(0,scales.Length));
@@ -53,12 +60,90 @@ public class ProceduralTiledCubeObject : MonoBehaviour
         TileUvs(tuileObject, tileSize);
         StretchVertices(tuileObject, tileSize);
         proceduralObj.SetRandomRelativePlacement(tuileObject, parentDimensions, placementIndex);
+        WrapMesh(tuileObject, tileSize);
         return tuileObject;
     }
     
     
     
-    
+    private void WrapMesh(GameObject obj, Vector3 size) 
+    {
+        if(wrapsAround == true)
+        {
+            Collider[] colliders = Physics.OverlapBox(obj.transform.position, size / 2);
+            Debug.Log("NBR COLLISIONS: "  + colliders.Length);
+            foreach (Collider collider in colliders)
+                if (obj != collider.gameObject)
+                    HollowOutMesh(obj, collider);
+        }
+
+    }
+    private static void HollowOutMesh(GameObject obj, Collider collider)
+    {
+        if (obj == null || collider.gameObject == null)
+            return;
+        Vector3 distance = Algos.GetVectorAbs(obj.transform.position - collider.transform.position);
+        Vector3 sizeObj = obj.GetComponent<MeshRenderer>().bounds.size;
+        Vector3 sizeCollider = collider.bounds.size;
+        Vector3 roomOverlap = new(distance.x - (sizeObj.x + sizeCollider.x) / 2, distance.y - (sizeObj.y + sizeCollider.y) / 2, distance.z - (sizeObj.z + sizeCollider.z) / 2);
+
+        List<(float, int)> cuts = new();
+
+        for(int i = 0; i < 3; ++i) 
+        {
+            if (roomOverlap[i] >= OVERLAP_TOLERANCE)
+            {
+                return;
+            } 
+        }
+        try
+        {
+            Model result = CSG.Subtract(obj, collider.gameObject);
+            obj.GetComponent<MeshFilter>().sharedMesh = Algos.CenterVertices(result.mesh);
+            obj.GetComponent<MeshRenderer>().sharedMaterials = result.materials.ToArray();
+        } catch
+        {
+            Debug.Log("ERROR: COULDNT USE CSG LIBRARY TO HOLLOW OUT TILE");
+
+        }
+    }
+
+    //private static void ModifyMesh(GameObject obj, Model operationResult)
+    //{
+
+
+        //    //Vector3[] vertices = operationResult.mesh.vertices;
+        //    //Vector3 MinVertices = vertices[0],MaxVertices = MinVertices, Offset;
+        //    //for(int i = 0; i < vertices.Length; ++i)
+        //    //{
+        //    //    for(int j = 0; j < 3; ++j)
+        //    //    {
+        //    //        if (vertices[i][j] < MinVertices[j])
+        //    //            MinVertices[j] = vertices[i][j];
+        //    //        else if (vertices[i][j] > MaxVertices[j])
+        //    //            MaxVertices[j] = vertices[i][j];
+        //    //    }
+        //    //}
+        //    //Offset.x = -MinVertices.x - Mathf.Abs(MinVertices.x - MaxVertices.x) / 2;
+        //    //Offset.y = -MinVertices.y - Mathf.Abs(MinVertices.y - MaxVertices.y) / 2;
+        //    //Offset.z = -MinVertices.z - Mathf.Abs(MinVertices.z - MaxVertices.z) / 2;
+        //    //for (int i = 0; i < vertices.Length; ++i)
+        //    //{
+        //    //    vertices[i] += Offset;
+        //    //}
+        //    //obj.GetComponent<MeshFilter>().sharedMesh.vertices = vertices;
+        //    /*
+        //    GameObject intersection = new GameObject();
+        //    intersection.transform.parent = obj.transform.parent;
+
+        //    intersection.AddComponent<MeshFilter>().sharedMesh = operationResult.mesh;
+        //    intersection.AddComponent<MeshRenderer>().sharedMaterials = operationResult.materials.ToArray();
+        //    */
+        //}
+
+
+
+
     private static int[] cubeAxisA = { 0, 0, 0 , 0, 2, 2 };//Représente les axes de chaque face/plan du cube Unity
     private static int[] cubeAxisB = { 1, 2, 1, 2, 1, 1 };
     private static void TileUvs(GameObject obj, Vector3 globalStretchSize)

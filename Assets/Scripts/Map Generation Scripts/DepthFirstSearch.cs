@@ -11,33 +11,35 @@ using UnityEngine;
 
 
 
-
-public static class DepthFirstSearch<T>
+namespace Assets
 {
-    public static List<Noeud<T>> Path(Noeud<T> startingNode,Noeud<T> endNode)
+    static class DepthFirstSearch
     {
-      
-        var visitedNodes = new List<Noeud<T>>();
-        var stackNode = new Stack<Noeud<T>>();
-        stackNode.Push(startingNode);
-
-        while (stackNode.Count > 0)
+        public static List<Noeud<T>> GetPath<T>(Noeud<T> startingNode, Noeud<T> endNode)
         {
-            var currentNode = stackNode.Pop();
-            if (!visitedNodes.Contains(currentNode))
+
+            var visitedNodes = new List<Noeud<T>>();
+            var stackNode = new Stack<Noeud<T>>();
+            stackNode.Push(startingNode);
+
+            while (stackNode.Count > 0)
             {
-               
-                visitedNodes.Add(currentNode);
-                if (currentNode==endNode)
-                    break;
-                
-                foreach (var childNode in currentNode.NoeudsEnfants)
+                var currentNode = stackNode.Pop();
+                if (!visitedNodes.Exists(n=> object.ReferenceEquals(n,currentNode)))
                 {
-                    stackNode.Push(childNode);
+
+                    visitedNodes.Add(currentNode);
+                    if (currentNode == endNode)
+                        break;
+                    
+                    foreach (var childNode in currentNode.NoeudsEnfants)
+                    {
+                        stackNode.Push(childNode);
+                    }
                 }
             }
-        }
 
-        return visitedNodes;
+            return visitedNodes;
+        }
     }
 }

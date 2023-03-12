@@ -154,14 +154,14 @@ MonoBehaviour:
   - startAt: {x: 0, y: 1, z: 1}
     endAt: {x: 0, y: 1, z: 1}
   scaleOffsets:
-  - startAt: {x: -0.1, y: 0, z: 0.1}
-    endAt: {x: -0.1, y: 0, z: 0.1}
-  - startAt: {x: -0.1, y: 0, z: 0.1}
-    endAt: {x: -0.1, y: 0, z: 0.1}
-  - startAt: {x: 0.1, y: 0, z: -0.1}
-    endAt: {x: 0.1, y: 0, z: -0.1}
-  - startAt: {x: 0.1, y: 0, z: -0.1}
-    endAt: {x: 0.1, y: 0, z: -0.1}
+  - startAt: {x: -0.2, y: 0, z: 0.1}
+    endAt: {x: -0.2, y: 0, z: 0.1}
+  - startAt: {x: -0.2, y: 0, z: 0.1}
+    endAt: {x: -0.2, y: 0, z: 0.1}
+  - startAt: {x: 0.1, y: 0, z: -0.2}
+    endAt: {x: 0.1, y: 0, z: -0.2}
+  - startAt: {x: 0.1, y: 0, z: -0.2}
+    endAt: {x: 0.1, y: 0, z: -0.2}
   wrapsAround: 1
 --- !u!114 &1018625573218568548
 MonoBehaviour:
@@ -571,7 +571,7 @@ MonoBehaviour:
   scaleOffsets:
   - startAt: {x: 0, y: 0.05, z: 0}
     endAt: {x: 0, y: 0.05, z: 0}
-  wrapsAround: 1
+  wrapsAround: 0
 --- !u!114 &2956627328167554219
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -593,8 +593,8 @@ MonoBehaviour:
   - startAt: {x: 0, y: 0, z: 0}
     endAt: {x: 0, y: 0, z: 0}
   offsets:
-  - startAt: {x: 0, y: -0.05, z: 0}
-    endAt: {x: 0, y: -0.05, z: 0}
+  - startAt: {x: 0, y: -0.025, z: 0}
+    endAt: {x: 0, y: -0.025, z: 0}
   XIsConstrained: 1
   YIsConstrained: 1
   ZIsConstrained: 1
