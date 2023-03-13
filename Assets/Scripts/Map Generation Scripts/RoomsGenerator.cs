@@ -25,6 +25,11 @@ namespace Assets
          List<Noeud<RectangleInfo2d>> leafNodes = Algos.FilterNoeudsFeuilles(BinarySpacePartitioning.GénérerBSP(new Noeud<RectangleInfo2d>(null, mapDimensions), TrySplitRoom));
          LinkRoomsByPhysicalConnections(leafNodes);
             //DFS ici(la classe existe, mais elle n'est pas utilisée pour le moment)
+            foreach (var VARIABLE in leafNodes)
+            {
+               if(VARIABLE.NoeudsEnfants.Count==0)
+                  Debug.Log("trashhhhhhhhhhhhhhhhhhhh");
+            }
          leafNodes = DepthFirstSearch.GetAlgorithmPath<RectangleInfo2d>(leafNodes,leafNodes[0], null).Distinct().ToList();
          //foreach (Noeud<RectangleInfo2d> leaf in leafNodes)
              //Debug.Log(leaf.NoeudsEnfants.Count);

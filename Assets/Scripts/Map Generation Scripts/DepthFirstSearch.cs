@@ -43,7 +43,7 @@ namespace Assets
                         
                         
                         isVisited.TryGetValue(childNode, out result);
-                        if (!result)
+                        if (!result&&childNode!=currentNode)
                         {
                             isVisited[childNode] = true;
                             stackNode.Push(childNode);
