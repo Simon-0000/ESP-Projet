@@ -13,11 +13,16 @@ public class DroneBehaviour : MonoBehaviour {
     private Vector3[] splinePoints; // the points for the spline
 
     void Start () {
+        MakePath();
+    }
+
+    void MakePath()
+    {
         // create the spline points
         List<Vector3> points = new List<Vector3>();
         points.Add(transform.position);
-        for (int i = 0; i < 10; i++) {
-            Vector3 point = new Vector3(Random.Range(-10.0f, 10.0f), Random.Range(-10.0f, 10.0f), Random.Range(-10.0f, 10.0f));
+        for (int i = 0; i < 5; i++) {
+            Vector3 point = new Vector3(Random.Range(transform.position.x, target.transform.position.x), Random.Range(transform.position.y, target.transform.position.y), Random.Range(transform.position.z, target.transform.position.z));
             points.Add(point);
         }
         points.Add(target.position);
@@ -28,17 +33,20 @@ public class DroneBehaviour : MonoBehaviour {
         args.Add("path", splinePoints);
         args.Add("time", splineTime);
         args.Add("easetype", iTween.EaseType.easeInOutSine);
-        args.Add("looptype", iTween.LoopType.loop);
-        iTween.MoveTo(gameObject, args);
+        //args.Add("looptype", iTween.LoopType.loop);
+        iTween.MoveTo(gameObject,args);
     }
 
     void Update () {
         // move the drone towards the player
-        Vector3 targetPosition = target.position - target.forward * followDistance;
-        transform.position = Vector3.Lerp(transform.position, targetPosition, Time.deltaTime * speed);
+        //Vector3 targetPosition = target.position - target.forward * followDistance;
+        //transform.position = Vector3.Lerp(transform.position, targetPosition, Time.deltaTime * speed);
 
         // rotate the drone towards the player
-        Vector3 targetRotation = Quaternion.LookRotation(target.position - transform.position).eulerAngles;
-        transform.rotation = Quaternion.Euler(0, targetRotation.y, 0);
+        //Vector3 targetRotation = Quaternion.LookRotation(target.position - transform.position).eulerAngles;
+        //transform.rotation = Quaternion.Euler(0, targetRotation.y, 0);
+        
+        
+        
     }
 }
