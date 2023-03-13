@@ -71,8 +71,8 @@ public class ProceduralTiledCubeObject : MonoBehaviour
         if(wrapsAround == true)
         {
             Collider[] colliders = Physics.OverlapBox(obj.transform.position, size / 2);
-            Debug.Log("NBR COLLISIONS: "  + colliders.Length);
-            foreach (Collider collider in colliders)
+           // Debug.Log("NBR COLLISIONS: "  + colliders.Length);
+           foreach (Collider collider in colliders)
                 if (obj != collider.gameObject)
                     HollowOutMesh(obj, collider);
         }

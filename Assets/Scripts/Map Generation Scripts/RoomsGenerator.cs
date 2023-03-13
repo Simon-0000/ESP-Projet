@@ -6,6 +6,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Random = UnityEngine.Random;
+using System.Linq;
 namespace Assets
 {
    class RoomsGenerator
@@ -24,7 +25,7 @@ namespace Assets
          List<Noeud<RectangleInfo2d>> leafNodes = Algos.FilterNoeudsFeuilles(BinarySpacePartitioning.GénérerBSP(new Noeud<RectangleInfo2d>(null, mapDimensions), TrySplitRoom));
          LinkRoomsByPhysicalConnections(leafNodes);
             //DFS ici(la classe existe, mais elle n'est pas utilisée pour le moment)
-         //leafNodes = DepthFirstSearch.GetPath<RectangleInfo2d>(leafNodes[0], null);
+         leafNodes = DepthFirstSearch.GetAlgorithmPath<RectangleInfo2d>(leafNodes,leafNodes[0], null).Distinct().ToList();
          //foreach (Noeud<RectangleInfo2d> leaf in leafNodes)
              //Debug.Log(leaf.NoeudsEnfants.Count);
          return leafNodes;
