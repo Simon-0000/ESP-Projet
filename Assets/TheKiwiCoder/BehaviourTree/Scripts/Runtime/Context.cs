@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
+// modification du script pour qu'il marche dans notre jeux, sergio abreo alvarez
 namespace TheKiwiCoder {
 
     // The context is a shared object every node has access to.
