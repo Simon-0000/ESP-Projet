@@ -78,28 +78,24 @@ public class ProceduralTiledCubeObject : MonoBehaviour
     }
     private static void HollowOutMesh(GameObject obj, Collider collider)
     {
-        if (obj == null || collider.gameObject == null)
+        if (obj == null || collider.gameObject == null || collider.gameObject.GetComponent<MeshRenderer>() == null)
             return;
-        Vector3 distance = Algos.GetVectorAbs(obj.transform.position - collider.transform.position);
-        Vector3 sizeObj = obj.GetComponent<MeshRenderer>().bounds.size;
-        Vector3 sizeCollider = collider.bounds.size;
         Vector3 roomOverlap = Algos.GetColliderOverlap(obj, collider);//new(distance.x - (sizeObj.x + sizeCollider.x) / 2, distance.y - (sizeObj.y + sizeCollider.y) / 2, distance.z - (sizeObj.z + sizeCollider.z) / 2);
 
         List<(float, int)> cuts = new();
 
-        for(int i = 0; i < 3; ++i) 
-        {
-            if (roomOverlap[i] <= Algos.OVERLAP_TOLERANCE)
-            {
-                return;
-            } 
-        }
+        if (!Algos.IsColliderOverlaping(roomOverlap, Algos.OVERLAP_TOLERANCE)) 
+            return;
         try
         {
             Model result = CSG.Subtract(obj, collider.gameObject);
             obj.GetComponent<MeshFilter>().sharedMesh = Algos.CenterVertices(result.mesh);
             obj.GetComponent<MeshRenderer>().sharedMaterials = result.materials.ToArray();
-        } catch
+            obj.AddComponent<MeshCollider>().sharedMesh = obj.GetComponent<MeshFilter>().sharedMesh;
+            Destroy(obj.GetComponent<BoxCollider>());
+
+        }
+        catch
         {
             Debug.Log("ERROR: COULDNT USE CSG LIBRARY TO HOLLOW OUT TILE");
         }

@@ -32,7 +32,17 @@ namespace Assets
         {
             return new Vector2(Mathf.Abs(src.x), Mathf.Abs(src.y));
         }
-        
+
+        public static Vector3 Vector2dTo3dVector(Vector2 vector2)
+        {
+            return Vector2dTo3dVector(vector2, 0);
+        }
+        public static Vector3 Vector2dTo3dVector(Vector2 vector2d, float height)
+        {
+            return new Vector3(vector2d.x, height, vector2d.y); ;
+        }
+
+
         //Cette fonction permet de prendre une certaine longueur (availableLength) et trouver une coupure aléatoire qui 
         //donnerait deux longueurs plus grandes ou égales à minimumCutLength 
         public static float FindRandomCut(float availableCutLength, float minimumCutLength)
@@ -67,16 +77,19 @@ namespace Assets
 
             Vector3[] vertices = src.vertices;
             Vector3 MinVertices = vertices[0], MaxVertices = MinVertices, Offset;
-            for (int i = 0; i < vertices.Length; ++i)
-            {
-                for (int j = 0; j < 3; ++j)
-                {
-                    if (vertices[i][j] < MinVertices[j])
-                        MinVertices[j] = vertices[i][j];
-                    else if (vertices[i][j] > MaxVertices[j])
-                        MaxVertices[j] = vertices[i][j];
-                }
-            }
+            //for (int i = 0; i < vertices.Length; ++i)
+            //{
+            //    for (int j = 0; j < 3; ++j)
+            //    {
+            //        if (vertices[i][j] < MinVertices[j])
+            //            MinVertices[j] = vertices[i][j];
+            //        else if (vertices[i][j] > MaxVertices[j])
+            //            MaxVertices[j] = vertices[i][j];
+            //    }
+            //}
+            MinVertices = src.bounds.min;
+            MaxVertices = src.bounds.max;
+
             Offset.x = -MinVertices.x - Mathf.Abs(MinVertices.x - MaxVertices.x) / 2;
             Offset.y = -MinVertices.y - Mathf.Abs(MinVertices.y - MaxVertices.y) / 2;
             Offset.z = -MinVertices.z - Mathf.Abs(MinVertices.z - MaxVertices.z) / 2;
@@ -103,21 +116,31 @@ namespace Assets
         {
             for (int i = 0; i < 3; ++i)
             {
-                if (overlap[i] >= overlapMin)
+                if (overlap[i] <= overlapMin)
                 {
-
+                    return false;
                 }
             }
 
-            return false;
+            return true;
         }
-        public static Vector3 Vector2dTo3dVector(Vector2 vector2)
+        public static Bounds GetRendererBounds(GameObject obj) //Le code de cette fonction a été pris de turnipski: https://www.reddit.com/r/Unity3D/comments/30y46p/getting_the_total_bounds_of_a_prefab_with/
         {
-            return Vector2dTo3dVector(vector2, 0);
-        }
-        public static Vector3 Vector2dTo3dVector(Vector2 vector2d, float height) 
-        {
-            return new Vector3(vector2d.x, height, vector2d.y); ;
+            Renderer[] renderers = obj.GetComponentsInChildren<Renderer>();
+
+            if (renderers.Length > 0)
+            {
+                Bounds bounds = renderers[0].bounds;
+                for (int i = 1, ni = renderers.Length; i < ni; i++)
+                {
+                    bounds.Encapsulate(renderers[i].bounds);
+                }
+                return bounds;
+            }
+            else
+            {
+                return new Bounds();
+            }
         }
     }
 }

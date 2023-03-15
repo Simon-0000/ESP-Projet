@@ -17,12 +17,14 @@ namespace Assets
       RectangleInfo2d mapDimensions;
       private const float ACCEPTABLE_ZERO_VALUE = 0.00001f;//Valeur approximatif de zero qui doit être utilisé à cause d'une comparaison entre un float et la valeur 0
       private GameObject doorObject;
+      Bounds doorBounds;
       public RoomsGenerator(RectangleInfo2d mapDimensions, float roomSizeMin,float roomSizeMax,GameObject door)
       {
          this.roomSizeMin = roomSizeMin;
          this.roomSizeMax = roomSizeMax;
          this.mapDimensions = mapDimensions;
          doorObject = door;
+         doorBounds = Algos.GetRendererBounds(doorObject);
       }
       public List<Noeud<RectangleInfo2d>> GenerateRooms()
       {
@@ -90,7 +92,7 @@ namespace Assets
          {
             for (int j = i + 1; j < unlinkedRooms.Count; ++j)
             {
-                    if (AreRoomsConnected(unlinkedRooms[i].Valeur, unlinkedRooms[j].Valeur, doorObject.GetComponent<MeshRenderer>().bounds.size.x))
+                    if (AreRoomsConnected(unlinkedRooms[i].Valeur, unlinkedRooms[j].Valeur, doorBounds.size.x))
                {
                   unlinkedRooms[i].NoeudsEnfants.Add(unlinkedRooms[j]);
                   unlinkedRooms[j].NoeudsEnfants.Add(unlinkedRooms[i]);
@@ -120,7 +122,6 @@ namespace Assets
                Noeud<RectangleInfo2d>.EnleverLiensRéciproque(rooms[roomIndex], rooms[roomIndex].NoeudsEnfants[0]);
                rooms.RemoveAt(roomIndex);
                removalPercentage -= roomPercentage;
-               Debug.Log(removalPercentage);
             }
             ++iterationAttemps;
          }
@@ -146,11 +147,11 @@ namespace Assets
                 {
                     Vector2 roomOverlap = GetRoomOverlap(roomNodesCopy[i].Valeur, roomNodesCopy[i].NoeudsEnfants[j].Valeur);
                     Quaternion doorRotation;
-                    if (roomOverlap.x > doorObject.GetComponent<MeshRenderer>().bounds.size.x)
+                    if (roomOverlap.x > doorBounds.size.x)
                     {
                         doorRotation = Quaternion.identity;//Si la connection se trouve sur l'axe des x, on ne tourne pas la porte
 
-                    } else if (roomOverlap.y > doorObject.GetComponent<MeshRenderer>().bounds.size.x)
+                    } else if (roomOverlap.y > doorBounds.size.x)
                     {
                         doorRotation = Quaternion.Euler(0,90,0);//Si la connection se trouve sur l'axe des y(y en 2d ou z en 3d), on tourne la porte
                     }
@@ -158,11 +159,11 @@ namespace Assets
                         continue ;//Si une connection entre deux pièce est invalide on ignore la connection
                     }
 
-                    Vector2 distanceOffset = roomNodesCopy[i].Valeur.size / 2 - new Vector2(Algos.FindRandomCut(roomOverlap.x, doorObject.GetComponent<MeshRenderer>().bounds.size.x), Algos.FindRandomCut(roomOverlap.y, doorObject.GetComponent<MeshRenderer>().bounds.size.x));
+                    Vector2 distanceOffset = roomNodesCopy[i].Valeur.size / 2 - new Vector2(Algos.FindRandomCut(roomOverlap.x, doorBounds.size.x), Algos.FindRandomCut(roomOverlap.y, doorBounds.size.x));
                     Vector2 connectionDirectionSign = -Algos.GetVectorSign(roomNodesCopy[i].Valeur.coordinates - roomNodesCopy[i].NoeudsEnfants[j].Valeur.coordinates);
 
                     distanceOffset = Vector2.Scale(distanceOffset, connectionDirectionSign);
-                    Vector3 centerOffset = Algos.Vector2dTo3dVector(distanceOffset, doorObject.GetComponent<MeshRenderer>().bounds.size.y / 2);
+                    Vector3 centerOffset = Algos.Vector2dTo3dVector(distanceOffset, doorBounds.size.y / 2);
                     GameObject.Instantiate(doorObject, Algos.Vector2dTo3dVector(roomNodesCopy[i].Valeur.coordinates, 0) + centerOffset, doorRotation, parent);
 
 

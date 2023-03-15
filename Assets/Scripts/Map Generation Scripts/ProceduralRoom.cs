@@ -44,9 +44,10 @@ namespace Assets
             int wallVariation = Random.Range(0,wallObject.GetComponent<ProceduralObject>().objectVariations.Length);
             for(int i = 0; i < wallObject.GetComponent<ProceduralObject>().positions.Length; ++i)
                 wallObject.InstantiateProceduralTiledObject(roomObj.transform, RoomDimensions, wallVariation, i);
-            
+
             //Instancier le sol:
-            floorObject.InstantiateProceduralTiledObject(roomObj.transform, RoomDimensions,0);
+            int floorVariation = Random.Range(0, floorObject.GetComponent<ProceduralObject>().objectVariations.Length);
+            floorObject.InstantiateProceduralTiledObject(roomObj.transform, RoomDimensions, floorVariation);
 
             //Instancier le plafond (pas implémenté pour les tests)
 
