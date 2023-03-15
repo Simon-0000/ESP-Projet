@@ -29,6 +29,7 @@ public class Patrol : ActionNode
         if (hostPosition == context.agent.destination)
         {
             context.agent.destination = context.zombie.patrolLocations[counter++];
+            Debug.Log($" x:{context.agent.destination.x} y:{context.agent.destination.y} z:{context.agent.destination.z}");
             if (counter == context.zombie.patrolLocations.Count)
                 counter = 0;
         }
