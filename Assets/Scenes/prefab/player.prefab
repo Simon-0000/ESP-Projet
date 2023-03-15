@@ -443,8 +443,8 @@ GameObject:
   - component: {fileID: 4905684690062875948}
   - component: {fileID: 4905684690062875951}
   - component: {fileID: 4905684690062875950}
-  - component: {fileID: 4014804487950775876}
   - component: {fileID: 4905684690062875949}
+  - component: {fileID: 6609024921178830964}
   m_Layer: 0
   m_Name: player
   m_TagString: Untagged
@@ -511,23 +511,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 5
   jumpHeigth: 1
---- !u!114 &4014804487950775876
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4905684690062875924}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d9a8e2b5039e3564094bde5d9bbffc06, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  crosshair: {fileID: 4905684688314579034}
-  text: {fileID: 4905684689494864805}
-  bullet: {fileID: 270624336992509730, guid: f51c10b8fb561144185f21fdf6e39996, type: 3}
-  boucheDeCanon: {fileID: 2511378110466890716}
-  gun: {fileID: 1351738998861982765}
 --- !u!143 &4905684690062875949
 CharacterController:
   m_ObjectHideFlags: 0
@@ -546,6 +529,23 @@ CharacterController:
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
   m_Center: {x: 0, y: 0.6, z: 0}
+--- !u!114 &6609024921178830964
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4905684690062875924}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7e43ba61e9ad2d34f96c85ae3b8f587b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  text: {fileID: 4905684689494864805}
+  bullet: {fileID: 270624336992509730, guid: f51c10b8fb561144185f21fdf6e39996, type: 3}
+  boucheDeCanon: {fileID: 2511378110466890716}
+  gun: {fileID: 1351738998861982765}
+  crosshair: {fileID: 4905684688314579034}
 --- !u!1 &4905684690193178105
 GameObject:
   m_ObjectHideFlags: 0
