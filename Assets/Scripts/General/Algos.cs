@@ -37,6 +37,10 @@ namespace Assets
         //donnerait deux longueurs plus grandes ou égales à minimumCutLength 
         public static float FindRandomCut(float availableCutLength, float minimumCutLength)
         {
+            if(availableCutLength <= 2 * minimumCutLength)
+            {
+                minimumCutLength = availableCutLength / 2;
+            }
             if (Random.Range(0, 2) == 0)
                 return availableCutLength / 2 + Random.Range(0, availableCutLength / 2 - minimumCutLength);
             return availableCutLength / 2 - Random.Range(0, availableCutLength / 2 - minimumCutLength);
@@ -106,6 +110,14 @@ namespace Assets
             }
 
             return false;
+        }
+        public static Vector3 Vector2dTo3dVector(Vector2 vector2)
+        {
+            return Vector2dTo3dVector(vector2, 0);
+        }
+        public static Vector3 Vector2dTo3dVector(Vector2 vector2d, float height) 
+        {
+            return new Vector3(vector2d.x, height, vector2d.y); ;
         }
     }
 }
