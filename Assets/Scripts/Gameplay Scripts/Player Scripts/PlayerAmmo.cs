@@ -19,7 +19,7 @@ public class PlayerAmmo : MonoBehaviour
 
     [SerializeField] private Image crosshair;
 
-    private Vector3 unAimedPosition = new Vector3(0.284f, -0.4f, 0.385f);
+    private Vector3 unAimedPosition = new Vector3(0.284f, -0.4f, -0.07f);
     private Vector3 aimedposition = new Vector3(0.00085f, -0.16f, 0.296f);
     private Vector3 deplacement;
     private int ammo;

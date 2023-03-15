@@ -12,7 +12,7 @@ public class PlayerMotor : MonoBehaviour
     private float gravity = -9.8f;
 
      public float speed = 5f;
-     public float jumpHeigth = 1f;
+     public float jumpHeigth;
     
 
     // Start is called before the first frame update
@@ -46,7 +46,7 @@ public class PlayerMotor : MonoBehaviour
     public void Jump()
     {
         if(isgrounded)
-            velocity.y = Mathf.Sqrt(-1*gravity);
+            velocity.y = Mathf.Sqrt(-jumpHeigth*gravity);
           
         
     }
