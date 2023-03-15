@@ -16,8 +16,8 @@ namespace Assets
       float roomSizeMin,roomSizeMax, grandeur;
       RectangleInfo2d mapDimensions;
       private const float ACCEPTABLE_ZERO_VALUE = 0.00001f;//Valeur approximatif de zero qui doit être utilisé à cause d'une comparaison entre un float et la valeur 0
-      private ProceduralObject doorObject;
-      public RoomsGenerator(RectangleInfo2d mapDimensions, float roomSizeMin,float roomSizeMax,ProceduralObject door)
+      private GameObject doorObject;
+      public RoomsGenerator(RectangleInfo2d mapDimensions, float roomSizeMin,float roomSizeMax,GameObject door)
       {
          this.roomSizeMin = roomSizeMin;
          this.roomSizeMax = roomSizeMax;
@@ -29,6 +29,7 @@ namespace Assets
          List<Noeud<RectangleInfo2d>> leafNodes = Algos.FilterNoeudsFeuilles(BinarySpacePartitioning.GénérerBSP(new Noeud<RectangleInfo2d>(null, mapDimensions), TrySplitRoom));
          LinkRoomsByPhysicalConnections(leafNodes);
          leafNodes = DepthFirstSearch.GetPath<RectangleInfo2d>(leafNodes,leafNodes[0], null);
+
          DepthFirstSearch.ConnectNodesAccordingToPath(leafNodes);
          leafNodes = leafNodes.Distinct().ToList();
 
@@ -89,7 +90,7 @@ namespace Assets
          {
             for (int j = i + 1; j < unlinkedRooms.Count; ++j)
             {
-               if (AreRoomsConnected(unlinkedRooms[i].Valeur,unlinkedRooms[j].Valeur))
+                    if (AreRoomsConnected(unlinkedRooms[i].Valeur, unlinkedRooms[j].Valeur, doorObject.GetComponent<MeshRenderer>().bounds.size.x))
                {
                   unlinkedRooms[i].NoeudsEnfants.Add(unlinkedRooms[j]);
                   unlinkedRooms[j].NoeudsEnfants.Add(unlinkedRooms[i]);
@@ -98,16 +99,18 @@ namespace Assets
          }
       }
 
-      static bool AreRoomsConnected(RectangleInfo2d roomA, RectangleInfo2d roomB)
+      static bool AreRoomsConnected(RectangleInfo2d roomA, RectangleInfo2d roomB,float minOverlapOnASide)
       {
-         Vector2 roomOverlap = GetRoomOverlap(roomA, roomB);
-         return roomOverlap.x <= ACCEPTABLE_ZERO_VALUE && roomOverlap.y <= ACCEPTABLE_ZERO_VALUE;
+            Vector2 roomOverlap = GetRoomOverlap(roomA, roomB);
+            bool isConnected = roomOverlap.x >= -ACCEPTABLE_ZERO_VALUE && roomOverlap.y >= -ACCEPTABLE_ZERO_VALUE;
+            bool overlapIsSufficient = roomOverlap.x >= minOverlapOnASide || roomOverlap.y >= minOverlapOnASide;
+            return isConnected && overlapIsSufficient;
       }
       
       static Vector2 GetRoomOverlap(RectangleInfo2d roomA, RectangleInfo2d roomB)
       {
          Vector2 distance = Algos.GetVectorAbs(roomA.coordinates - roomB.coordinates);
-         return new(distance.x - (roomA.size.x + roomB.size.x)/2,distance.y - (roomA.size.y + roomB.size.y)/2);
+         return -new Vector2(distance.x - (roomA.size.x + roomB.size.x)/2,distance.y - (roomA.size.y + roomB.size.y)/2);
       }
 
       const int MAX_ITERATION_ATTEMPS = 100;
@@ -128,6 +131,14 @@ namespace Assets
             ++iterationAttemps;
          }
       }
-      
+        public void InstantiateRooms(ProceduralRoom[] roomObjects, List<Noeud<RectangleInfo2d>> roomsNodes,Transform parent) 
+        {
+            for (int i = 0; i < roomsNodes.Count; ++i)
+            {
+                int roomTypeIndex = Random.Range(0, roomObjects.Length);
+                roomObjects[roomTypeIndex].InstantiateRoom(roomsNodes[i], parent);
+            }
+
+        }
    }
 }

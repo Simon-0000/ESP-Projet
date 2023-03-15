@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.18028352, g: 0.22571376, b: 0.30692244, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -446,7 +446,7 @@ Transform:
   m_GameObject: {fileID: 401092107}
   m_LocalRotation: {x: 0.040463384, y: -0.691716, z: 0.04533477, w: 0.7196086}
   m_LocalPosition: {x: -14.99, y: 1.9189129, z: -12.39}
-  m_LocalScale: {x: 3, y: 3, z: 3}
+  m_LocalScale: {x: 3, y: 4, z: 4}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -981,5 +981,6 @@ MonoBehaviour:
   largeurMap: 30
   wallSizeMin: 5
   wallSizeMax: 10
-  roomObject: {fileID: 7271430624650593193, guid: 491c178b4b960154f86a23e6d5b8c742, type: 3}
-  doorObject: {fileID: 0}
+  roomObjects:
+  - {fileID: 7271430624650593193, guid: 491c178b4b960154f86a23e6d5b8c742, type: 3}
+  doorObject: {fileID: 1891833553788042296, guid: d8c8c3336f423fb45b777c0cff99ce30, type: 3}

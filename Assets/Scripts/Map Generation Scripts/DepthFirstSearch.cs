@@ -53,15 +53,10 @@ namespace Assets
                     
                     if (result)
                     {
-                        //Si on a atteint la fin d'un chemin, on recule
                         stackNode.Pop();
                         if (!showCompletePath)
-                            visitedNodes.RemoveAt(visitedNodes.Count);
+                            visitedNodes.RemoveAt(visitedNodes.Count - 1);
                     }
-                    
-
-                    
-                
             }
 
             return visitedNodes;
