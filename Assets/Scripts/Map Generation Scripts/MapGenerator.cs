@@ -15,13 +15,19 @@ namespace Assets
       [SerializeField]
       float wallSizeMin, wallSizeMax;
       [SerializeField]
-      ProceduralRoom roomObject;
+      ProceduralRoom[] roomObjects;
 
       [SerializeField] 
-      ProceduralObject doorObject;
+      GameObject doorObject;
+
         bool mapHasRefreshed = true;
       void Awake()
       {
+            Debug.Assert(roomObjects.Length != 0);
+            for (int i = 0; i < roomObjects.Length; ++i)
+                Debug.Assert(roomObjects[i] != null);
+            Debug.Assert(doorObject != null);
+            Debug.Assert(Mathf.Max(wallSizeMin, wallSizeMax) < Mathf.Max(longueurMap, largeurMap));
          RefreshMap();
       }
 
@@ -50,12 +56,9 @@ namespace Assets
             //On génère les pièces
             List<Noeud<RectangleInfo2d>> noeudsPièces = bspPièces.GenerateRooms();
 
-            
+
             //On instancie les pièces
-            for (int i = 0; i < noeudsPièces.Count; ++i)
-            {
-                roomObject.InstantiateRoom(noeudsPièces[i], transform);
-            }
+            bspPièces.InstantiateRooms(roomObjects,noeudsPièces,transform);
 
             //On roule l'algorithme A* (pas implémenté)
 
