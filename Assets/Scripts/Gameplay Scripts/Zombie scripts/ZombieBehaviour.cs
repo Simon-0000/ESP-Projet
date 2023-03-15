@@ -51,6 +51,7 @@ public class ZombieBehaviour : MonoBehaviour
 
     private void DefinePatrolSequence()
     {
+        // fck u oli
         //trouver tout les GameObjects avec un EntryWaypoint ou DoorWaypoint
         EntryWaypoint[] windows = FindObjectsOfType<EntryWaypoint>();
         DoorWaypoint[] doors = FindObjectsOfType<DoorWaypoint>();
