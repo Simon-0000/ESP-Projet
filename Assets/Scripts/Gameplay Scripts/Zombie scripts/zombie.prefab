@@ -135,6 +135,8 @@ MonoBehaviour:
   Team: []
   patrolLocations: []
   inactiveTime: 0
+  fieldOfView: 90
+  target: {fileID: 0}
 --- !u!195 &7383446646913012884
 NavMeshAgent:
   m_ObjectHideFlags: 0

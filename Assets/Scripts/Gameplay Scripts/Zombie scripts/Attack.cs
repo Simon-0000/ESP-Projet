@@ -7,8 +7,7 @@ using TheKiwiCoder;
 [System.Serializable]
 public class Attack : ActionNode
 {
-    public GameObject target;
-    public ZombieBehaviour host;
+    private ZombieBehaviour host;
     protected override void OnStart() {
         host = context.zombie;
     }
