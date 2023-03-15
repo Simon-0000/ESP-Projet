@@ -7,20 +7,21 @@ using TheKiwiCoder;
 [System.Serializable]
 public class Chase : ActionNode
 {
-    public GameObject target;
-    public Vector3 hostPosition;
+    private ZombieBehaviour host;
 
     protected override void OnStart() {
-        hostPosition = context.transform.position;
+        host = context.zombie;
+        host.ManageChase();
     }
 
     protected override void OnStop() {
     }
 
     protected override State OnUpdate() {
-        if (!((target.transform.position - hostPosition).sqrMagnitude > 1))
+        if (host.CanChangeState(3))
             return State.Success;
 
+        host.ManageChase();
         return State.Running;
     }
 }

@@ -20,10 +20,12 @@ public class ZombieBehaviour : MonoBehaviour
     [SerializeField] public List<ZombieBehaviour> Team;
     [SerializeField] public List<Vector3> patrolLocations;
     [SerializeField] private float inactiveTime;
-    const int BaseHealth = 20;
-    const int BaseDamage = 5;
-    const int BaseSpeed = 10;
-    private LazerComponent lazer;
+    [SerializeField] private float fieldOfView = 90;
+    [SerializeField] private GameObject target;
+    int patrolIndexCounter = 0;
+    const int BaseHealth = 100;
+    const int BaseDamage = 10;
+    const int BaseSpeed = 3;
 
     void Start()
     {
@@ -35,6 +37,10 @@ public class ZombieBehaviour : MonoBehaviour
         isOnTeam = false;
         isLeader = false;
         DefinePatrolSequence();
+        DefineTarget();
+        GetComponent<NavMeshAgent>().speed = speed;
+        GetComponent<NavMeshAgent>().speed = speed * 1.5f;
+        GetComponent<NavMeshAgent>().destination = patrolLocations[patrolIndexCounter];
     }
 
     private void Update()
@@ -47,7 +53,11 @@ public class ZombieBehaviour : MonoBehaviour
         }
     }
 
-    
+    private void DefineTarget()
+    {
+        ZombieManager manager = FindObjectOfType<ZombieManager>();
+        target = manager.player;
+    }
 
     private void DefinePatrolSequence()
     {
@@ -59,23 +69,52 @@ public class ZombieBehaviour : MonoBehaviour
         System.Random indexGenerator = new System.Random();
 
         //ajouter la postion de l'entrée pour dans la liste de waypoints
-        patrolLocations.Add(windows[indexGenerator.Next(windows.Length)].entryWaypoint);
-
-        //ajouter les points de patroulle pour le zombie en ordre aleatoire,
-        //on veut remplir la liste avec toutes les positions de toutes portes de la carte et une fenêtre de la carte
-        do
+        if(windows.Length + doors.Length > 0)
         {
-            int randomIndex = indexGenerator.Next(doors.Length);
-            if (!patrolLocations.Contains(doors[randomIndex].waypointLocation))
-                patrolLocations.Add(doors[randomIndex].waypointLocation);
-        } while (patrolLocations.Count <(doors.Length + 1));
 
+            patrolLocations.Add(windows[indexGenerator.Next(windows.Length)].entryWaypoint);
+
+            //ajouter les points de patroulle pour le zombie en ordre aleatoire,
+            //on veut remplir la liste avec toutes les positions de toutes portes de la carte et une fenêtre de la carte
+            do
+            {
+                int randomIndex = indexGenerator.Next(doors.Length);
+                if (!patrolLocations.Contains(doors[randomIndex].waypointLocation))
+                    patrolLocations.Add(doors[randomIndex].waypointLocation);
+            } while (patrolLocations.Count < (doors.Length));
+        }
+    }
+
+    public void ManagePatrol()
+    {
+       // GetComponent<NavMeshAgent>().destination = patrolLocations[patrolIndexCounter];
+        Debug.Log("patrol update was made");
+        if ((transform.position - GetComponent<NavMeshAgent>().destination).magnitude < 2)
+        {
+            GetComponent<NavMeshAgent>().destination = patrolLocations[patrolIndexCounter++];
+            if (patrolIndexCounter == patrolLocations.Count)
+                patrolIndexCounter = 0;
+        }
+    }
+
+    public void ManageChase()
+    {
+        GetComponent<NavMeshAgent>().destination = target.transform.position;
+        Debug.Log("chase update was made");
+        Debug.Log($" x:{target.transform.position.x} y:{target.transform.position.y} z:{target.transform.position.z}");
+    }
+
+    public bool CanChangeState(int distanceWanted)
+    {
+        Vector3 direction = transform.position - target.transform.position;
+        return Vector3.Angle(direction, transform.forward) < fieldOfView && direction.magnitude <= distanceWanted;
     }
 
     //besoin d'implementer le playerBehaviour
     public void Attack()
     {
         //GetComponent<>
+        Debug.Log("attack made");
     }
     public void TakeDamage(int damage)
     {

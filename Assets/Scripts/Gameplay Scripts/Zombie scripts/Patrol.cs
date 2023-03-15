@@ -7,37 +7,21 @@ using TheKiwiCoder;
 [System.Serializable]
 public class Patrol : ActionNode
 {
-    public float fieldOfView;
-    public GameObject target;
-    public Vector3 hostPosition;
-    private int counter;
 
+    private ZombieBehaviour host;
     protected override void OnStart() {
-        counter = 0;
-        hostPosition = context.transform.position;
-        context.agent.speed = context.zombie.speed;
-        context.agent.destination = context.zombie.patrolLocations[counter];
+        host = context.zombie;
+        host.ManagePatrol();
     }
 
     protected override void OnStop() {
     }
 
     protected override State OnUpdate() {
-        if (CanStopPatrol())
+        if ( host.CanChangeState(6))
             return State.Success;
 
-        if (hostPosition == context.agent.destination)
-        {
-            context.agent.destination = context.zombie.patrolLocations[counter++];
-            if (counter == context.zombie.patrolLocations.Count)
-                counter = 0;
-        }
+        host.ManagePatrol();
         return State.Running;
-    }
-
-    public bool CanStopPatrol()
-    {
-        Vector3 direction = target.transform.position - hostPosition;
-        return Vector3.Angle(direction, context.transform.forward) < fieldOfView;
     }
 }

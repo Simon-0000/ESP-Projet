@@ -12,17 +12,12 @@ public class ZombieManager : MonoBehaviour
     private int nbActiveZombies;
     private List<GameObject> ActiveZombies;
     [SerializeField] private GameObject zombie;
-    [SerializeField] private List<Vector3> entryPoints;
     [SerializeField] private Vector3 spawnPoint;
+    [SerializeField] public GameObject player;
     private float ellapsedTime = 0;
     private GameObject CreateNewZombie()
     {
         return Instantiate(zombie, spawnPoint,new Quaternion(0,0,0,0));
-    }
-
-    private Vector3 ChoseWindow()
-    {
-        return entryPoints[Random.Range(0,entryPoints.Count)];
     }
 
     void Awake()
