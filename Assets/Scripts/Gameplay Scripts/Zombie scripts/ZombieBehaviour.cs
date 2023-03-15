@@ -59,17 +59,20 @@ public class ZombieBehaviour : MonoBehaviour
         System.Random indexGenerator = new System.Random();
 
         //ajouter la postion de l'entrée pour dans la liste de waypoints
-        patrolLocations.Add(windows[indexGenerator.Next(windows.Length)].entryWaypoint);
-
-        //ajouter les points de patroulle pour le zombie en ordre aleatoire,
-        //on veut remplir la liste avec toutes les positions de toutes portes de la carte et une fenêtre de la carte
-        do
+        if(windows.Length + doors.Length > 0)
         {
-            int randomIndex = indexGenerator.Next(doors.Length);
-            if (!patrolLocations.Contains(doors[randomIndex].waypointLocation))
-                patrolLocations.Add(doors[randomIndex].waypointLocation);
-        } while (patrolLocations.Count <(doors.Length + 1));
 
+            patrolLocations.Add(windows[indexGenerator.Next(windows.Length)].entryWaypoint);
+
+            //ajouter les points de patroulle pour le zombie en ordre aleatoire,
+            //on veut remplir la liste avec toutes les positions de toutes portes de la carte et une fenêtre de la carte
+            do
+            {
+                int randomIndex = indexGenerator.Next(doors.Length);
+                if (!patrolLocations.Contains(doors[randomIndex].waypointLocation))
+                    patrolLocations.Add(doors[randomIndex].waypointLocation);
+            } while (patrolLocations.Count < (doors.Length));
+        }
     }
 
     //besoin d'implementer le playerBehaviour
