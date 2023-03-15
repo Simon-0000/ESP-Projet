@@ -90,7 +90,7 @@ public class ZombieBehaviour : MonoBehaviour
     {
         isActive = false;
         Destroy(GetComponent<BehaviourTreeRunner>());
-        Destroy(GetComponent<NavMeshAgent>());
+        GetComponent<NavMeshAgent>().isStopped=true;
         if (isLeader)
             ManageLeaderDeath();
     }

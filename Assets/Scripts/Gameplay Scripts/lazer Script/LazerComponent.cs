@@ -18,6 +18,7 @@ public class LazerComponent : MonoBehaviour
    private float time;
    private void Awake()
    {
+       damage = (int)floatDamage;
        rig = GetComponent<Rigidbody>();
        rig.AddRelativeForce(Vector3.forward*100);
    }
@@ -41,10 +42,11 @@ public class LazerComponent : MonoBehaviour
            
          
        }
-       if (collision.contacts[0].otherCollider.gameObject.layer == 7)
+       if (collision.contacts[0].otherCollider.gameObject.layer == 5)
        {
            zombie= collision.contacts[0].otherCollider.GetComponent<ZombieBehaviour>();
            zombie.TakeDamage(damage);
+           Debug.Log(damage);
            Destroy(gameObject);
        }
 
