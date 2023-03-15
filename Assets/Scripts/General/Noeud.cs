@@ -25,5 +25,15 @@ namespace Assets
          this.valeur = valeur;
          NoeudsEnfants = new();
       }
+      static public void FormerLiensRéciproque<T>(Noeud<T> noeudA, Noeud<T> noeudB)
+      {
+         noeudA.NoeudsEnfants.Add(noeudB);
+         noeudB.NoeudsEnfants.Add(noeudA);
+      }
+      static public void EnleverLiensRéciproque<T>(Noeud<T> noeudA, Noeud<T> noeudB)
+      {
+         noeudA.NoeudsEnfants.Remove(noeudB);
+         noeudB.NoeudsEnfants.Remove(noeudA);
+      }
    }
 }

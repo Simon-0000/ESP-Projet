@@ -3,6 +3,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.Linq;
 using Assets;
 using JetBrains.Annotations;
 using Unity.VisualScripting;
@@ -16,21 +17,18 @@ namespace Assets
 {
     static class DepthFirstSearch
     {
-        public static List<Noeud<T>> GetAlgorithmPath<T>(List<Noeud<T>>Nodes, Noeud<T> startingNode, Noeud<T> endNode)
+        public static List<Noeud<T>> GetPath<T>(List<Noeud<T>>nodes, Noeud<T> startingNode, Noeud<T> endNode)
         {
-
-           var visitedNodes = new List<Noeud<T>>();
-             var stackNode = new Stack<Noeud<T>>();
+            bool showCompletePath = endNode == null ? true : false;
+            var visitedNodes = new List<Noeud<T>>();
+            var stackNode = new Stack<Noeud<T>>();
             stackNode.Push(startingNode);
             Dictionary<Noeud<T>, bool> isVisited = new Dictionary<Noeud<T>, bool>();
-            for (int i = 0; i < Nodes.Count; i++) 
-                isVisited.TryAdd(Nodes[i], false);
-            Debug.Log("new map:---------------------------------------------------------------------------------------");
-
+            for (int i = 0; i < nodes.Count; i++) 
+                isVisited.TryAdd(nodes[i], false);
+            
             while (stackNode.Count > 0)
             {
-                Debug.Log(stackNode.Count +","+stackNode.Peek().NoeudsEnfants.Count);
-                
                 var currentNode = stackNode.Peek();
                 
 
@@ -40,8 +38,6 @@ namespace Assets
                     bool result=true;
                     foreach (var childNode in currentNode.NoeudsEnfants)
                     {
-                        
-                        
                         isVisited.TryGetValue(childNode, out result);
                         if (!result)
                         {
@@ -49,17 +45,21 @@ namespace Assets
                             stackNode.Push(childNode);
                             break;
                         }
-
-                        
-                        
                     }
-                    if (result) 
-                        stackNode.Pop();
-                    
-                    if (currentNode == endNode)
+                    if (currentNode == endNode) 
                     { 
                         break; 
                     }
+                    
+                    if (result)
+                    {
+                        //Si on a atteint la fin d'un chemin, on recule
+                        stackNode.Pop();
+                        if (!showCompletePath)
+                            visitedNodes.RemoveAt(visitedNodes.Count);
+                    }
+                    
+
                     
                 
             }
@@ -79,12 +79,19 @@ namespace Assets
                }
                
            }*/
-
-           
-           
-           
-
         }
-           
+
+        static public void ConnectNodesAccordingToPath<T>(List<Noeud<T>> path)
+        {
+            ClearConnecions(path);
+            for(int i = 0 ; i < path.Count - 1; ++i)
+                if (path[i].NoeudsEnfants.All(n => n != path[i + 1]))
+                    Noeud<T>.FormerLiensRéciproque(path[i], path[i + 1]);
+        }
+        static private void ClearConnecions<T>(List<Noeud<T>> nodes)
+        {
+            for (int i = 0; i < nodes.Count; ++i)
+                nodes[i].NoeudsEnfants.Clear();
+        }
     }
 }

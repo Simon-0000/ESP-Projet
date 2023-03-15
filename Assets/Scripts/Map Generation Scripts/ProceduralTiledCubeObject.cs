@@ -14,8 +14,6 @@ using Parabox.CSG;
 [RequireComponent(typeof(ProceduralObject))]
 public class ProceduralTiledCubeObject : MonoBehaviour
 {
-    const float OVERLAP_TOLERANCE = -0.002f;
-
     [SerializeField] 
     VectorRange[] scales;// Les valeurs de «scales» sont utilisées comme des uvs où 0 représente une grandeur de 0
                          // et 1 représente la grandeur du parent
@@ -44,7 +42,7 @@ public class ProceduralTiledCubeObject : MonoBehaviour
         //Chaque variation de l'objet à instancier doit être un cube
         for(int i = 0; i < proceduralObj.objectVariations.Length; ++i) 
             Debug.Assert(proceduralObj.objectVariations[i].GetComponent<MeshFilter>().sharedMesh.name == "Cube");
-        CSG.epsilon = Mathf.Abs(OVERLAP_TOLERANCE);
+        CSG.epsilon = Mathf.Abs(Algos.OVERLAP_TOLERANCE);
     }
 
     
@@ -85,13 +83,13 @@ public class ProceduralTiledCubeObject : MonoBehaviour
         Vector3 distance = Algos.GetVectorAbs(obj.transform.position - collider.transform.position);
         Vector3 sizeObj = obj.GetComponent<MeshRenderer>().bounds.size;
         Vector3 sizeCollider = collider.bounds.size;
-        Vector3 roomOverlap = new(distance.x - (sizeObj.x + sizeCollider.x) / 2, distance.y - (sizeObj.y + sizeCollider.y) / 2, distance.z - (sizeObj.z + sizeCollider.z) / 2);
+        Vector3 roomOverlap = Algos.GetColliderOverlap(obj, collider);//new(distance.x - (sizeObj.x + sizeCollider.x) / 2, distance.y - (sizeObj.y + sizeCollider.y) / 2, distance.z - (sizeObj.z + sizeCollider.z) / 2);
 
         List<(float, int)> cuts = new();
 
         for(int i = 0; i < 3; ++i) 
         {
-            if (roomOverlap[i] >= OVERLAP_TOLERANCE)
+            if (roomOverlap[i] <= Algos.OVERLAP_TOLERANCE)
             {
                 return;
             } 
@@ -104,7 +102,6 @@ public class ProceduralTiledCubeObject : MonoBehaviour
         } catch
         {
             Debug.Log("ERROR: COULDNT USE CSG LIBRARY TO HOLLOW OUT TILE");
-
         }
     }
 

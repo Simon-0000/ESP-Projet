@@ -15,6 +15,7 @@ namespace Assets
         [SerializeField] ProceduralTiledCubeObject wallObject;
         [SerializeField] ProceduralTiledCubeObject roofObject;
         [SerializeField] ProceduralTiledCubeObject floorObject;
+        [SerializeField] private ProceduralObject openingObject;
         [SerializeField] ProceduralObject[] childObjects;
         const int ROOM_HEIGHT = 3;//Pour le moment, la grandeur d'une pièce reste constante
         const String ROOM_NAME = "Room";
@@ -28,6 +29,8 @@ namespace Assets
             
             wallObject.Awake();
             floorObject.Awake();
+            
+            
             
             //Innstancier la pièce
             GameObject roomObj = new GameObject(ROOM_NAME);

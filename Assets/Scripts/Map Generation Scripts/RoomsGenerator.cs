@@ -7,27 +7,32 @@ using System.Collections.Generic;
 using UnityEngine;
 using Random = UnityEngine.Random;
 using System.Linq;
+using Unity.VisualScripting;
+
 namespace Assets
 {
    class RoomsGenerator
    {
       float roomSizeMin,roomSizeMax, grandeur;
       RectangleInfo2d mapDimensions;
-
-      public RoomsGenerator(RectangleInfo2d mapDimensions, float roomSizeMin,float roomSizeMax)
+      private const float ACCEPTABLE_ZERO_VALUE = 0.00001f;//Valeur approximatif de zero qui doit être utilisé à cause d'une comparaison entre un float et la valeur 0
+      private ProceduralObject doorObject;
+      public RoomsGenerator(RectangleInfo2d mapDimensions, float roomSizeMin,float roomSizeMax,ProceduralObject door)
       {
          this.roomSizeMin = roomSizeMin;
          this.roomSizeMax = roomSizeMax;
          this.mapDimensions = mapDimensions;
+         doorObject = door;
       }
       public List<Noeud<RectangleInfo2d>> GenerateRooms()
       {
          List<Noeud<RectangleInfo2d>> leafNodes = Algos.FilterNoeudsFeuilles(BinarySpacePartitioning.GénérerBSP(new Noeud<RectangleInfo2d>(null, mapDimensions), TrySplitRoom));
          LinkRoomsByPhysicalConnections(leafNodes);
-            //DFS ici(la classe existe, mais elle n'est pas utilisée pour le moment)
-         leafNodes = DepthFirstSearch.GetAlgorithmPath<RectangleInfo2d>(leafNodes,leafNodes[0], null).Distinct().ToList();
-         //foreach (Noeud<RectangleInfo2d> leaf in leafNodes)
-             //Debug.Log(leaf.NoeudsEnfants.Count);
+         leafNodes = DepthFirstSearch.GetPath<RectangleInfo2d>(leafNodes,leafNodes[0], null);
+         DepthFirstSearch.ConnectNodesAccordingToPath(leafNodes);
+         leafNodes = leafNodes.Distinct().ToList();
+
+         RandomlyRemoveRooms(leafNodes, 0);
          return leafNodes;
       }
       
@@ -80,7 +85,7 @@ namespace Assets
       //(deux pièces qui se touchent = une connexion)
       void LinkRoomsByPhysicalConnections(List<Noeud<RectangleInfo2d>> unlinkedRooms)
       {
-         for (int i = 0; i < unlinkedRooms.Count; ++i)
+         for (int i = 0; i < unlinkedRooms.Count - 1; ++i)
          {
             for (int j = i + 1; j < unlinkedRooms.Count; ++j)
             {
@@ -92,12 +97,37 @@ namespace Assets
             }
          }
       }
+
       static bool AreRoomsConnected(RectangleInfo2d roomA, RectangleInfo2d roomB)
       {
-         Vector2 distance = roomA.coordinates - roomB.coordinates;
-         distance = Algos.GetVectorAbs(distance);
-         Vector2 roomOverlap = new(distance.x - (roomA.size.x + roomB.size.x)/2,distance.y - (roomA.size.y + roomB.size.y)/2);
-         return roomOverlap.x <= 0 && roomOverlap.y <= 0;
+         Vector2 roomOverlap = GetRoomOverlap(roomA, roomB);
+         return roomOverlap.x <= ACCEPTABLE_ZERO_VALUE && roomOverlap.y <= ACCEPTABLE_ZERO_VALUE;
       }
+      
+      static Vector2 GetRoomOverlap(RectangleInfo2d roomA, RectangleInfo2d roomB)
+      {
+         Vector2 distance = Algos.GetVectorAbs(roomA.coordinates - roomB.coordinates);
+         return new(distance.x - (roomA.size.x + roomB.size.x)/2,distance.y - (roomA.size.y + roomB.size.y)/2);
+      }
+
+      const int MAX_ITERATION_ATTEMPS = 100;
+      void RandomlyRemoveRooms(List<Noeud<RectangleInfo2d>> rooms, float removalPercentage)
+      {
+         int iterationAttemps = 0;
+         while (removalPercentage > ACCEPTABLE_ZERO_VALUE && iterationAttemps <= MAX_ITERATION_ATTEMPS)
+         {
+            int roomIndex = Random.Range(0, rooms.Count);
+            float roomPercentage = 100 * (rooms[roomIndex].Valeur.size.x * rooms[roomIndex].Valeur.size.y) / (mapDimensions.size.x * mapDimensions.size.y);
+            if (rooms[roomIndex].NoeudsEnfants.Count == 1 && removalPercentage - roomPercentage > ACCEPTABLE_ZERO_VALUE)
+            {
+               Noeud<RectangleInfo2d>.EnleverLiensRéciproque(rooms[roomIndex], rooms[roomIndex].NoeudsEnfants[0]);
+               rooms.RemoveAt(roomIndex);
+               removalPercentage -= roomPercentage;
+               Debug.Log(removalPercentage);
+            }
+            ++iterationAttemps;
+         }
+      }
+      
    }
 }

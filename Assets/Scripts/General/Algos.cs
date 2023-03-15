@@ -10,7 +10,8 @@ namespace Assets
 {
     static class Algos
     {
-        
+        public const float OVERLAP_TOLERANCE = 0.002f;
+
         //Ces fonctions retournent le signe(-1 ou 1) de chaque composante du vecteur src
         public static Vector3 GetVectorSign(Vector3 src)
         {
@@ -86,5 +87,25 @@ namespace Assets
             return mesh;
         }
 
+        public static Vector3 GetColliderOverlap(GameObject obj, Collider collider)
+        {
+            Vector3 distance = Algos.GetVectorAbs(obj.transform.position - collider.transform.position);
+            Vector3 sizeObj = obj.GetComponent<MeshRenderer>().bounds.size;
+            Vector3 sizeCollider = collider.bounds.size;
+            return -new Vector3(distance.x - (sizeObj.x + sizeCollider.x) / 2, distance.y - (sizeObj.y + sizeCollider.y) / 2, distance.z - (sizeObj.z + sizeCollider.z) / 2);
+        }
+
+        public static bool IsColliderOverlaping(Vector3 overlap, float overlapMin)
+        {
+            for (int i = 0; i < 3; ++i)
+            {
+                if (overlap[i] >= overlapMin)
+                {
+
+                }
+            }
+
+            return false;
+        }
     }
 }

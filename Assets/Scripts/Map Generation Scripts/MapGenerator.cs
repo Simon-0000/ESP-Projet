@@ -17,6 +17,8 @@ namespace Assets
       [SerializeField]
       ProceduralRoom roomObject;
 
+      [SerializeField] 
+      ProceduralObject doorObject;
         bool mapHasRefreshed = true;
       void Awake()
       {
@@ -43,11 +45,12 @@ namespace Assets
 
             yield return new WaitForSeconds(0.25f);
             //On instancie le RoomsGenerator
-            RoomsGenerator bspPièces = new RoomsGenerator(new RectangleInfo2d(new Vector2(longueurMap, largeurMap), transform.position), wallSizeMin, wallSizeMax);
+            RoomsGenerator bspPièces = new RoomsGenerator(new RectangleInfo2d(new Vector2(longueurMap, largeurMap), transform.position), wallSizeMin, wallSizeMax,doorObject);
 
             //On génère les pièces
             List<Noeud<RectangleInfo2d>> noeudsPièces = bspPièces.GenerateRooms();
 
+            
             //On instancie les pièces
             for (int i = 0; i < noeudsPièces.Count; ++i)
             {

@@ -47,10 +47,10 @@ public class ProceduralObject : MonoBehaviour
         Debug.Assert(positions.Length == orientations.Length&& positions.Length == offsets.Length);
     }
 
-    public virtual void InstanciateProceduralObject(Transform parentTransform)//Instancier l'objet relatif à un parent
+    public GameObject InstanciateProceduralObject(Transform parentTransform)//Instancier l'objet relatif à un parent
     {
-        GameObject obj = Instantiate(objectVariations[Random.Range(0, objectVariations.Length)], parentTransform);
-        SetRandomRelativePlacement(obj, parentTransform.gameObject.GetComponent<MeshRenderer>().bounds.size);
+        return Instantiate(objectVariations[Random.Range(0, objectVariations.Length)], parentTransform);
+        //SetRandomRelativePlacement(obj, parentTransform.gameObject.GetComponent<MeshRenderer>().bounds.size);
     }
 
     public void SetRandomRelativePlacement(GameObject obj, Vector3 parentDimensions) =>
@@ -61,25 +61,46 @@ public class ProceduralObject : MonoBehaviour
     
     public void SetRandomRelativePlacement(GameObject obj, Vector3 parentDimensions, (VectorRange position, VectorRange orientation, VectorRange offset) placement)
     {
-        Vector3 relativePosition = placement.position.GetRandomVector();
-        Vector3 relativeOrientation = placement.orientation.GetRandomVector();
-        Vector3 offset =  placement.offset.GetRandomVector();
-        
-        //Placer l'objet relativement à son parent
-        PositionObject(obj,parentDimensions, new Vector3(parentDimensions.x * relativePosition.x,
-            parentDimensions.y * relativePosition.y,
-            parentDimensions.z * relativePosition.z));
-        
-        //Décaler l'objet
-        offset.Scale(Algos.GetVectorSign(obj.transform.localPosition));
-        obj.transform.localPosition += offset;
+        bool reposition = false;
 
-        //Tourner l'objet
-        obj.transform.localRotation = Quaternion.Euler(relativeOrientation.x, relativeOrientation.y, relativeOrientation.z);
-        
-        //Repositionner l'objet s'il rentre en collision avec d'autres objets (pas implémenté)
+        do
+        {
+            Vector3 relativePosition = placement.position.GetRandomVector();
+            Vector3 relativeOrientation = placement.orientation.GetRandomVector();
+            Vector3 offset = placement.offset.GetRandomVector();
+
+            //Placer l'objet relativement à son parent
+            PositionObject(obj, parentDimensions, new Vector3(parentDimensions.x * relativePosition.x,
+                parentDimensions.y * relativePosition.y,
+                parentDimensions.z * relativePosition.z));
+
+            //Décaler l'objet
+            offset.Scale(Algos.GetVectorSign(obj.transform.localPosition));
+            obj.transform.localPosition += offset;
+
+            //Tourner l'objet
+            obj.transform.localRotation =
+                Quaternion.Euler(relativeOrientation.x, relativeOrientation.y, relativeOrientation.z);
+
+            reposition = false;
+            //Repositionner l'objet s'il rentre en collision avec d'autres objets (pas implémenté)
+            Collider[] colliders =
+                Physics.OverlapBox(obj.transform.position, obj.GetComponent<MeshRenderer>().bounds.size / 2);
+            for (int i = 0; i < colliders.Length; ++i)
+            {
+                /* if (Algos.GetColliderOverlap(obj, colliders[i]) <= Algos.OVERLAP_TOLERANCE)
+                {
+                    reposition = true;
+                    break;
+                }*/
+            }
+        } while (reposition == true);
+
+
+
 
     }
+    
     
     
     //Cet fonction positionne l'objet relatif au parent
