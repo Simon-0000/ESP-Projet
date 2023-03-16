@@ -10,9 +10,9 @@ using UnityEngine.UI;
 public class LazerComponent : MonoBehaviour
 {
     private float floatDamage = 75f;
-    public int damage;
+    private int damage=75;
     private ZombieBehaviour zombie;
-    private float n1 = 1f;
+    private const float n1 = 1f;
    private float n2;
    private float angelInDeg;
    private float angelInRad;
@@ -24,7 +24,7 @@ public class LazerComponent : MonoBehaviour
    {
        damage = (int)floatDamage;
        rig = GetComponent<Rigidbody>();
-       rig.AddRelativeForce(Vector3.forward*500);
+       rig.AddRelativeForce(Vector3.forward*1000);
    }
 
    private void Update()
@@ -79,7 +79,6 @@ public class LazerComponent : MonoBehaviour
    {
        zombie= collision.contacts[0].otherCollider.GetComponent<ZombieBehaviour>();
                   zombie.TakeDamage(damage);
-                  Debug.Log(damage);
                   Destroy(gameObject);
    }
    public static float Schlick(float n1, float n2, float angle)
