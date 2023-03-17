@@ -24,7 +24,7 @@ public class LazerComponent : MonoBehaviour
    {
        damage = (int)floatDamage;
        rig = GetComponent<Rigidbody>();
-       rig.AddRelativeForce(Vector3.forward*1000);
+       rig.AddRelativeForce(Vector3.forward*5000);
    }
 
    private void Update()
