@@ -35,10 +35,10 @@ namespace Assets
             //Innstancier la pièce
             GameObject roomObj = new GameObject(ROOM_NAME);
             roomObj.transform.parent = parentTransform;
-            roomObj.transform.position = Algos.Vector2dTo3dVector(roomNode.Valeur.coordinates);
+            roomObj.transform.position = Algos.Vector2dTo3dVector(roomNode.valeur.coordinates);
             
             //On transforme la grandeur 2d du «RectangleInfo2d» de «roomNode» en une grandeur 3d
-            Vector3 RoomDimensions = Algos.Vector2dTo3dVector(roomNode.Valeur.size, ROOM_HEIGHT);
+            Vector3 RoomDimensions = Algos.Vector2dTo3dVector(roomNode.valeur.size, ROOM_HEIGHT);
 
             //Instancier les murs:
             int wallVariation = Random.Range(0,wallObject.GetComponent<ProceduralObject>().objectVariations.Length);

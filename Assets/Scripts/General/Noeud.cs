@@ -3,37 +3,42 @@
 //des nœuds (ex d'utilisation: BSP, DFS)
 
 using System.Collections.Generic;
-
+using System;
 
 
 namespace Assets
 {
+    [Serializable]
    public class Noeud <T>
    {
-      public List<Noeud<T>> NoeudsEnfants;
+        
+      public List<Noeud<T>> noeudsEnfants = new();
       Noeud<T> parent;
-      T valeur;//la valeur du noeud
+      public T valeur;//la valeur du noeud
       
       public Noeud<T> Parent { get => parent; }
-      public T Valeur { 
-         get => valeur;
-         set => valeur = value;
-      }
+
       public Noeud(Noeud<T> parent, T valeur) 
       {
          this.parent = parent;
          this.valeur = valeur;
-         NoeudsEnfants = new();
       }
-      static public void FormerLiensRéciproque<T>(Noeud<T> noeudA, Noeud<T> noeudB)
+      static public bool TryFormerLienRéciproque(Noeud<T> noeudA, Noeud<T> noeudB)
       {
-         noeudA.NoeudsEnfants.Add(noeudB);
-         noeudB.NoeudsEnfants.Add(noeudA);
+          bool alreadyAdded = noeudA.noeudsEnfants.Exists(n => n == noeudB);
+          if (!alreadyAdded)
+              FormerLienRéciproque(noeudA, noeudB);
+          return !alreadyAdded;
       }
-      static public void EnleverLiensRéciproque<T>(Noeud<T> noeudA, Noeud<T> noeudB)
+      static public void FormerLienRéciproque(Noeud<T> noeudA, Noeud<T> noeudB)
       {
-         noeudA.NoeudsEnfants.Remove(noeudB);
-         noeudB.NoeudsEnfants.Remove(noeudA);
+         noeudA.noeudsEnfants.Add(noeudB);
+         noeudB.noeudsEnfants.Add(noeudA);
+      }
+      static public void EnleverLienRéciproque(Noeud<T> noeudA, Noeud<T> noeudB)
+      {
+         noeudA.noeudsEnfants.Remove(noeudB);
+         noeudB.noeudsEnfants.Remove(noeudA);
       }
    }
 }

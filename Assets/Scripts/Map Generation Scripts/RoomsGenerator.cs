@@ -30,9 +30,9 @@ namespace Assets
       {
          List<Noeud<RectangleInfo2d>> leafNodes = Algos.FilterNoeudsFeuilles(BinarySpacePartitioning.GénérerBSP(new Noeud<RectangleInfo2d>(null, mapDimensions), TrySplitRoom));
          LinkRoomsByPhysicalConnections(leafNodes);
-         leafNodes = DepthFirstSearch.GetPath<RectangleInfo2d>(leafNodes,leafNodes[0], null);
 
-         DepthFirstSearch.ConnectNodesAccordingToPath(leafNodes);
+         leafNodes = DepthFirstSearch.GetPath<RectangleInfo2d>(leafNodes,leafNodes[0], null);
+         DepthFirstSearch.OnlyConnectNodesAccordingToPath(leafNodes);
          leafNodes = leafNodes.Distinct().ToList();
 
          RandomlyRemoveRooms(leafNodes, 25);
@@ -46,27 +46,31 @@ namespace Assets
       {
          Vector2 grandeurEnfantA, grandeurEnfantB;
 
-         switch (FindValidCutDirection(noeudParent.Valeur))
+         switch (FindValidCutDirection(noeudParent.valeur))
          {
             case Direction.Horizontal:
-               grandeurEnfantA = new(noeudParent.Valeur.size.x, Algos.FindRandomCut(noeudParent.Valeur.size.y, grandeur));
-               grandeurEnfantB = new(grandeurEnfantA.x, noeudParent.Valeur.size.y - grandeurEnfantA.y);
+               grandeurEnfantA = new(noeudParent.valeur.size.x, Algos.FindRandomCut(noeudParent.valeur.size.y, grandeur));
+               grandeurEnfantB = new(grandeurEnfantA.x, noeudParent.valeur.size.y - grandeurEnfantA.y);
 
                break;
             case Direction.Vertical:
-               grandeurEnfantA = new(Algos.FindRandomCut(noeudParent.Valeur.size.x, grandeur), noeudParent.Valeur.size.y);
-               grandeurEnfantB = new(noeudParent.Valeur.size.x - grandeurEnfantA.x, grandeurEnfantA.y);
+               grandeurEnfantA = new(Algos.FindRandomCut(noeudParent.valeur.size.x, grandeur), noeudParent.valeur.size.y);
+               grandeurEnfantB = new(noeudParent.valeur.size.x - grandeurEnfantA.x, grandeurEnfantA.y);
                break;
             default:
                return (null, null);
          }
 
-         return (new Noeud<RectangleInfo2d>(noeudParent, new RectangleInfo2d(grandeurEnfantA, noeudParent.Valeur.BottomLeftCoordinates + grandeurEnfantA/2)),
-               new Noeud<RectangleInfo2d>(noeudParent, new RectangleInfo2d(grandeurEnfantB,  noeudParent.Valeur.TopRightCoordinates - grandeurEnfantB/2)));
+         return (new Noeud<RectangleInfo2d>(noeudParent, new RectangleInfo2d(grandeurEnfantA, noeudParent.valeur.BottomLeftCoordinates + grandeurEnfantA/2)),
+               new Noeud<RectangleInfo2d>(noeudParent, new RectangleInfo2d(grandeurEnfantB,  noeudParent.valeur.TopRightCoordinates - grandeurEnfantB/2)));
       }
       Direction FindValidCutDirection(RectangleInfo2d dimensions)
       {
-         grandeur = Random.Range(roomSizeMin, roomSizeMax);
+         if(Mathf.Max(dimensions.size.x, dimensions.size.y) > roomSizeMax)
+            grandeur = Random.Range(roomSizeMin, Mathf.Max(dimensions.size.x, dimensions.size.y)/2);
+         else 
+            return Direction.None; 
+
          bool canCutVertically = dimensions.size.x >= grandeur  * 2;
          bool canCutHorizontally = dimensions.size.y >= grandeur * 2;
          
@@ -92,16 +96,15 @@ namespace Assets
          {
             for (int j = i + 1; j < unlinkedRooms.Count; ++j)
             {
-                    if (AreRoomsConnected(unlinkedRooms[i].Valeur, unlinkedRooms[j].Valeur, doorBounds.size.x))
+               if (AreRoomsConnected(unlinkedRooms[i].valeur, unlinkedRooms[j].valeur, doorBounds.size.x))
                {
-                  unlinkedRooms[i].NoeudsEnfants.Add(unlinkedRooms[j]);
-                  unlinkedRooms[j].NoeudsEnfants.Add(unlinkedRooms[i]);
+                   Noeud<RectangleInfo2d>.TryFormerLienRéciproque(unlinkedRooms[i], unlinkedRooms[j]);
                }
             }
          }
-      }
+        }
 
-      static bool AreRoomsConnected(RectangleInfo2d roomA, RectangleInfo2d roomB,float minOverlapOnASide)
+        static bool AreRoomsConnected(RectangleInfo2d roomA, RectangleInfo2d roomB,float minOverlapOnASide)
       {
             Vector2 roomOverlap = GetRoomOverlap(roomA, roomB);
             bool isConnected = roomOverlap.x >= -ACCEPTABLE_ZERO_VALUE && roomOverlap.y >= -ACCEPTABLE_ZERO_VALUE;
@@ -116,10 +119,10 @@ namespace Assets
          while (removalPercentage > ACCEPTABLE_ZERO_VALUE && iterationAttemps <= MAX_ITERATION_ATTEMPS)
          {
             int roomIndex = Random.Range(0, rooms.Count);
-            float roomPercentage = 100 * (rooms[roomIndex].Valeur.size.x * rooms[roomIndex].Valeur.size.y) / (mapDimensions.size.x * mapDimensions.size.y);
-            if (rooms[roomIndex].NoeudsEnfants.Count == 1 && removalPercentage - roomPercentage > ACCEPTABLE_ZERO_VALUE)
+            float roomPercentage = 100 * (rooms[roomIndex].valeur.size.x * rooms[roomIndex].valeur.size.y) / (mapDimensions.size.x * mapDimensions.size.y);
+            if (rooms[roomIndex].noeudsEnfants.Count == 1 && removalPercentage - roomPercentage > ACCEPTABLE_ZERO_VALUE)
             {
-               Noeud<RectangleInfo2d>.EnleverLiensRéciproque(rooms[roomIndex], rooms[roomIndex].NoeudsEnfants[0]);
+               Noeud<RectangleInfo2d>.EnleverLienRéciproque(rooms[roomIndex], rooms[roomIndex].noeudsEnfants[0]);
                rooms.RemoveAt(roomIndex);
                removalPercentage -= roomPercentage;
             }
@@ -140,31 +143,41 @@ namespace Assets
 
         private void InstantiateDoors(List<Noeud<RectangleInfo2d>> roomsNodes, Transform parent)
         {
+            int j;
             Noeud<RectangleInfo2d>[] roomNodesCopy =  roomsNodes.ToArray();
-            for (int i = 0; i < roomNodesCopy.Length; ++i)
+            for (int i = 0; i < roomsNodes.Count; ++i)
             {
-                for (int j = 0; j < roomNodesCopy[i].NoeudsEnfants.Count; ++j)
+                j = 0;
+                while (j < roomNodesCopy[i].noeudsEnfants.Count)
                 {
-                    Vector2 roomOverlap = GetRoomOverlap(roomNodesCopy[i].Valeur, roomNodesCopy[i].NoeudsEnfants[j].Valeur);
+                    Vector2 roomOverlap = GetRoomOverlap(roomNodesCopy[i].valeur, roomNodesCopy[i].noeudsEnfants[j].valeur);
                     Quaternion doorRotation;
+                    int planeAxis = 0;
                     if (roomOverlap.x > doorBounds.size.x)
                     {
                         doorRotation = Quaternion.identity;//Si la connection se trouve sur l'axe des x, on ne tourne pas la porte
 
                     } else if (roomOverlap.y > doorBounds.size.x)
                     {
+                        planeAxis = 1;
                         doorRotation = Quaternion.Euler(0,90,0);//Si la connection se trouve sur l'axe des y(y en 2d ou z en 3d), on tourne la porte
                     }
-                    else { 
+                    else {
+                        Noeud<RectangleInfo2d>.EnleverLienRéciproque(roomNodesCopy[i], roomNodesCopy[i].noeudsEnfants[j]);
+                        Debug.Log("UNEXPECTED CONNECTION");
                         continue ;//Si une connection entre deux pièce est invalide on ignore la connection
                     }
-
-                    Vector2 distanceOffset = roomNodesCopy[i].Valeur.size / 2 - new Vector2(Algos.FindRandomCut(roomOverlap.x, doorBounds.size.x), Algos.FindRandomCut(roomOverlap.y, doorBounds.size.x));
-                    Vector2 connectionDirectionSign = -Algos.GetVectorSign(roomNodesCopy[i].Valeur.coordinates - roomNodesCopy[i].NoeudsEnfants[j].Valeur.coordinates);
-
+                    if (roomNodesCopy[i].valeur.size[planeAxis] > roomNodesCopy[i].noeudsEnfants[j].valeur.size[planeAxis] )
+                    {
+                        ++j;
+                        continue;
+                    }
+                    Vector2 distanceOffset = roomNodesCopy[i].valeur.size / 2 - new Vector2(Algos.FindRandomCut(roomOverlap.x, doorBounds.size.x), Algos.FindRandomCut(roomOverlap.y, doorBounds.size.x));
+                    Vector2 connectionDirectionSign = -Algos.GetVectorSign(roomNodesCopy[i].valeur.coordinates - roomNodesCopy[i].noeudsEnfants[j].valeur.coordinates);
+                    //Doit ajuster distanceOffset pour que les pièces connecté par un centre soit pris en compte
                     distanceOffset = Vector2.Scale(distanceOffset, connectionDirectionSign);
                     Vector3 centerOffset = Algos.Vector2dTo3dVector(distanceOffset, doorBounds.size.y / 2);
-                    GameObject.Instantiate(doorObject, Algos.Vector2dTo3dVector(roomNodesCopy[i].Valeur.coordinates, 0) + centerOffset, doorRotation, parent);
+                    GameObject.Instantiate(doorObject, Algos.Vector2dTo3dVector(roomNodesCopy[i].valeur.coordinates, 0) + centerOffset, doorRotation, parent);
 
 
 
@@ -173,7 +186,7 @@ namespace Assets
 
                     //GameObject.Instantiate(doorObject,Algos.Vector2dTo3dVector(roomNodesCopy[i].Valeur.coordinates + new Vector2(Algos.FindRandomCut(roomOverlap.x, doorObject.GetComponent<MeshRenderer>().bounds.size.x), Algos.FindRandomCut(roomOverlap.y, doorObject.GetComponent<MeshRenderer>().bounds.size.x)), 0), doorRotation,parent);
 
-                    Noeud<RectangleInfo2d>.EnleverLiensRéciproque(roomNodesCopy[i],roomNodesCopy[i].NoeudsEnfants[j]);
+                    Noeud<RectangleInfo2d>.EnleverLienRéciproque(roomNodesCopy[i],roomNodesCopy[i].noeudsEnfants[j]);
 
                 }
             }

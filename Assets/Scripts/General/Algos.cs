@@ -64,7 +64,7 @@ namespace Assets
             List<Noeud<T>> noeudsFeuilles = new();
             for (int i = 0; i < bsp.Count; ++i)
             {
-                if (bsp[i].NoeudsEnfants.Count == 0)
+                if (bsp[i].noeudsEnfants.Count == 0)
                 {
                     noeudsFeuilles.Add(bsp[i]);
                 }
@@ -74,28 +74,10 @@ namespace Assets
 
         static public Mesh CenterVertices(Mesh src) 
         {
-
             Vector3[] vertices = src.vertices;
-            Vector3 MinVertices = vertices[0], MaxVertices = MinVertices, Offset;
-            //for (int i = 0; i < vertices.Length; ++i)
-            //{
-            //    for (int j = 0; j < 3; ++j)
-            //    {
-            //        if (vertices[i][j] < MinVertices[j])
-            //            MinVertices[j] = vertices[i][j];
-            //        else if (vertices[i][j] > MaxVertices[j])
-            //            MaxVertices[j] = vertices[i][j];
-            //    }
-            //}
-            MinVertices = src.bounds.min;
-            MaxVertices = src.bounds.max;
-
-            Offset.x = -MinVertices.x - Mathf.Abs(MinVertices.x - MaxVertices.x) / 2;
-            Offset.y = -MinVertices.y - Mathf.Abs(MinVertices.y - MaxVertices.y) / 2;
-            Offset.z = -MinVertices.z - Mathf.Abs(MinVertices.z - MaxVertices.z) / 2;
             for (int i = 0; i < vertices.Length; ++i)
             {
-                vertices[i] += Offset;
+                vertices[i] -= src.bounds.center;
             }
             Mesh mesh = src;
             mesh.vertices = vertices;

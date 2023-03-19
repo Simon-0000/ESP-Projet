@@ -23,8 +23,8 @@ namespace Assets
             subNoeuds = TryDiviserNoeud(noeudParent);
             if (subNoeuds != (null,null))//Condition qui est true si on a pu diviser le nœud 
             {
-               noeudParent.NoeudsEnfants.Add(subNoeuds.subNoeudA);
-               noeudParent.NoeudsEnfants.Add(subNoeuds.subNoeudB);
+               noeudParent.noeudsEnfants.Add(subNoeuds.subNoeudA);
+               noeudParent.noeudsEnfants.Add(subNoeuds.subNoeudB);
                noeudsÀDiviser.Enqueue(subNoeuds.subNoeudA);
                noeudsÀDiviser.Enqueue(subNoeuds.subNoeudB);
                bspList.Add(subNoeuds.subNoeudA);
