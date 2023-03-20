@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices.ComTypes;
 using UnityEngine;
 using UnityEngine.UI;
+using Assets;
 
 [RequireComponent(typeof(Rigidbody))]
 public class LazerComponent : MonoBehaviour
@@ -24,27 +25,30 @@ public class LazerComponent : MonoBehaviour
    {
        damage = (int)floatDamage;
        rig = GetComponent<Rigidbody>();
-       rig.AddRelativeForce(Vector3.forward*5000);
+       rig.AddRelativeForce(Vector3.forward*1);
+       rig.velocity = transform.forward*500;
+
    }
 
    private void Update()
    {
+       
        time += Time.deltaTime;
-       if(time>10f)
+       if(time>10f || damage<=0.001)
            Destroy(gameObject);
-       lastVel = rig.velocity;
+       
    }
 
    private void LateUpdate()
    {
-       
+       lastVel = rig.velocity;
    }
 
 
    private void OnCollisionEnter(Collision collision)
    {
        if (collision.contacts[0].otherCollider.gameObject.layer == 6)
-       {
+       { 
            Bounce(collision);
           AdjustDammageToShlick(collision);
          
@@ -62,10 +66,12 @@ public class LazerComponent : MonoBehaviour
 
    void Bounce(Collision collision)
    { 
-       var currentSpeed =lastVel.magnitude;
-     var direction= Vector3.Reflect(lastVel.normalized, collision.contacts[0].normal)*currentSpeed;
+       var currentSpeed =500f;
+       Debug.Log($"{lastVel.x}  {lastVel.y}     {lastVel.z}");
+       var direction= Vector3.Reflect(lastVel.normalized, collision.contacts[0].normal)*500f;
+     
      rig.velocity = direction;
-     Debug.Log($"x:{direction.x},y:{direction.y},z:{direction.z},");
+     //Debug.Log($"x:{direction.x},y:{direction.y},z:{direction.z},");
 
    }
 
@@ -75,6 +81,7 @@ public class LazerComponent : MonoBehaviour
         angelInDeg = MathF.Abs(90-Vector3.Angle(rig.velocity, collision.contacts[0].normal));
        floatDamage *= Schlick(n1, n2, angelInDeg); 
        damage = (int)floatDamage;
+       Debug.Log((damage));
    }
 
    void DoDamageToZombie(Collision collision)
@@ -92,6 +99,6 @@ public class LazerComponent : MonoBehaviour
           
            float val = r0 + (1 - r0) * Mathf.Pow(x,5);
            
-           return Mathf.Clamp(val,0,1) ;
+           return Mathf.Clamp(val*2,0,1) ;
        }
 }

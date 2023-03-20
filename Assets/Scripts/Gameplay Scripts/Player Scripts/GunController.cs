@@ -129,6 +129,7 @@ public class GunController : MonoBehaviour
     void SetCursor()
     {
         crosshair.transform.position = new Vector3(Screen.width / 2f, Screen.height / 2f);
+        aimedcrosshair.transform.position = new Vector3(Screen.width / 2f, Screen.height / 2f);
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
     }
@@ -139,7 +140,7 @@ public class GunController : MonoBehaviour
         RaycastHit hit;
         Ray ray = Camera.main.ScreenPointToRay(new Vector3(Screen.width / 2f, Screen.height / 2f));
         if (Physics.Raycast(ray, out hit))
-        {
+        { 
             gun.LookAt(hit.point);
            boucheDeCanon.LookAt(hit.point);
         }

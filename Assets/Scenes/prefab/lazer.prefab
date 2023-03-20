@@ -50,8 +50,8 @@ Rigidbody:
   m_UseGravity: 0
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 0
-  m_CollisionDetection: 1
+  m_Constraints: 112
+  m_CollisionDetection: 2
 --- !u!114 &7079356329559635557
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -341,8 +341,8 @@ TrailRenderer:
       serializedVersion: 2
       m_Curve:
       - serializedVersion: 3
-        time: 0.003780365
-        value: 0.062497824
+        time: 0
+        value: 0.2925851
         inSlope: 0
         outSlope: 0
         tangentMode: 0
