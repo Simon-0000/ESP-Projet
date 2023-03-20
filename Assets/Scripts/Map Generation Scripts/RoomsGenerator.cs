@@ -130,14 +130,19 @@ namespace Assets
          }
       }
 
-        public void InstantiateRooms(ProceduralRoom[] roomObjects, List<Noeud<RectangleInfo2d>> roomsNodes,Transform parent) 
+        public void InstantiateRooms(ProceduralRoom[] roomObjects, List<Noeud<RectangleInfo2d>> roomsNodes,Transform parent)
         {
-            InstantiateDoors(roomsNodes, parent);
+           GameObject doorParent = new GameObject("Doors");
+           doorParent.transform.parent = parent;
+           GameObject roomParent = new GameObject("Rooms");
+           roomParent.transform.parent = parent;
+           
+            InstantiateDoors(roomsNodes, doorParent.transform);
 
             for (int i = 0; i < roomsNodes.Count; ++i)
             {
                 int roomTypeIndex = Random.Range(0, roomObjects.Length);
-                roomObjects[roomTypeIndex].InstantiateRoom(roomsNodes[i], parent);
+                roomObjects[roomTypeIndex].InstantiateRoom(roomsNodes[i], roomParent.transform);
             }
         }
 

@@ -26,8 +26,8 @@ MonoBehaviour:
   treeState: 0
   blackboard:
     moveToPosition: {x: 0, y: 0, z: 0}
-  viewPosition: {x: 600, y: 300, z: 0}
-  viewScale: {x: 1, y: 1, z: 1}
+  viewPosition: {x: 408, y: 247.2, z: 0}
+  viewScale: {x: 0.7561437, y: 0.7561437, z: 1}
   references:
     version: 2
     RefIds:
@@ -50,7 +50,7 @@ MonoBehaviour:
         state: 0
         started: 0
         guid: 3545ba78c949a7f4eb01832bab26fb3c
-        position: {x: -451.33334, y: 54.666656}
+        position: {x: -504.40057, y: 62.39999}
         blackboard:
           moveToPosition: {x: 0, y: 0, z: 0}
         description: "\xE9tat de patrouille"

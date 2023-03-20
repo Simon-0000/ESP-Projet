@@ -15,10 +15,13 @@ namespace Assets
         [SerializeField] ProceduralTiledCubeObject wallObject;
         [SerializeField] ProceduralTiledCubeObject roofObject;
         [SerializeField] ProceduralTiledCubeObject floorObject;
-        [SerializeField] private ProceduralObject openingObject;
-        [SerializeField] ProceduralObject[] childObjects;
-        const int ROOM_HEIGHT = 3;//Pour le moment, la grandeur d'une pièce reste constante
+        [SerializeField] ProceduralObject mandatoryRoomObjects;
+        [SerializeField] ProceduralObject[] availableRoomObjects;
+        private ProceduralObject[] roomObjects;
+        
+        const int ROOM_HEIGHT = 3;//Pour le moment, la hauteur d'une pièce reste constante
         const String ROOM_NAME = "Room";
+        
         
 
         public void InstantiateRoom(Noeud<RectangleInfo2d> roomNode, Transform parentTransform)
