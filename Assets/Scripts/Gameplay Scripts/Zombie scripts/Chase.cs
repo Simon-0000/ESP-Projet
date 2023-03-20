@@ -18,7 +18,7 @@ public class Chase : ActionNode
     }
 
     protected override State OnUpdate() {
-        if (host.CanChangeState(3))
+        if (host.CanChangeState(1.5f))
             return State.Success;
 
         host.ManageChase();

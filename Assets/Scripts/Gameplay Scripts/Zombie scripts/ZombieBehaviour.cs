@@ -106,7 +106,7 @@ public class ZombieBehaviour : MonoBehaviour
         Debug.Log($" x:{target.transform.position.x} y:{target.transform.position.y} z:{target.transform.position.z}");
     }
 
-    public bool CanChangeState(int distanceWanted)
+    public bool CanChangeState(float distanceWanted)
     {
         Vector3 direction = Algos.GetVectorAbs(transform.position - target.transform.position);
 
