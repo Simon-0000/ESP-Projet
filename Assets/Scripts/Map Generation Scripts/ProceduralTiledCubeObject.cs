@@ -81,7 +81,6 @@ public class ProceduralTiledCubeObject : MonoBehaviour
         if (obj == null || collider.gameObject == null || collider.gameObject.GetComponent<MeshRenderer>() == null)
             return;
         Vector3 roomOverlap = Algos.GetColliderOverlap(obj, collider);//new(distance.x - (sizeObj.x + sizeCollider.x) / 2, distance.y - (sizeObj.y + sizeCollider.y) / 2, distance.z - (sizeObj.z + sizeCollider.z) / 2);
-
         List<(float, int)> cuts = new();
 
         if (!Algos.IsColliderOverlaping(roomOverlap, Algos.OVERLAP_TOLERANCE)) 
@@ -93,6 +92,7 @@ public class ProceduralTiledCubeObject : MonoBehaviour
             obj.GetComponent<MeshRenderer>().sharedMaterials = result.materials.ToArray();
             obj.AddComponent<MeshCollider>().sharedMesh = obj.GetComponent<MeshFilter>().sharedMesh;
             Destroy(obj.GetComponent<BoxCollider>());
+            //DOIT CHANGER LA LOGIQUE pusque si on tranche le bas d'un mur, le mur sera complètement décaler à cause de ça
 
         }
         catch

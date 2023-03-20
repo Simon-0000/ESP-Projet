@@ -22,6 +22,7 @@ namespace Assets
             bool showCompletePath = endNode == null ? true : false;
             var visitedNodes = new List<Noeud<T>>();
             var stackNode = new Stack<Noeud<T>>();
+
             stackNode.Push(startingNode);
             Dictionary<Noeud<T>, bool> isVisited = new Dictionary<Noeud<T>, bool>();
             for (int i = 0; i < nodes.Count; i++) 
@@ -36,10 +37,10 @@ namespace Assets
                     
                         
                     bool result=true;
-                    foreach (var childNode in currentNode.NoeudsEnfants)
+                    foreach (var childNode in currentNode.noeudsEnfants)
                     {
                         isVisited.TryGetValue(childNode, out result);
-                        if (!result&&childNode!=currentNode)
+                        if (!result && childNode!=currentNode)
                         {
                             isVisited[childNode] = true;
                             stackNode.Push(childNode);
@@ -60,33 +61,21 @@ namespace Assets
             }
 
             return visitedNodes;
-         
-           /* 
-           visitedNodes.Add(startingNode);
-           for (int i = 0; i < visitedNodes[visitedNodes.Count-1].NoeudsEnfants.Count; i++)
-           {
-               bool result;
-               isVisited.TryGetValue(visitedNodes[visitedNodes.Count - 1].NoeudsEnfants[i], out result);
-               if (!result)
-               {
-                   visitedNodes[visitedNodes.Count - 1].
-                  
-               }
-               
-           }*/
         }
-
-        static public void ConnectNodesAccordingToPath<T>(List<Noeud<T>> path)
+        static public void OnlyConnectNodesAccordingToPath<T>(List<Noeud<T>> path)
         {
             ClearConnecions(path);
+            ConnectNodesAccordingToPath(path);
+        }
+        static public void ConnectNodesAccordingToPath<T>(List<Noeud<T>> path)
+        {
             for(int i = 0 ; i < path.Count - 1; ++i)
-                if (path[i].NoeudsEnfants.All(n => n != path[i + 1]))
-                    Noeud<T>.FormerLiensRéciproque(path[i], path[i + 1]);
+               Noeud<T>.TryFormerLienRéciproque(path[i], path[i + 1]);
         }
         static private void ClearConnecions<T>(List<Noeud<T>> nodes)
         {
             for (int i = 0; i < nodes.Count; ++i)
-                nodes[i].NoeudsEnfants.Clear();
+                nodes[i].noeudsEnfants.Clear();
         }
     }
 }

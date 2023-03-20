@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 using TheKiwiCoder;
+using Assets;
+
 
 // sergio abreo alvarez
 //gestion d'un zombie. gestion de la vie, �tat actif, temps de destruction, point d'entr�e 
@@ -106,8 +108,9 @@ public class ZombieBehaviour : MonoBehaviour
 
     public bool CanChangeState(int distanceWanted)
     {
-        Vector3 direction = transform.position - target.transform.position;
-        return Vector3.Angle(direction, transform.forward) < fieldOfView && direction.magnitude <= distanceWanted;
+        Vector3 direction = Algos.GetVectorAbs(transform.position - target.transform.position);
+
+        return Vector3.Angle(direction, Algos.GetVectorAbs(transform.forward)) <= fieldOfView && direction.magnitude <= distanceWanted;
     }
 
     //besoin d'implementer le playerBehaviour
