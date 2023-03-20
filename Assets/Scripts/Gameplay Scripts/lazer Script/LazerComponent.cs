@@ -30,13 +30,14 @@ public class LazerComponent : MonoBehaviour
    private void Update()
    {
        time += Time.deltaTime;
-       if(time>2f)
+       if(time>10f)
            Destroy(gameObject);
+       lastVel = rig.velocity;
    }
 
    private void LateUpdate()
    {
-       lastVel = rig.velocity;
+       
    }
 
 
@@ -44,8 +45,9 @@ public class LazerComponent : MonoBehaviour
    {
        if (collision.contacts[0].otherCollider.gameObject.layer == 6)
        {
+           Bounce(collision);
           AdjustDammageToShlick(collision);
-          Bounce(collision);
+         
 
 
        }
@@ -59,7 +61,7 @@ public class LazerComponent : MonoBehaviour
    }
 
    void Bounce(Collision collision)
-   {
+   { 
        var currentSpeed =lastVel.magnitude;
      var direction= Vector3.Reflect(lastVel.normalized, collision.contacts[0].normal)*currentSpeed;
      rig.velocity = direction;
