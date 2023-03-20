@@ -116,8 +116,9 @@ public class ZombieBehaviour : MonoBehaviour
     //besoin d'implementer le playerBehaviour
     public void Attack()
     {
-        //GetComponent<>
+        target.GetComponent<PlayerHealth>().takeDamage(damage);
         Debug.Log("attack made");
+        
     }
     public void TakeDamage(int damage)
     {
