@@ -40,5 +40,10 @@ namespace Assets
          noeudA.noeudsEnfants.Remove(noeudB);
          noeudB.noeudsEnfants.Remove(noeudA);
       }
+      static public void ClearConnecions(List<Noeud<T>> nodes)
+      {
+         for (int i = 0; i < nodes.Count; ++i)
+            nodes[i].noeudsEnfants.Clear();
+      }
    }
 }

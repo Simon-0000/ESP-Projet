@@ -17,9 +17,8 @@ namespace Assets
 {
     static class DepthFirstSearch
     {
-        public static List<Noeud<T>> GetPath<T>(List<Noeud<T>>nodes, Noeud<T> startingNode, Noeud<T> endNode)
+        public static List<Noeud<T>> GetPath<T>(List<Noeud<T>>nodes, Noeud<T> startingNode, Noeud<T> endNode,bool showCompletePath = false)
         {
-            bool showCompletePath = endNode == null ? true : false;
             var visitedNodes = new List<Noeud<T>>();
             var stackNode = new Stack<Noeud<T>>();
 
@@ -62,20 +61,10 @@ namespace Assets
 
             return visitedNodes;
         }
-        static public void OnlyConnectNodesAccordingToPath<T>(List<Noeud<T>> path)
-        {
-            ClearConnecions(path);
-            ConnectNodesAccordingToPath(path);
-        }
         static public void ConnectNodesAccordingToPath<T>(List<Noeud<T>> path)
         {
             for(int i = 0 ; i < path.Count - 1; ++i)
                Noeud<T>.TryFormerLienRéciproque(path[i], path[i + 1]);
-        }
-        static private void ClearConnecions<T>(List<Noeud<T>> nodes)
-        {
-            for (int i = 0; i < nodes.Count; ++i)
-                nodes[i].noeudsEnfants.Clear();
         }
     }
 }

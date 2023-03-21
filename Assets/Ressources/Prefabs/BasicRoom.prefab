@@ -205,6 +205,7 @@ MonoBehaviour:
     endAt: {x: -0.05, y: 0, z: 0}
   - startAt: {x: -0.05, y: 0, z: 0}
     endAt: {x: -0.05, y: 0, z: 0}
+  repositionAtCollision: 0
   XIsConstrained: 0
   YIsConstrained: 0
   ZIsConstrained: 0
@@ -355,14 +356,15 @@ MonoBehaviour:
   positions: []
   orientations: []
   offsets: []
+  repositionAtCollision: 1
   XIsConstrained: 1
   YIsConstrained: 1
   ZIsConstrained: 1
   wallObject: {fileID: 3183394960504068209}
   roofObject: {fileID: 0}
   floorObject: {fileID: 1902440217402886749}
-  openingObject: {fileID: 0}
-  childObjects: []
+  mandatoryRoomObjects: {fileID: 0}
+  availableRoomObjects: []
 --- !u!1 &4998183169681510225
 GameObject:
   m_ObjectHideFlags: 0
@@ -538,6 +540,7 @@ MonoBehaviour:
   offsets:
   - startAt: {x: 0, y: -0.025, z: 0}
     endAt: {x: 0, y: -0.025, z: 0}
+  repositionAtCollision: 0
   XIsConstrained: 1
   YIsConstrained: 1
   ZIsConstrained: 1

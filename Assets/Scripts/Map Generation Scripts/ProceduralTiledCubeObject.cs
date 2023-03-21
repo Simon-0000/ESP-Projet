@@ -42,7 +42,7 @@ public class ProceduralTiledCubeObject : MonoBehaviour
         //Chaque variation de l'objet à instancier doit être un cube
         for(int i = 0; i < proceduralObj.objectVariations.Length; ++i) 
             Debug.Assert(proceduralObj.objectVariations[i].GetComponent<MeshFilter>().sharedMesh.name == "Cube");
-        CSG.epsilon = Mathf.Abs(Algos.OVERLAP_TOLERANCE);
+        CSG.epsilon = Mathf.Abs(GameConstants.OVERLAP_TOLERANCE);
     }
 
     
@@ -69,7 +69,6 @@ public class ProceduralTiledCubeObject : MonoBehaviour
         if(wrapsAround == true)
         {
             Collider[] colliders = Physics.OverlapBox(obj.transform.position, size / 2);
-           // Debug.Log("NBR COLLISIONS: "  + colliders.Length);
            foreach (Collider collider in colliders)
                 if (obj != collider.gameObject)
                     HollowOutMesh(obj, collider);
@@ -83,7 +82,7 @@ public class ProceduralTiledCubeObject : MonoBehaviour
         Vector3 roomOverlap = Algos.GetColliderOverlap(obj, collider);//new(distance.x - (sizeObj.x + sizeCollider.x) / 2, distance.y - (sizeObj.y + sizeCollider.y) / 2, distance.z - (sizeObj.z + sizeCollider.z) / 2);
         List<(float, int)> cuts = new();
 
-        if (!Algos.IsColliderOverlaping(roomOverlap, Algos.OVERLAP_TOLERANCE)) 
+        if (!Algos.IsColliderOverlaping(roomOverlap)) 
             return;
         try
         {

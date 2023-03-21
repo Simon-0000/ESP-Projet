@@ -880,10 +880,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c56acb474826c2f4a8488914865d6849, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  longueurMap: 40
-  largeurMap: 40
-  wallSizeMin: 4
-  wallSizeMax: 10
+  longueurMap: 20
+  largeurMap: 20
+  wallSizeMin: 5
+  wallSizeMax: 5
   roomObjects:
   - {fileID: 7271430624650593193, guid: 491c178b4b960154f86a23e6d5b8c742, type: 3}
   doorObject: {fileID: 2430739564790736020, guid: 21b28f3efd218ab4a8ea5a7c522c44ad, type: 3}

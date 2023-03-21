@@ -4,9 +4,15 @@
 //limité le X,Y,Z pour que l'objet ne dépasse pas les limites du parent.
 //ex d'implémentations: portrait relatif à un mur, un lit relatif au sol,etc.
 
+using System;
+using System.Numerics;
 using UnityEngine;
 using Random = UnityEngine.Random;
 using Assets;
+using UnityEditor;
+using Quaternion = UnityEngine.Quaternion;
+using Vector3 = UnityEngine.Vector3;
+
 public class ProceduralObject : MonoBehaviour
 {
     
@@ -24,7 +30,8 @@ public class ProceduralObject : MonoBehaviour
     public VectorRange[] offsets;//Les décalages permettent de positionner des objets qui sont par exemple,
                                  //toujours décalés du centre de 1 unité. Une valeur négative va le décaler
                                  //vers le centre de son parent, une valeur positive fera l'inverse
-                                 
+    [SerializeField]
+    bool repositionAtCollision = true;
     //X,Y,Z «IsConstrained» permet de limiter la position d'un objet pour qu'il ne dépasse pas les limites de son parent
     //ex: on ne veut pas qu'une porte sorte physiquement du mur(«Constrained» en x,y), mais on voudrait qu'une vase puisse
     //être plus haute que la table (pas «Constrained»)
@@ -34,8 +41,8 @@ public class ProceduralObject : MonoBehaviour
 
     public void Awake()
     {
-        for (int i = 0; i < objectVariations.Length; ++i)//On s'assure que chaque GameObject possède un «MeshRenderer»
-            Debug.Assert(objectVariations[i].GetComponent<MeshRenderer>() != null);
+        for (int i = 0; i < objectVariations.Length; ++i)//On s'assure que chaque GameObject possède une grandeur
+            Debug.Assert(Algos.GetRendererBounds(objectVariations[i]) != default);
 
         //Il doit y avoir au moins 1 objet et 1 positionnement pour l'objet
         Debug.Assert(objectVariations.Length != 0 &&
@@ -49,8 +56,9 @@ public class ProceduralObject : MonoBehaviour
 
     public GameObject InstanciateProceduralObject(Transform parentTransform)//Instancier l'objet relatif à un parent
     {
-        return Instantiate(objectVariations[Random.Range(0, objectVariations.Length)], parentTransform);
-        //SetRandomRelativePlacement(obj, parentTransform.gameObject.GetComponent<MeshRenderer>().bounds.size);
+        GameObject obj =  Instantiate(objectVariations[Random.Range(0, objectVariations.Length)], parentTransform);
+        SetRandomRelativePlacement(obj, Algos.GetRendererBounds(parentTransform.gameObject).size);
+        return obj;
     }
 
     public void SetRandomRelativePlacement(GameObject obj, Vector3 parentDimensions) =>
@@ -58,19 +66,21 @@ public class ProceduralObject : MonoBehaviour
     
     public void SetRandomRelativePlacement(GameObject obj, Vector3 parentDimensions,int placementIndex)=>
         SetRandomRelativePlacement(obj, parentDimensions,(positions[placementIndex],orientations[placementIndex], offsets[placementIndex]));
-    
+
     public void SetRandomRelativePlacement(GameObject obj, Vector3 parentDimensions, (VectorRange position, VectorRange orientation, VectorRange offset) placement)
     {
         bool reposition = false;
-
+        int iterationAttemps = 0;
         do
         {
+            Vector3 objDimensions = Algos.GetRendererBounds(obj).size;
+
             Vector3 relativePosition = placement.position.GetRandomVector();
             Vector3 relativeOrientation = placement.orientation.GetRandomVector();
             Vector3 offset = placement.offset.GetRandomVector();
 
             //Placer l'objet relativement à son parent
-            PositionObject(obj, parentDimensions, new Vector3(parentDimensions.x * relativePosition.x,
+            obj.transform.localPosition = PositionObject(objDimensions, parentDimensions, new Vector3(parentDimensions.x * relativePosition.x,
                 parentDimensions.y * relativePosition.y,
                 parentDimensions.z * relativePosition.z));
 
@@ -83,44 +93,49 @@ public class ProceduralObject : MonoBehaviour
                 Quaternion.Euler(relativeOrientation.x, relativeOrientation.y, relativeOrientation.z);
 
             reposition = false;
+            
             //Repositionner l'objet s'il rentre en collision avec d'autres objets (pas implémenté)
-            Collider[] colliders =
-                Physics.OverlapBox(obj.transform.position, obj.GetComponent<MeshRenderer>().bounds.size / 2);
-            for (int i = 0; i < colliders.Length; ++i)
+            
+            //les lignes de codes ci-dessous avec Physics.autoSimulation et Physics.Simulate on été pris par Pablo Lanza et derHugo
+            //https://stackoverflow.com/questions/69055600/bad-usage-of-physics-overlapbox
+            if (repositionAtCollision)
             {
-                /* if (Algos.GetColliderOverlap(obj, colliders[i]) <= Algos.OVERLAP_TOLERANCE)
+                Physics.autoSimulation = false;
+                Physics.Simulate(Time.deltaTime);
+           
+                Collider[] colliders = Physics.OverlapBox(obj.transform.position, (objDimensions*0.45f ),obj.transform.rotation);
+                for (int i = 0; i < colliders.Length; ++i)
                 {
-                    reposition = true;
-                    break;
-                }*/
+                    if (colliders[i].gameObject != obj)
+                    {
+                        Debug.Log("Collider: " + obj.name + " With: "+ colliders[i].gameObject.name + "OBJ Size: " + objDimensions*0.45f + "Overlap = " + Algos.GetColliderOverlap(obj, colliders[i]));
+                        reposition = true;
+                        break;
+                    }
+                }
+
+                Physics.autoSimulation = true;
             }
-        } while (reposition == true);
-
-
-
-
+            ++iterationAttemps;
+        } while (reposition == true && iterationAttemps <= GameConstants.MAX_ITERATIONS);
     }
     
     
     
     //Cet fonction positionne l'objet relatif au parent
-    private void PositionObject(GameObject obj, Vector3 parentDimensions, Vector3 relativePosition) =>
-            PositionObject(obj, parentDimensions, relativePosition, XIsConstrained, YIsConstrained, ZIsConstrained);
-    private static void PositionObject(GameObject obj, Vector3 parentDimensions, Vector3 relativePosition, bool xIsConstrained, bool yIsConstrained, bool zIsConstrained)
+    private Vector3 PositionObject(Vector3 objDimensions, Vector3 parentDimensions, Vector3 relativePosition) =>
+            PositionObject(objDimensions, parentDimensions, relativePosition, XIsConstrained, YIsConstrained, ZIsConstrained);
+    private static Vector3 PositionObject(Vector3 objDimensions, Vector3 parentDimensions, Vector3 relativePosition, bool xIsConstrained, bool yIsConstrained, bool zIsConstrained)
     {
         //On essaye de limiter la position de l'objet
-        relativePosition = TryConstrainRelativePosition(obj, parentDimensions, relativePosition, xIsConstrained, yIsConstrained, zIsConstrained);
-        
-        //On positionne l'objet
-        obj.transform.localPosition = relativePosition;
+        return TryConstrainRelativePosition(objDimensions, parentDimensions, relativePosition, xIsConstrained, yIsConstrained, zIsConstrained);
     }
 
     
     //Cette fonction retourne une position relative qui ne dépasse pas les limites XYZ de son parent si
     // XYZ «IsConstrained» = true 
-    private static Vector3 TryConstrainRelativePosition(GameObject obj, Vector3 parentDimensions, Vector3 relativePosition, bool xIsConstrained, bool yIsConstrained, bool zIsConstrained)
+    private static Vector3 TryConstrainRelativePosition(Vector3 objDimensions, Vector3 parentDimensions, Vector3 relativePosition, bool xIsConstrained, bool yIsConstrained, bool zIsConstrained)
     {
-        Vector3 objDimensions = obj.GetComponent<MeshRenderer>().bounds.size;
         Vector3 cornerPosition = objDimensions / 2 + Algos.GetVectorAbs(relativePosition);
         Vector3 relativePositionSign = Algos.GetVectorSign(relativePosition);
 
