@@ -13,7 +13,7 @@ using UnityEditor;
 using Quaternion = UnityEngine.Quaternion;
 using Vector3 = UnityEngine.Vector3;
 
-public class ProceduralObject : MonoBehaviour
+public class ProceduralObject : Procedural
 {
     
     //Pour «positions», «orientations» et «offsets», il doit y avoir autant d'éléments dans chaque array,
@@ -54,10 +54,14 @@ public class ProceduralObject : MonoBehaviour
         Debug.Assert(positions.Length == orientations.Length&& positions.Length == offsets.Length);
     }
 
-    public GameObject InstanciateProceduralObject(Transform parentTransform)//Instancier l'objet relatif à un parent
+    public override GameObject InstanciateProceduralObject(Transform parentTransform)//Instancier l'objet relatif à un parent
     {
         GameObject obj =  Instantiate(objectVariations[Random.Range(0, objectVariations.Length)], parentTransform);
-        SetRandomRelativePlacement(obj, Algos.GetRendererBounds(parentTransform.gameObject).size);
+        BoundsManager parentBoundsManager = parentTransform.GetComponent<BoundsManager>();
+        if (parentBoundsManager != null)
+            SetRandomRelativePlacement(obj, parentBoundsManager.objectBounds.size);
+        else
+            SetRandomRelativePlacement(obj, Algos.GetRendererBounds(parentTransform.gameObject).size);
         return obj;
     }
 
@@ -69,11 +73,15 @@ public class ProceduralObject : MonoBehaviour
 
     public void SetRandomRelativePlacement(GameObject obj, Vector3 parentDimensions, (VectorRange position, VectorRange orientation, VectorRange offset) placement)
     {
-        bool reposition = false;
+        bool reposition;
         int iterationAttemps = 0;
+        obj.AddComponent<BoundsManager>().objectBounds = Algos.GetRendererBounds(obj);
+        Vector3 objDimensions = obj.AddComponent<BoundsManager>().objectBounds.size;
+
+        Debug.Log(obj.name + objDimensions);
+
         do
         {
-            Vector3 objDimensions = Algos.GetRendererBounds(obj).size;
 
             Vector3 relativePosition = placement.position.GetRandomVector();
             Vector3 relativeOrientation = placement.orientation.GetRandomVector();
@@ -103,10 +111,10 @@ public class ProceduralObject : MonoBehaviour
                 Physics.autoSimulation = false;
                 Physics.Simulate(Time.deltaTime);
            
-                Collider[] colliders = Physics.OverlapBox(obj.transform.position, (objDimensions*0.45f ),obj.transform.rotation);
+                Collider[] colliders = Physics.OverlapBox(obj.transform.position, (objDimensions*0.49f ),obj.transform.rotation);
                 for (int i = 0; i < colliders.Length; ++i)
                 {
-                    if (colliders[i].gameObject != obj)
+                    if (colliders[i].gameObject != obj &&Algos.IsColliderOverlaping(Algos.GetColliderOverlap(obj,colliders[i])) &&!Algos.IsItObjectChildren(obj,colliders[i].gameObject))
                     {
                         Debug.Log("Collider: " + obj.name + " With: "+ colliders[i].gameObject.name + "OBJ Size: " + objDimensions*0.45f + "Overlap = " + Algos.GetColliderOverlap(obj, colliders[i]));
                         reposition = true;
@@ -118,6 +126,8 @@ public class ProceduralObject : MonoBehaviour
             }
             ++iterationAttemps;
         } while (reposition == true && iterationAttemps <= GameConstants.MAX_ITERATIONS);
+        if (reposition == true)
+            Destroy(obj);
     }
     
     

@@ -10,6 +10,7 @@ namespace Assets
         public const float OVERLAP_TOLERANCE = 0.002f;
         public const float ACCEPTABLE_ZERO_VALUE = 0.00001f;
         public const int MAX_ITERATIONS = 100;
+        public const int ROOM_HEIGHT = 3; //Pour le moment, la hauteur d'une pièce reste constante
 
     }
 }

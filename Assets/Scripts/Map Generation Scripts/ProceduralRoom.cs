@@ -7,19 +7,15 @@ using UnityEngine;
 using Random = UnityEngine.Random;
 using Parabox.CSG;
 using Assets;
-
 namespace Assets
 {
-    public class ProceduralRoom : ProceduralObject
+    public class ProceduralRoom : MonoBehaviour
     {
         [SerializeField] ProceduralTiledCubeObject wallObject;
         [SerializeField] ProceduralTiledCubeObject roofObject;
         [SerializeField] ProceduralTiledCubeObject floorObject;
-        [SerializeField] ProceduralObject mandatoryRoomObjects;
-        [SerializeField] ProceduralObject[] availableRoomObjects;
-        private ProceduralObject[] roomObjects;
+        [SerializeField] ProceduralHierarchy[] roomHierarchyRoots;
 
-        const int ROOM_HEIGHT = 3; //Pour le moment, la hauteur d'une pièce reste constante
         const String ROOM_NAME = "Room";
 
 
@@ -38,28 +34,30 @@ namespace Assets
             GameObject roomObj = new GameObject(ROOM_NAME);
             roomObj.transform.parent = parentTransform;
             roomObj.transform.position = Algos.Vector2dTo3dVector(roomNode.valeur.coordinates);
-
+            roomObj.AddComponent<BoundsManager>().objectBounds.center = roomObj.transform.position;
             //On transforme la grandeur 2d du «RectangleInfo2d» de «roomNode» en une grandeur 3d
-            Vector3 RoomDimensions = Algos.Vector2dTo3dVector(roomNode.valeur.size, ROOM_HEIGHT);
+            Vector3 roomDimensions = Algos.Vector2dTo3dVector(roomNode.valeur.size, GameConstants.ROOM_HEIGHT);
+            roomObj.GetComponent<BoundsManager>().objectBounds.size = roomDimensions;
 
             //Instancier les murs:
             int wallVariation = Random.Range(0, wallObject.GetComponent<ProceduralObject>().objectVariations.Length);
             for (int i = 0; i < wallObject.GetComponent<ProceduralObject>().positions.Length; ++i)
-                wallObject.InstantiateProceduralTiledObject(roomObj.transform, RoomDimensions, wallVariation, i);
+                wallObject.InstantiateProceduralTiledObject(roomObj.transform, roomDimensions, wallVariation, i);
 
             //Instancier le sol:
             int floorVariation = Random.Range(0, floorObject.GetComponent<ProceduralObject>().objectVariations.Length);
-            floorObject.InstantiateProceduralTiledObject(roomObj.transform, RoomDimensions, floorVariation);
+            floorObject.InstantiateProceduralTiledObject(roomObj.transform, roomDimensions, floorVariation);
 
             //Instancier le plafond (pas implémenté pour les tests)
 
-            //Instancier les objets de la pièce (pas implémenté)
-            InstantiateObj();
+            //Instancier les objets de la pièce
+            InstantiateHierarchies(roomObj,Algos.GetVector3Volume(roomDimensions));
         }
 
-        private void InstantiateObj()
+        private void InstantiateHierarchies(GameObject parentObj, float roomVolume)
         {
-            
+            for (int i = 0; i < roomHierarchyRoots.Length; ++i)
+                roomVolume = roomHierarchyRoots[i].InstantiateProceduralHierarchy(parentObj, roomVolume);
         }
     }
 }

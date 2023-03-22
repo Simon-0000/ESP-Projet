@@ -12,7 +12,7 @@ using Parabox.CSG;
 
 
 [RequireComponent(typeof(ProceduralObject))]
-public class ProceduralTiledCubeObject : MonoBehaviour
+public class ProceduralTiledCubeObject : Procedural
 {
     [SerializeField] 
     VectorRange[] scales;// Les valeurs de «scales» sont utilisées comme des uvs où 0 représente une grandeur de 0
@@ -44,13 +44,14 @@ public class ProceduralTiledCubeObject : MonoBehaviour
             Debug.Assert(proceduralObj.objectVariations[i].GetComponent<MeshFilter>().sharedMesh.name == "Cube");
         CSG.epsilon = Mathf.Abs(GameConstants.OVERLAP_TOLERANCE);
     }
-
-    
+    public override GameObject InstanciateProceduralObject(Transform parent)
+    {
+        return InstantiateProceduralTiledObject(parent, Algos.GetRendererBounds(parent.gameObject).size, Random.Range(0, proceduralObj.objectVariations.Length), Random.Range(0, scales.Length));
+    }
     public GameObject InstantiateProceduralTiledObject(Transform parent, Vector3 parentDimensions,int variationIndex)
     {
         return InstantiateProceduralTiledObject(parent,parentDimensions,variationIndex,Random.Range(0,scales.Length));
     }
-
     public GameObject InstantiateProceduralTiledObject(Transform parent, Vector3 parentDimensions, int variationIndex,int placementIndex)
     {
         GameObject tuileObject = Instantiate(proceduralObj.objectVariations[variationIndex], parent);

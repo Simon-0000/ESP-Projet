@@ -4,7 +4,7 @@
 
 using System.Collections.Generic;
 using System;
-
+using UnityEngine;
 
 namespace Assets
 {
@@ -13,14 +13,13 @@ namespace Assets
    {
         
       public List<Noeud<T>> noeudsEnfants = new();
-      Noeud<T> parent;
       public T valeur;//la valeur du noeud
       
-      public Noeud<T> Parent { get => parent; }
+      public Noeud<T> Parent { set; get; }
 
       public Noeud(Noeud<T> parent, T valeur) 
       {
-         this.parent = parent;
+         Parent = parent;
          this.valeur = valeur;
       }
       static public bool TryFormerLienRéciproque(Noeud<T> noeudA, Noeud<T> noeudB)

@@ -4,8 +4,8 @@
 
 using UnityEngine;
 using System.Collections.Generic;
-
-
+using System;
+using Random = UnityEngine.Random;
 namespace Assets
 {
     static class Algos
@@ -42,9 +42,12 @@ namespace Assets
         public static Vector3 Vector2dTo3dVector(Vector2 vector2d, float height)
         {
             return new Vector3(vector2d.x, height, vector2d.y);
-            ;
         }
 
+        public static float GetVector3Volume(Vector3 src)
+        {
+            return src.x * src.y * src.z;
+        }
 
         //Cette fonction permet de prendre une certaine longueur (availableLength) et trouver une coupure aléatoire qui 
         //donnerait deux longueurs plus grandes ou égales à minimumCutLength 
@@ -95,7 +98,7 @@ namespace Assets
         public static Vector3 GetColliderOverlap(GameObject obj, Collider collider)
         {
             Vector3 distance = Algos.GetVectorAbs(obj.transform.position - collider.transform.position);
-            Vector3 sizeObj = obj.GetComponent<MeshRenderer>().bounds.size;
+            Vector3 sizeObj = Algos.GetRendererBounds(obj).size;
             Vector3 sizeCollider = collider.bounds.size;
             return -new Vector3(distance.x - (sizeObj.x + sizeCollider.x) / 2,
                 distance.y - (sizeObj.y + sizeCollider.y) / 2, distance.z - (sizeObj.z + sizeCollider.z) / 2);
@@ -119,12 +122,16 @@ namespace Assets
         public static Bounds GetRendererBounds(GameObject obj) //Le code de cette fonction a été pris de turnipski: https://www.reddit.com/r/Unity3D/comments/30y46p/getting_the_total_bounds_of_a_prefab_with/
         {
             Renderer[] renderers = obj.GetComponentsInChildren<Renderer>();
-
+            //Debug.Log(obj.name);
             if (renderers.Length > 0)
             {
+
                 Bounds bounds = renderers[0].bounds;
+
                 for (int i = 1, ni = renderers.Length; i < ni; i++)
                 {
+                    //Debug.Log("LocalScale: " + renderers[i].gameObject.name + renderers[i].gameObject.transform.localScale);
+                    //Debug.Log("OldVal: " + renderers[i].gameObject.name + renderers[i].bounds.size);
                     bounds.Encapsulate(renderers[i].bounds);
                 }
                 return bounds;
@@ -133,6 +140,17 @@ namespace Assets
             {
                 return default;
             }
+        }
+        public static bool IsItObjectChildren(GameObject parent, GameObject potentialChild)
+        {
+            Transform childParentTransform = potentialChild.transform.parent;
+            while(childParentTransform != null)
+            {
+                if (parent.transform == childParentTransform)
+                    return true;
+                childParentTransform = childParentTransform.transform.parent;
+            }
+            return false;
         }
     }
 }
