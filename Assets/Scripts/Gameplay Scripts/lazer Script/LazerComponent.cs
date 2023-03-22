@@ -19,14 +19,15 @@ public class LazerComponent : MonoBehaviour
    private float angelInRad;
    private Rigidbody rig;
    private float time;
+   private const float speed = 500f;
 
    private Vector3 lastVel;
    private void Awake()
    {
        damage = (int)floatDamage;
        rig = GetComponent<Rigidbody>();
-       rig.AddRelativeForce(Vector3.forward*1);
-       rig.velocity = transform.forward*500;
+       rig.AddRelativeForce(Vector3.forward);
+       rig.velocity = transform.forward*speed;
 
    }
 
@@ -66,12 +67,10 @@ public class LazerComponent : MonoBehaviour
 
    void Bounce(Collision collision)
    { 
-       var currentSpeed =500f;
+       
     
-       var direction= Vector3.Reflect(lastVel.normalized, collision.contacts[0].normal)*500f;
-     
-     rig.velocity = direction;
-     //Debug.Log($"x:{direction.x},y:{direction.y},z:{direction.z},");
+       var direction= Vector3.Reflect(lastVel.normalized, collision.contacts[0].normal)*speed;
+       rig.velocity = direction;
 
    }
 
@@ -87,18 +86,17 @@ public class LazerComponent : MonoBehaviour
    void DoDamageToZombie(Collision collision)
    {
        zombie= collision.contacts[0].otherCollider.GetComponent<ZombieBehaviour>();
-                  zombie.TakeDamage(damage);
-                  Destroy(gameObject);
+       zombie.TakeDamage(damage);
+       Destroy(gameObject);
    }
    public static float Schlick(float n1, float n2, float angle)
    {
             var cosTheta = Mathf.Cos(angle*Mathf.Deg2Rad);
            float r0 = Mathf.Pow((n1 - n2) / (n1 + n2),2);
-          
            float x = 1 - cosTheta;
-          
            float val = r0 + (1 - r0) * Mathf.Pow(x,5);
-           
            return Mathf.Clamp(val*2,0,1) ;
+           // on retourne la valuer x2 puisuqe selon shlick, le dommage aurait été minime et 
+           // défie le principe de notre jeu 
        }
 }
