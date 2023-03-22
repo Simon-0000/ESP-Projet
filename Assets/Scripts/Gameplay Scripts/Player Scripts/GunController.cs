@@ -21,7 +21,7 @@ public class GunController : MonoBehaviour
     private Vector3 unAimedPosition = new Vector3(0.284f, -0.4f, -0.07f);
     private Vector3 aimedposition = new Vector3(0.00085f, -0.16f, 0.296f);
     private Vector3 deplacement;
-    private float zoomMultiplier = 2;
+    private float zoomMultiplier = 5;
     private float defaultFov = 90;
     private float zoomDuration = 1 / 8f;
     private float timeelapse=0;

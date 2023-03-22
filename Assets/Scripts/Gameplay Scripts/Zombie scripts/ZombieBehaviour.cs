@@ -90,7 +90,7 @@ public class ZombieBehaviour : MonoBehaviour
     public void ManagePatrol()
     {
        // GetComponent<NavMeshAgent>().destination = patrolLocations[patrolIndexCounter];
-        Debug.Log("patrol update was made");
+       // Debug.Log("patrol update was made");
         if ((transform.position - GetComponent<NavMeshAgent>().destination).magnitude < 2)
         {
             GetComponent<NavMeshAgent>().destination = patrolLocations[patrolIndexCounter++];

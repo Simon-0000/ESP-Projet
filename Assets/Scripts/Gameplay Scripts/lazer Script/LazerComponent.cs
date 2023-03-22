@@ -67,7 +67,7 @@ public class LazerComponent : MonoBehaviour
    void Bounce(Collision collision)
    { 
        var currentSpeed =500f;
-       Debug.Log($"{lastVel.x}  {lastVel.y}     {lastVel.z}");
+    
        var direction= Vector3.Reflect(lastVel.normalized, collision.contacts[0].normal)*500f;
      
      rig.velocity = direction;
