@@ -11,24 +11,34 @@ using UnityEngine.UI;
 
 public class GunController : MonoBehaviour
 {
+    
+    [Header("le compteur de balle")] 
     [SerializeField] TextMeshProUGUI text;
+    
+    [Header("projectile")] 
     [SerializeField] private GameObject bullet;
-    [SerializeField] private Transform boucheDeCanon;
-
-    [Header("aiming component")] [SerializeField]
-    private Transform gun;
-
+   
+    [Header("aiming component")] 
+    [SerializeField] private Transform gun;
+     [SerializeField] private Transform boucheDeCanon;
     private Vector3 unAimedPosition = new Vector3(0.284f, -0.4f, -0.07f);
     private Vector3 aimedposition = new Vector3(0.00085f, -0.16f, 0.296f);
     private Vector3 deplacement;
-    private float zoomMultiplier = 2;
+    private float zoomMultiplier = 5;
     private float defaultFov = 90;
     private float zoomDuration = 1 / 8f;
+   
+    
     private float timeelapse=0;
 
+    [Header("crosshair")] 
     [SerializeField] private Image crosshair;
     [SerializeField] private RawImage aimedcrosshair;
-
+    
+   // pour régler la sensibilité
+    private PlayerLook lookie;
+    float basexSens;
+    float baseySens;
 
     private int ammo;
     private Camera cam;
@@ -36,6 +46,9 @@ public class GunController : MonoBehaviour
 
     void Awake()
     {
+        lookie = GetComponent<PlayerLook>();
+         basexSens=lookie.xSensitivity ;
+         baseySens= lookie.ySensitivity;
 
         cam = Camera.main;
         SetCursor();
@@ -50,13 +63,14 @@ public class GunController : MonoBehaviour
         if (Input.GetMouseButton(1))
         {
             timeelapse = 0;
-                
-            
+
+            lookie.xSensitivity =basexSens/2;
+            lookie.ySensitivity =baseySens/2;
             ZoomCamera(defaultFov / zoomMultiplier); 
             gun.localPosition = Vector3.MoveTowards(gun.localPosition ,aimedposition, deplacement.magnitude/100);
             gun.rotation = new Quaternion(0f,0f,0f,0f);
-           // crosshair.color = new Color(0, 0, 0, 0);
-           crosshair.enabled = false;
+            boucheDeCanon.rotation=new Quaternion(0f,0f,0f,0f);
+            crosshair.enabled = false;
            aimedcrosshair.enabled = true;
            gun.GetComponent<MeshRenderer>().enabled=false;
         } 
@@ -67,21 +81,21 @@ public class GunController : MonoBehaviour
             if (timeelapse > 0.1f)
             {
                 gun.GetComponent<MeshRenderer>().enabled = true;
-               
             }
-        else
+            else
             {
-                timeelapse += Time.deltaTime; 
-                 
+                timeelapse += Time.deltaTime;
             }
-
+            lookie.xSensitivity =basexSens;
+            lookie.ySensitivity =baseySens;
+            AimGun();
             gun.localPosition =
                 Vector3.MoveTowards(gun.localPosition, unAimedPosition, deplacement.magnitude / 100);
             ZoomCamera(defaultFov);
             crosshair.enabled = true;
             aimedcrosshair.enabled = false;
            
-            AimGun();
+           
             crosshair.color = Color.green;
             
         }
@@ -145,7 +159,11 @@ public class GunController : MonoBehaviour
            boucheDeCanon.LookAt(hit.point);
         }
         else
-            gun.rotation = new Quaternion(0f,0f,0f,0f);
+        {
+          gun.rotation = new Quaternion(0f,0f,0f,0f);
+          boucheDeCanon.rotation = new Quaternion(0, 0, 0, 0);
+        }
+            
 
     }
 
@@ -154,3 +172,5 @@ public class GunController : MonoBehaviour
         text.text = ammo.ToString();}
 
 }
+
+
