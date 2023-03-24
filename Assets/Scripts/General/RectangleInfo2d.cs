@@ -19,17 +19,5 @@ namespace Assets
       public Vector2 BottomLeftCoordinates => coordinates + new Vector2(-size.x/2,-size.y/2);
       public Vector2 BottomRightCoordinates => coordinates + new Vector2(size.x/2,-size.y/2);
       
-      public Vector2 GetCornerCoordinates(int signX,int signY)
-      {
-            if(signX > 0)
-            {
-                if(signY > 0)
-                    return TopRightCoordinates;
-                return BottomRightCoordinates;
-            }
-            if (signY > 0)
-                return TopLeftCoordinates;
-            return BottomLeftCoordinates;
-        }
    }
 }

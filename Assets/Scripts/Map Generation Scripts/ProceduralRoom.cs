@@ -5,7 +5,6 @@
 using System;
 using UnityEngine;
 using Random = UnityEngine.Random;
-using Parabox.CSG;
 using Assets;
 namespace Assets
 {
@@ -34,7 +33,7 @@ namespace Assets
             GameObject roomObj = new GameObject(ROOM_NAME);
             roomObj.transform.parent = parentTransform;
             roomObj.transform.position = Algos.Vector2dTo3dVector(roomNode.valeur.coordinates);
-            roomObj.AddComponent<BoundsManager>().objectBounds.center = roomObj.transform.position;
+            roomObj.TryAddComponent<BoundsManager>().objectBounds.center = roomObj.transform.position;
             //On transforme la grandeur 2d du «RectangleInfo2d» de «roomNode» en une grandeur 3d
             Vector3 roomDimensions = Algos.Vector2dTo3dVector(roomNode.valeur.size, GameConstants.ROOM_HEIGHT);
             roomObj.GetComponent<BoundsManager>().objectBounds.size = roomDimensions;
@@ -50,8 +49,11 @@ namespace Assets
 
             //Instancier le plafond (pas implémenté pour les tests)
 
+            //Diminuer la gradeur de la pièce par rapport aux murs qui ont été instancié
+
             //Instancier les objets de la pièce
             InstantiateHierarchies(roomObj,Algos.GetVector3Volume(roomDimensions));
+
         }
 
         private void InstantiateHierarchies(GameObject parentObj, float roomVolume)

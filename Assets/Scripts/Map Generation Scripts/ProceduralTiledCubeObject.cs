@@ -58,9 +58,10 @@ public class ProceduralTiledCubeObject : Procedural
         Vector3 tileSize = Vector3.Scale(scales[placementIndex].GetRandomVector(),parentDimensions) + scaleOffsets[placementIndex].GetRandomVector();
         TileUvs(tuileObject, tileSize);
         StretchVertices(tuileObject, tileSize);
-        proceduralObj.SetRandomRelativePlacement(tuileObject, parentDimensions, placementIndex);
+        proceduralObj.SetRandomRelativePlacement(ref tuileObject, parentDimensions, placementIndex);
         WrapMesh(tuileObject, tileSize);
         return tuileObject;
+        
     }
     
     
@@ -74,7 +75,6 @@ public class ProceduralTiledCubeObject : Procedural
                 if (obj != collider.gameObject)
                     HollowOutMesh(obj, collider);
         }
-
     }
     private static void HollowOutMesh(GameObject obj, Collider collider)
     {
@@ -90,10 +90,9 @@ public class ProceduralTiledCubeObject : Procedural
             Model result = CSG.Subtract(obj, collider.gameObject);
             obj.GetComponent<MeshFilter>().sharedMesh = Algos.CenterVertices(result.mesh);
             obj.GetComponent<MeshRenderer>().sharedMaterials = result.materials.ToArray();
-            obj.AddComponent<MeshCollider>().sharedMesh = obj.GetComponent<MeshFilter>().sharedMesh;
+            obj.TryAddComponent<MeshCollider>().sharedMesh = obj.GetComponent<MeshFilter>().sharedMesh;
             Destroy(obj.GetComponent<BoxCollider>());
             //DOIT CHANGER LA LOGIQUE pusque si on tranche le bas d'un mur, le mur sera complètement décaler à cause de ça
-
         }
         catch
         {

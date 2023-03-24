@@ -57,29 +57,30 @@ public class ProceduralObject : Procedural
     public override GameObject InstanciateProceduralObject(Transform parentTransform)//Instancier l'objet relatif à un parent
     {
         GameObject obj =  Instantiate(objectVariations[Random.Range(0, objectVariations.Length)], parentTransform);
+
         BoundsManager parentBoundsManager = parentTransform.GetComponent<BoundsManager>();
         if (parentBoundsManager != null)
-            SetRandomRelativePlacement(obj, parentBoundsManager.objectBounds.size);
+             SetRandomRelativePlacement(ref obj, parentBoundsManager.objectBounds.size);
         else
-            SetRandomRelativePlacement(obj, Algos.GetRendererBounds(parentTransform.gameObject).size);
+            SetRandomRelativePlacement(ref obj, Algos.GetRendererBounds(parentTransform.gameObject).size);
         return obj;
     }
 
-    public void SetRandomRelativePlacement(GameObject obj, Vector3 parentDimensions) =>
-        SetRandomRelativePlacement(obj, parentDimensions, Random.Range(0, positions.Length));
-    
-    public void SetRandomRelativePlacement(GameObject obj, Vector3 parentDimensions,int placementIndex)=>
-        SetRandomRelativePlacement(obj, parentDimensions,(positions[placementIndex],orientations[placementIndex], offsets[placementIndex]));
+    public void SetRandomRelativePlacement(ref GameObject obj, Vector3 parentDimensions) =>
+        SetRandomRelativePlacement(ref obj, parentDimensions, Random.Range(0, positions.Length));
 
-    public void SetRandomRelativePlacement(GameObject obj, Vector3 parentDimensions, (VectorRange position, VectorRange orientation, VectorRange offset) placement)
+    public void SetRandomRelativePlacement(ref GameObject obj, Vector3 parentDimensions,int placementIndex)=>
+        SetRandomRelativePlacement(ref obj, parentDimensions,(positions[placementIndex],orientations[placementIndex], offsets[placementIndex]));
+
+    public void SetRandomRelativePlacement(ref GameObject obj, Vector3 parentDimensions, (VectorRange position, VectorRange orientation, VectorRange offset) placement)
     {
         bool reposition;
         int iterationAttemps = 0;
-        obj.AddComponent<BoundsManager>().objectBounds = Algos.GetRendererBounds(obj);
-        Vector3 objDimensions = obj.AddComponent<BoundsManager>().objectBounds.size;
+        obj.TryAddComponent<BoundsManager>().objectBounds = Algos.GetRendererBounds(obj);
+        Vector3 objDimensions;
 
-        Debug.Log(obj.name + objDimensions);
-
+        Physics.autoSimulation = false;
+        Physics.Simulate(Time.deltaTime);
         do
         {
 
@@ -87,18 +88,28 @@ public class ProceduralObject : Procedural
             Vector3 relativeOrientation = placement.orientation.GetRandomVector();
             Vector3 offset = placement.offset.GetRandomVector();
 
+
+
+            //Tourner l'objet
+            obj.transform.localRotation =
+                Quaternion.Euler(relativeOrientation.x, relativeOrientation.y, relativeOrientation.z);
+
+            obj.GetComponent<BoundsManager>().Awake();
+            objDimensions = obj.GetComponent<BoundsManager>().objectBounds.size;
+
+
             //Placer l'objet relativement à son parent
             obj.transform.localPosition = PositionObject(objDimensions, parentDimensions, new Vector3(parentDimensions.x * relativePosition.x,
                 parentDimensions.y * relativePosition.y,
                 parentDimensions.z * relativePosition.z));
 
+
+
             //Décaler l'objet
             offset.Scale(Algos.GetVectorSign(obj.transform.localPosition));
             obj.transform.localPosition += offset;
 
-            //Tourner l'objet
-            obj.transform.localRotation =
-                Quaternion.Euler(relativeOrientation.x, relativeOrientation.y, relativeOrientation.z);
+            obj.GetComponent<BoundsManager>().objectBounds.center = obj.transform.position;
 
             reposition = false;
             
@@ -108,30 +119,36 @@ public class ProceduralObject : Procedural
             //https://stackoverflow.com/questions/69055600/bad-usage-of-physics-overlapbox
             if (repositionAtCollision)
             {
-                Physics.autoSimulation = false;
-                Physics.Simulate(Time.deltaTime);
+
            
                 Collider[] colliders = Physics.OverlapBox(obj.transform.position, (objDimensions*0.49f ),obj.transform.rotation);
                 for (int i = 0; i < colliders.Length; ++i)
                 {
-                    if (colliders[i].gameObject != obj &&Algos.IsColliderOverlaping(Algos.GetColliderOverlap(obj,colliders[i])) &&!Algos.IsItObjectChildren(obj,colliders[i].gameObject))
+                    
+                    if (colliders[i].gameObject != obj && Algos.IsColliderOverlaping(Algos.GetColliderOverlap(obj,colliders[i])) && Algos.FindFirstParentInstance(colliders[i].gameObject,p=>p.gameObject.GetComponent<BoundsManager>() != null).gameObject != obj)
                     {
+                        Debug.Log(Algos.FindFirstParentInstance(colliders[i].gameObject, p => p.gameObject.GetComponent<BoundsManager>() != null).gameObject.name + "Collided with" + obj.name);
                         Debug.Log("Collider: " + obj.name + " With: "+ colliders[i].gameObject.name + "OBJ Size: " + objDimensions*0.45f + "Overlap = " + Algos.GetColliderOverlap(obj, colliders[i]));
                         reposition = true;
                         break;
                     }
                 }
 
-                Physics.autoSimulation = true;
             }
             ++iterationAttemps;
         } while (reposition == true && iterationAttemps <= GameConstants.MAX_ITERATIONS);
         if (reposition == true)
+        {
+            Debug.Log("XXXXXXXXXXXXXXxx");
             Destroy(obj);
+            obj = null;
+        }
+        Physics.autoSimulation = true;
+
     }
-    
-    
-    
+
+
+
     //Cet fonction positionne l'objet relatif au parent
     private Vector3 PositionObject(Vector3 objDimensions, Vector3 parentDimensions, Vector3 relativePosition) =>
             PositionObject(objDimensions, parentDimensions, relativePosition, XIsConstrained, YIsConstrained, ZIsConstrained);

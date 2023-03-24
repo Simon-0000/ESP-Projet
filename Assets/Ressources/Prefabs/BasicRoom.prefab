@@ -326,7 +326,7 @@ MonoBehaviour:
   offsets:
   - startAt: {x: 0, y: 0.8, z: 0}
     endAt: {x: 0, y: 0.8, z: 0}
-  repositionAtCollision: 0
+  repositionAtCollision: 1
   XIsConstrained: 1
   YIsConstrained: 1
   ZIsConstrained: 1
@@ -629,11 +629,13 @@ MonoBehaviour:
   - noeudsEnfants:
     - noeudsEnfants: []
       valeur:
-        likelyhood: 57.9
+        likelyhood: 100
         proceduralComponent: {fileID: 8804535930258130700}
+        proceduralComponentAmount: 3
     valeur:
       likelyhood: 100
       proceduralComponent: {fileID: 267105012156637242}
+      proceduralComponentAmount: 1
 --- !u!1 &4294347369560251504
 GameObject:
   m_ObjectHideFlags: 0
@@ -684,6 +686,7 @@ MonoBehaviour:
     valeur:
       likelyhood: 100
       proceduralComponent: {fileID: 4189485426261564774}
+      proceduralComponentAmount: 2
 --- !u!1 &4893328270345556088
 GameObject:
   m_ObjectHideFlags: 0
@@ -1122,19 +1125,31 @@ MonoBehaviour:
   - {fileID: 5983351616182201920}
   positions:
   - startAt: {x: -0.5, y: -5, z: -0.5}
+    endAt: {x: 0.5, y: -5, z: -0.5}
+  - startAt: {x: -0.5, y: -5, z: 0.5}
     endAt: {x: 0.5, y: -5, z: 0.5}
   - startAt: {x: -0.5, y: -5, z: -0.5}
+    endAt: {x: -0.5, y: -5, z: 0.5}
+  - startAt: {x: 0.5, y: -5, z: -0.5}
     endAt: {x: 0.5, y: -5, z: 0.5}
   orientations:
-  - startAt: {x: 0, y: 0, z: 0}
-    endAt: {x: 0, y: 0, z: 0}
+  - startAt: {x: 0, y: -90, z: 0}
+    endAt: {x: 0, y: -90, z: 0}
   - startAt: {x: 0, y: 90, z: 0}
     endAt: {x: 0, y: 90, z: 0}
+  - startAt: {x: 0, y: 0, z: 0}
+    endAt: {x: 0, y: 0, z: 0}
+  - startAt: {x: 0, y: 180, z: 0}
+    endAt: {x: 0, y: 180, z: 0}
   offsets:
-  - startAt: {x: 0, y: 0, z: 0}
-    endAt: {x: 0, y: 0, z: 0}
-  - startAt: {x: 0, y: 0, z: 0}
-    endAt: {x: 0, y: 0, z: 0}
+  - startAt: {x: -0.5, y: 0, z: -0.5}
+    endAt: {x: -0.5, y: 0, z: -0.5}
+  - startAt: {x: -0.5, y: 0, z: -0.5}
+    endAt: {x: -0.5, y: 0, z: -0.5}
+  - startAt: {x: -0.5, y: 0, z: -0.5}
+    endAt: {x: -0.5, y: 0, z: -0.5}
+  - startAt: {x: -0.5, y: 0, z: -0.5}
+    endAt: {x: -0.5, y: 0, z: -0.5}
   repositionAtCollision: 1
   XIsConstrained: 1
   YIsConstrained: 1

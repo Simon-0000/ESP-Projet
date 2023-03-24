@@ -141,16 +141,34 @@ namespace Assets
                 return default;
             }
         }
-        public static bool IsItObjectChildren(GameObject parent, GameObject potentialChild)
+        //public static bool IsItObjectChildren(GameObject parent, GameObject potentialChild)
+        //{
+        //    Transform childParentTransform = potentialChild.transform.parent;
+        //    while(childParentTransform != null)
+        //    {
+        //        if (parent.transform == childParentTransform)
+        //            return true;
+        //        childParentTransform = childParentTransform.transform.parent;
+        //    }
+        //    return false;
+        //}
+        public static Transform FindFirstParentInstance(GameObject obj, Func<Transform,bool> parentConditionIsSatisfied)
         {
-            Transform childParentTransform = potentialChild.transform.parent;
-            while(childParentTransform != null)
+            Transform childParentTransform = obj.transform.parent;
+            while (childParentTransform != null && !parentConditionIsSatisfied(childParentTransform))
             {
-                if (parent.transform == childParentTransform)
-                    return true;
                 childParentTransform = childParentTransform.transform.parent;
             }
-            return false;
+            return childParentTransform;
+        }
+        public static T TryAddComponent<T>(this GameObject obj) where T : Component//Cette fonction/extension de GameObject a été pris (et modifié) de ChatGPT
+        {
+            T component = obj.GetComponent<T>();
+            if (component == null)
+            {
+                component = obj.AddComponent<T>();
+            }
+            return component;
         }
     }
 }

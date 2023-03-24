@@ -41,9 +41,6 @@ namespace Assets
             Destroy(transform.GetChild(i).gameObject);
             StartCoroutine(CreateMap());
 
-
-
-
         }
         IEnumerator CreateMap()
         {
