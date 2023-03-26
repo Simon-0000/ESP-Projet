@@ -15,10 +15,12 @@ namespace Assets
         [SerializeField] ProceduralTiledCubeObject floorObject;
         [SerializeField] ProceduralHierarchy[] roomHierarchyRoots;
 
+        [Range(0,1)] [SerializeField]
+        float roomFillPercentage = 0.5f;
+
         const String ROOM_NAME = "Room";
 
-
-        public void InstantiateRoom(Noeud<RectangleInfo2d> roomNode, Transform parentTransform)
+        public void InstanciateProceduralRoom(Noeud<RectangleInfo2d> roomNode,Transform parentTransform)
         {
             //On fait les «Awake» ici, puisqu'un «ProceduralObject» est utilisé comme un modèle qui nous fourni
             //l'information nécessaire pour instancier un gameObject, donc leur «Awake» ne sera jamais appelé si on
@@ -33,7 +35,13 @@ namespace Assets
             GameObject roomObj = new GameObject(ROOM_NAME);
             roomObj.transform.parent = parentTransform;
             roomObj.transform.position = Algos.Vector2dTo3dVector(roomNode.valeur.coordinates);
-            roomObj.TryAddComponent<BoundsManager>().objectBounds.center = roomObj.transform.position;
+            BoundsManager defaultBounds = GetComponent<BoundsManager>();
+            if (defaultBounds != null)
+                Algos.CopyComponent(defaultBounds, roomObj);
+            else
+                roomObj.TryAddComponent<BoundsManager>();
+
+            roomObj.GetComponent<BoundsManager>().objectBounds.center = roomObj.transform.position;
             //On transforme la grandeur 2d du «RectangleInfo2d» de «roomNode» en une grandeur 3d
             Vector3 roomDimensions = Algos.Vector2dTo3dVector(roomNode.valeur.size, GameConstants.ROOM_HEIGHT);
             roomObj.GetComponent<BoundsManager>().objectBounds.size = roomDimensions;
@@ -52,14 +60,18 @@ namespace Assets
             //Diminuer la gradeur de la pièce par rapport aux murs qui ont été instancié
 
             //Instancier les objets de la pièce
-            InstantiateHierarchies(roomObj,Algos.GetVector3Volume(roomDimensions));
-
+            roomObj.GetComponent<BoundsManager>().Awake();
+            InstantiateHierarchies(roomObj.transform,Algos.GetVector3Volume(roomDimensions) * roomFillPercentage);
         }
-
-        private void InstantiateHierarchies(GameObject parentObj, float roomVolume)
+        private void InstantiateHierarchies(Transform parentTransform, float roomVolume)
         {
+            parentTransform.gameObject.TryAddComponent<ProceduralHierarchy>().hierarchyVolume = roomVolume;
             for (int i = 0; i < roomHierarchyRoots.Length; ++i)
-                roomVolume = roomHierarchyRoots[i].InstantiateProceduralHierarchy(parentObj, roomVolume);
+            {
+                roomHierarchyRoots[i].TryConnectToNewParentHierarchy(parentTransform);
+                roomHierarchyRoots[i].InstanciateProcedural(parentTransform);
+            }
+            Destroy(parentTransform.gameObject.GetComponent<ProceduralHierarchy>());
         }
     }
 }

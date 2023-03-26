@@ -44,7 +44,7 @@ public class ProceduralTiledCubeObject : Procedural
             Debug.Assert(proceduralObj.objectVariations[i].GetComponent<MeshFilter>().sharedMesh.name == "Cube");
         CSG.epsilon = Mathf.Abs(GameConstants.OVERLAP_TOLERANCE);
     }
-    public override GameObject InstanciateProceduralObject(Transform parent)
+    public override GameObject InstanciateProcedural(Transform parent)
     {
         return InstantiateProceduralTiledObject(parent, Algos.GetRendererBounds(parent.gameObject).size, Random.Range(0, proceduralObj.objectVariations.Length), Random.Range(0, scales.Length));
     }

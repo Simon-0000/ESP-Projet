@@ -142,7 +142,8 @@ namespace Assets
             for (int i = 0; i < roomsNodes.Count; ++i)
             {
                 int roomTypeIndex = Random.Range(0, roomObjects.Length);
-                roomObjects[roomTypeIndex].InstantiateRoom(roomsNodes[i], roomParent.transform);
+
+                roomObjects[roomTypeIndex].InstanciateProceduralRoom(roomsNodes[i],roomParent.transform);
             }
         }
 

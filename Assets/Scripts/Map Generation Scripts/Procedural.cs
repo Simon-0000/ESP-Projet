@@ -9,6 +9,6 @@ namespace Assets
 {
     public abstract class Procedural : MonoBehaviour
     {
-        public abstract GameObject InstanciateProceduralObject(Transform parent);
+        public abstract GameObject InstanciateProcedural(Transform parent);
     }
 }

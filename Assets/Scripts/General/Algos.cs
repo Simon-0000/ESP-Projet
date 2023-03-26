@@ -94,6 +94,14 @@ namespace Assets
             mesh.RecalculateNormals();
             return mesh;
         }
+        public static void ChangePivotPosition(Transform objTransform,Vector3 newPivotPosition)
+        {
+            Vector3 centerOffset = objTransform.position - newPivotPosition;
+            for(int i =0; i < objTransform.childCount; ++i)
+                objTransform.GetChild(i).position += centerOffset;
+            objTransform.position = newPivotPosition;
+        }
+
 
         public static Vector3 GetColliderOverlap(GameObject obj, Collider collider)
         {
@@ -169,6 +177,29 @@ namespace Assets
                 component = obj.AddComponent<T>();
             }
             return component;
+        }
+        public static T CopyComponent<T>(T original, GameObject destination) where T : Component
+        {
+            if (original == null || destination == null)
+            {
+                return null;
+            }
+
+            System.Type type = original.GetType();
+            Component copy = destination.AddComponent(type);
+            System.Reflection.FieldInfo[] fields = type.GetFields();
+
+            foreach (System.Reflection.FieldInfo field in fields)
+            {
+                if (Attribute.IsDefined(field, typeof(SerializeField)))
+                {
+                    continue;
+                }
+
+                field.SetValue(copy, field.GetValue(original));
+            }
+
+            return copy as T;
         }
     }
 }
