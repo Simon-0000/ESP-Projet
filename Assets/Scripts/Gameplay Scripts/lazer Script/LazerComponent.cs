@@ -6,6 +6,7 @@ using System.Runtime.InteropServices.ComTypes;
 using UnityEngine;
 using UnityEngine.UI;
 using Assets;
+using UnityEngine.PlayerLoop;
 
 [RequireComponent(typeof(Rigidbody))]
 public class LazerComponent : MonoBehaviour
@@ -20,6 +21,9 @@ public class LazerComponent : MonoBehaviour
    private Rigidbody rig;
    private float time;
    private const float speed = 500f;
+   [SerializeField] private int[] layers;
+   
+
 
    private Vector3 lastVel;
    private void Awake()
@@ -48,14 +52,19 @@ public class LazerComponent : MonoBehaviour
 
    private void OnCollisionEnter(Collision collision)
    {
-       if (collision.contacts[0].otherCollider.gameObject.layer == 6)
-       { 
-           Bounce(collision);
-          AdjustDammageToShlick(collision);
-         
+       for (int i = 0; i < layers.Length; i++)
+       {
+         if (collision.contacts[0].otherCollider.gameObject.layer == layers[i])
+         { 
+             Bounce(collision);
+             AdjustDammageToShlick(collision);
+             break;
 
 
+
+         }  
        }
+       
        if (collision.contacts[0].otherCollider.gameObject.layer == 7)
        {
            DoDamageToZombie( collision);
