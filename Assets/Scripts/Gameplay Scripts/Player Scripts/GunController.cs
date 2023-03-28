@@ -64,8 +64,8 @@ public class GunController : MonoBehaviour
         {
             timeelapse = 0;
 
-            lookie.xSensitivity =basexSens/2;
-            lookie.ySensitivity =baseySens/2;
+            lookie.xSensitivity =basexSens/3;
+            lookie.ySensitivity =baseySens/3;
             ZoomCamera(defaultFov / zoomMultiplier); 
             gun.localPosition = Vector3.MoveTowards(gun.localPosition ,aimedposition, deplacement.magnitude/100);
             gun.rotation = new Quaternion(0f,0f,0f,0f);
@@ -172,5 +172,3 @@ public class GunController : MonoBehaviour
         text.text = ammo.ToString();}
 
 }
-
-
