@@ -80,6 +80,8 @@ namespace Assets
             return noeudsFeuilles;
         }
 
+        // La fonction ci-dessous à pour but de centré les vertices d'un mesh. Elle est utilisé en combinaison avec la
+        // librarie: Parabox.CSG, puisque les mesh retourné par cette librarie sont décalé du centre 
         static public Mesh CenterVertices(Mesh src)
         {
             Vector3[] vertices = src.vertices;
@@ -87,13 +89,14 @@ namespace Assets
             {
                 vertices[i] -= src.bounds.center;
             }
-
+            
             Mesh mesh = src;
             mesh.vertices = vertices;
             mesh.RecalculateBounds();
             mesh.RecalculateNormals();
             return mesh;
         }
+        
         public static void ChangePivotPosition(Transform objTransform,Vector3 newPivotPosition)
         {
             Vector3 centerOffset = objTransform.position - newPivotPosition;
@@ -103,6 +106,8 @@ namespace Assets
         }
 
 
+        //GetColliderOverlap donne une vecteur (en valeur absolue) qui représente le chevauchement entre un objet et
+        //un collider
         public static Vector3 GetColliderOverlap(GameObject obj, Collider collider)
         {
             Vector3 distance = Algos.GetVectorAbs(obj.transform.position - collider.transform.position);
@@ -112,6 +117,8 @@ namespace Assets
                 distance.y - (sizeObj.y + sizeCollider.y) / 2, distance.z - (sizeObj.z + sizeCollider.z) / 2);
         }
 
+        //IsColliderOverlaping détermine si chaque axe (x,y,z) d'un chevauchement est assez grand pour les considéré
+        //comme étant un chevauchement physique en 3d
         public static bool IsColliderOverlaping(Vector3 overlap) =>
             IsColliderOverlaping(overlap, GameConstants.OVERLAP_TOLERANCE);
 
@@ -127,39 +134,9 @@ namespace Assets
 
             return true;
         }
-        public static Bounds GetRendererBounds(GameObject obj) //Le code de cette fonction a été pris de turnipski: https://www.reddit.com/r/Unity3D/comments/30y46p/getting_the_total_bounds_of_a_prefab_with/
-        {
-            Renderer[] renderers = obj.GetComponentsInChildren<Renderer>();
-            //Debug.Log(obj.name);
-            if (renderers.Length > 0)
-            {
-
-                Bounds bounds = renderers[0].bounds;
-
-                for (int i = 1, ni = renderers.Length; i < ni; i++)
-                {
-                    //Debug.Log("LocalScale: " + renderers[i].gameObject.name + renderers[i].gameObject.transform.localScale);
-                    //Debug.Log("OldVal: " + renderers[i].gameObject.name + renderers[i].bounds.size);
-                    bounds.Encapsulate(renderers[i].bounds);
-                }
-                return bounds;
-            }
-            else
-            {
-                return default;
-            }
-        }
-        //public static bool IsItObjectChildren(GameObject parent, GameObject potentialChild)
-        //{
-        //    Transform childParentTransform = potentialChild.transform.parent;
-        //    while(childParentTransform != null)
-        //    {
-        //        if (parent.transform == childParentTransform)
-        //            return true;
-        //        childParentTransform = childParentTransform.transform.parent;
-        //    }
-        //    return false;
-        //}
+        
+        //La fonction ci-dessous parcours les parents de l'objet jusqu'à ce qu'il trouve un parent qui rempli
+        //la condition donnée. Le parent trouvé est retourné,mais s'il n'existe pas, la fonction retournera null
         public static Transform FindFirstParentInstance(GameObject obj, Func<Transform,bool> parentConditionIsSatisfied)
         {
             Transform childParentTransform = obj.transform.parent;
@@ -169,6 +146,10 @@ namespace Assets
             }
             return childParentTransform;
         }
+        
+        
+        //La fonction "TryAddComponent" a pour but d'essayer d'ajouter une composante si elle n'existe pas et de
+        //retourner la composante en question
         public static T TryAddComponent<T>(this GameObject obj) where T : Component//Cette fonction/extension de GameObject a été pris (et modifié) de ChatGPT
         {
             T component = obj.GetComponent<T>();
@@ -178,6 +159,12 @@ namespace Assets
             }
             return component;
         }
+
+        
+        
+
+        //La fonction ci-dessous (CopyComponent) a été prise par Shaffe:
+        //https://answers.unity.com/questions/458207/copy-a-component-at-runtime.html
         public static T CopyComponent<T>(T original, GameObject destination) where T : Component
         {
             if (original == null || destination == null)
@@ -200,6 +187,27 @@ namespace Assets
             }
 
             return copy as T;
+        }
+        
+        
+        //Le code de cette fonction a été pris de turnipski:
+        //https://www.reddit.com/r/Unity3D/comments/30y46p/getting_the_total_bounds_of_a_prefab_with/
+        public static Bounds GetRendererBounds(GameObject obj) 
+        {
+            Renderer[] renderers = obj.GetComponentsInChildren<Renderer>();
+            if (renderers.Length > 0)
+            {
+                Bounds bounds = renderers[0].bounds;
+                for (int i = 1, ni = renderers.Length; i < ni; i++)
+                {
+                    bounds.Encapsulate(renderers[i].bounds);
+                }
+                return bounds;
+            }
+            else
+            {
+                return default;
+            }
         }
     }
 }

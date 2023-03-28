@@ -3,6 +3,7 @@
 //             dimensions des pièces en 2d)
 
 using UnityEngine;
+using UnityEngine.SubsystemsImplementation;
 
 namespace Assets
 {
@@ -19,5 +20,20 @@ namespace Assets
       public Vector2 BottomLeftCoordinates => coordinates + new Vector2(-size.x/2,-size.y/2);
       public Vector2 BottomRightCoordinates => coordinates + new Vector2(size.x/2,-size.y/2);
       
+      public Vector2 GetCornerCoordinates(int index)
+      {
+         switch (index)
+         {
+            case 0:
+               return BottomLeftCoordinates;
+            case 1:
+               return TopLeftCoordinates;
+            case 2:
+               return TopRightCoordinates;
+            case 3:
+               return BottomRightCoordinates;
+         }
+         return coordinates;
+      }
    }
 }

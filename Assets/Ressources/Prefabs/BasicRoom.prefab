@@ -1083,7 +1083,7 @@ MonoBehaviour:
   - noeudsEnfants:
     - noeudsEnfants: []
       valeur:
-        likelyhood: 5
+        likelyhood: 2
         proceduralComponent: {fileID: 4327715884798234366}
         proceduralComponentAmount: 2
     valeur:

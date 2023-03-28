@@ -42,7 +42,7 @@ public class ProceduralTiledCubeObject : Procedural
         //Chaque variation de l'objet à instancier doit être un cube
         for(int i = 0; i < proceduralObj.objectVariations.Length; ++i) 
             Debug.Assert(proceduralObj.objectVariations[i].GetComponent<MeshFilter>().sharedMesh.name == "Cube");
-        CSG.epsilon = Mathf.Abs(GameConstants.OVERLAP_TOLERANCE);
+        CSG.epsilon = GameConstants.OVERLAP_TOLERANCE;
     }
     public override GameObject InstanciateProcedural(Transform parent)
     {
@@ -59,7 +59,9 @@ public class ProceduralTiledCubeObject : Procedural
         TileUvs(tuileObject, tileSize);
         StretchVertices(tuileObject, tileSize);
         proceduralObj.SetRandomRelativePlacement(ref tuileObject, parentDimensions, placementIndex);
-        WrapMesh(tuileObject, tileSize);
+        if (wrapsAround == true)
+            WrapMesh(tuileObject, tileSize);
+
         return tuileObject;
         
     }
@@ -68,31 +70,32 @@ public class ProceduralTiledCubeObject : Procedural
     
     private void WrapMesh(GameObject obj, Vector3 size) 
     {
-        if(wrapsAround == true)
+        //On cherche tous ce rentre en collision avec l'objet et on le donne à
+
+        Collider[] colliders = Physics.OverlapBox(obj.transform.position, size / 2,obj.transform.rotation);
+        for (int i = 0; i < colliders.Length; ++i)
         {
-            Collider[] colliders = Physics.OverlapBox(obj.transform.position, size / 2);
-           foreach (Collider collider in colliders)
-                if (obj != collider.gameObject)
-                    HollowOutMesh(obj, collider);
+            if (obj != colliders[i].gameObject)
+            {
+                Vector3 roomOverlap = Algos.GetColliderOverlap(obj, colliders[i]);
+                if (!Algos.IsColliderOverlaping(roomOverlap)) 
+                    continue;
+                HollowOutMesh(obj, colliders[i].gameObject);
+            }
         }
     }
-    private static void HollowOutMesh(GameObject obj, Collider collider)
+    private static void HollowOutMesh(GameObject obj, GameObject substractedObj)
     {
-        if (obj == null || collider.gameObject == null || collider.gameObject.GetComponent<MeshRenderer>() == null)
+        if (obj == null || substractedObj == null || substractedObj.GetComponent<MeshRenderer>() == null)
             return;
-        Vector3 roomOverlap = Algos.GetColliderOverlap(obj, collider);//new(distance.x - (sizeObj.x + sizeCollider.x) / 2, distance.y - (sizeObj.y + sizeCollider.y) / 2, distance.z - (sizeObj.z + sizeCollider.z) / 2);
-        List<(float, int)> cuts = new();
 
-        if (!Algos.IsColliderOverlaping(roomOverlap)) 
-            return;
         try
         {
-            Model result = CSG.Subtract(obj, collider.gameObject);
+            Model result = CSG.Subtract(obj, substractedObj);
             obj.GetComponent<MeshFilter>().sharedMesh = Algos.CenterVertices(result.mesh);
             obj.GetComponent<MeshRenderer>().sharedMaterials = result.materials.ToArray();
             obj.TryAddComponent<MeshCollider>().sharedMesh = obj.GetComponent<MeshFilter>().sharedMesh;
             Destroy(obj.GetComponent<BoxCollider>());
-            //DOIT CHANGER LA LOGIQUE pusque si on tranche le bas d'un mur, le mur sera complètement décaler à cause de ça
         }
         catch
         {

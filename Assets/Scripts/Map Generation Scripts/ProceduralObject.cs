@@ -58,6 +58,8 @@ public class ProceduralObject : Procedural
     {
         GameObject obj =  Instantiate(objectVariations[Random.Range(0, objectVariations.Length)], parentTransform);
 
+        //Si on a accès à l'information du "bounds" donné par le parent, on l'utilise, sinon on obtient cette
+        //information manuellement
         BoundsManager parentBoundsManager = parentTransform.gameObject.GetComponent<BoundsManager>();
         if (parentBoundsManager != null)
              SetRandomRelativePlacement(ref obj, parentBoundsManager.objectBounds.size);
@@ -108,6 +110,7 @@ public class ProceduralObject : Procedural
                 offset.Scale(Algos.GetVectorSign(obj.transform.localPosition));
             obj.transform.localPosition += offset;
 
+            //Prendre les dimensions sans la rotation pour que 
             obj.GetComponent<BoundsManager>().Awake();
 
             //Tourner l'objet
@@ -118,19 +121,9 @@ public class ProceduralObject : Procedural
             reposition = false;
             if (repositionAtCollision)
             {
-
-           
                 Collider[] colliders = Physics.OverlapBox(obj.transform.position, (objDimensions*0.49f ),obj.transform.rotation);
                 for (int i = 0; i < colliders.Length; ++i)
                 {
-                    //if (colliders[i].gameObject != obj && Algos.IsColliderOverlaping(Algos.GetColliderOverlap(obj,colliders[i])) && Algos.FindFirstParentInstance(colliders[i].gameObject,p=>p.gameObject.GetComponent<BoundsManager>() != null).gameObject != obj)
-                    //{
-                    //    Debug.Log(Algos.FindFirstParentInstance(colliders[i].gameObject, p => p.gameObject.GetComponent<BoundsManager>() != null).gameObject.name + "Collided with" + obj.name);
-                    //    Debug.Log("Collider: " + obj.name + " With: "+ colliders[i].gameObject.name + "OBJ Size: " + objDimensions*0.45f + "Overlap = " + Algos.GetColliderOverlap(obj, colliders[i]));
-                    //    reposition = true;
-                    //    break;
-                    //}
-                                 
                     if (colliders[i].gameObject != obj && Algos.IsColliderOverlaping(Algos.GetColliderOverlap(obj,colliders[i])))
                     {
                         Transform other = Algos.FindFirstParentInstance(colliders[i].gameObject, p => p.gameObject.GetComponent<BoundsManager>() != null);
@@ -148,7 +141,6 @@ public class ProceduralObject : Procedural
         } while (reposition == true && iterationAttemps <= GameConstants.MAX_ITERATIONS);
         if (reposition == true)
         {
-            Debug.Log("XXXXXXXXXXXXXXxx");
             Destroy(obj);
             obj = null;
         }
@@ -156,8 +148,7 @@ public class ProceduralObject : Procedural
 
     }
 
-
-
+    
     //Cet fonction positionne l'objet relatif au parent
     private Vector3 PositionObject(Vector3 objDimensions, Vector3 parentDimensions, Vector3 relativePosition) =>
             PositionObject(objDimensions, parentDimensions, relativePosition, XIsConstrained, YIsConstrained, ZIsConstrained);

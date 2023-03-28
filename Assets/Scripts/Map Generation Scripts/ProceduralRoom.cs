@@ -65,10 +65,13 @@ namespace Assets
         }
         private void InstantiateHierarchies(Transform parentTransform, float roomVolume)
         {
+            //On donne ProceduralHierarchy au parent, afin que les hiérarchies instanciées puissent
+            //se fier à son volume lors de la génération
+            
             parentTransform.gameObject.TryAddComponent<ProceduralHierarchy>().hierarchyVolume = roomVolume;
+            
             for (int i = 0; i < roomHierarchyRoots.Length; ++i)
             {
-                roomHierarchyRoots[i].TryConnectToNewParentHierarchy(parentTransform);
                 roomHierarchyRoots[i].InstanciateProcedural(parentTransform);
             }
             Destroy(parentTransform.gameObject.GetComponent<ProceduralHierarchy>());

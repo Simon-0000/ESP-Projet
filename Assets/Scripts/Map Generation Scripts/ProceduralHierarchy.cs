@@ -1,3 +1,19 @@
+//Auteurs: Simon Asmar
+//Explication: Une hierarchie procÃ©durale permet de gÃ©nÃ©rer tout ce qui est de type procÃ©durale. Chaque procÃ©dural est
+//compris dans le type ProceduralHierarchyNodeValue et celui-ci agit comme des noeuds pouvant chacun possÃ©der des
+//enfants (de type ProceduralHierarchyNodeValue).
+//Pour passer Ã  travers un noeud, on utilise un systÃ¨me de probabilitÃ© (0 Ã  100).
+//On peut choisir le nombre de fois qu'on peut pigÃ© Ã  travers le mÃªme noeud pour par exemple gÃ©nÃ©rer 3 fois la
+//mÃªme "Procedural". 
+//AprÃ¨s l'instanciation d'un objet, on diminue le volume de cette hiÃ©rarchie, afin de s'assurer de ne pas remplir la
+//piÃ¨ce Ã  un volume qui excÃ¨de l'espace disponible de la racine(la racine correspond au volume de la piÃ¨ce)
+//Ã€ noter qu'on utilise un stack pour parcourir les noeuds, donc une hierarchie devra atteindre un enfant sans enfants
+//avant de passÃ© Ã  une autre branche
+//
+//Exemple d'implÃ©mentation: une table(ProceduralObject) est Ã  la racine de la hiÃ©rarchie et possÃ¨de une probabilitÃ©
+//de 100% d'Ãªtre instancier. Lors de l'instanciation de cette table, il est possible d'instancier 3 assiettes
+//(ProceduralObject, 50% chacun) qui seront toutes relatives Ã  la table. On rÃ©ussit Ã  instancier 2 assiettes sur 3 et
+//le volume disponible diminue de 10m^2
 using Assets;
 using System;
 using System.Collections.Generic;
@@ -46,14 +62,14 @@ public class ProceduralHierarchy : Procedural
     }
     public override GameObject InstanciateProcedural(Transform rootParent)
     {
-        //Trouver le parent de la hiérarchie s'il n'est pas déjà défini, s'il n'y a pas de parent,
-        //il n'y a pas de "hierarchyVolume" donc on ne peut pas générer la hiérarchie
+        //Trouver le parent de la hiï¿½rarchie s'il n'est pas dï¿½jï¿½ dï¿½fini, s'il n'y a pas de parent,
+        //il n'y a pas de "hierarchyVolume" donc on ne peut pas gï¿½nï¿½rer la hiï¿½rarchie
 
         if (!TryConnectToNewParentHierarchy(rootParent))
             return null;
 
-        //Le volume max de cette hiérarchie correspond au volume du parent, lorsque la génération de la hiérarchie sera terminé,
-        //on met à jour la valeur de volume du parent
+        //Le volume max de cette hiï¿½rarchie correspond au volume du parent, lorsque la gï¿½nï¿½ration de la hiï¿½rarchie sera terminï¿½,
+        //on met ï¿½ jour la valeur de volume du parent
         hierarchyVolume = parentHierarchy.hierarchyVolume;
         InstantiateHierarchy(rootParent);
         parentHierarchy.hierarchyVolume = hierarchyVolume;
@@ -61,10 +77,10 @@ public class ProceduralHierarchy : Procedural
     }
     private void InstantiateHierarchy(Transform rootParent)
     {
-        //Créer un Queue de noeuds utilisé dans la surcharge/overload pour générer la hiérarchie 
+        //Crï¿½er un Queue de noeuds utilisï¿½ dans la surcharge/overload pour gï¿½nï¿½rer la hiï¿½rarchie 
         Stack<Noeud<ProceduralHierarchyNodeValue>> proceduralsQueue = new(ProceduralRootNodes);
 
-        //Créer un noeud parent qui va englober notre hiérarchie, et préparer les noeuds enfants à être utilisés
+        //Crï¿½er un noeud parent qui va englober notre hiï¿½rarchie, et prï¿½parer les noeuds enfants ï¿½ ï¿½tre utilisï¿½s
         Noeud<ProceduralHierarchyNodeValue> parentNode = new(null, new ProceduralHierarchyNodeValue());
         parentNode.valeur.InstantiatedObj = rootParent.gameObject;
         for (int i = 0; i < ProceduralRootNodes.Length; ++i)
@@ -87,7 +103,7 @@ public class ProceduralHierarchy : Procedural
             {
                 --proceduralObj.valeur.proceduralComponentCount;
 
-                if (proceduralObj.valeur.likelyhood > 0 && Random.Range(0, 100) < proceduralObj.valeur.likelyhood)//Condition qui est vrai si on doit instancier la pièce
+                if (proceduralObj.valeur.likelyhood > 0 && Random.Range(0, 100) < proceduralObj.valeur.likelyhood)//Condition qui est vrai si on doit instancier la piï¿½ce
                 {
                     proceduralObj.valeur.InstantiatedObj = proceduralObj.valeur.proceduralComponent.InstanciateProcedural(proceduralObj.Parent.valeur.InstantiatedObj.transform);
                     if (proceduralObj.valeur.InstantiatedObj != null)
@@ -110,37 +126,4 @@ public class ProceduralHierarchy : Procedural
         }
 
     }
-    //private void InstantiateHierarchy(Queue<Noeud<ProceduralHierarchyNodeValue>> proceduralsQueue)
-    //{
-    //    Noeud<ProceduralHierarchyNodeValue> proceduralObj;
-    //    float objSize;
-    //    while (proceduralsQueue.Count > GameConstants.ACCEPTABLE_ZERO_VALUE)
-    //    {
-    //        proceduralObj = proceduralsQueue.Peek();
-    //        while (proceduralObj.valeur.proceduralComponentCount > 0 && hierarchyVolume > 0)
-    //        {
-    //            --proceduralObj.valeur.proceduralComponentCount;
-
-    //            if (proceduralObj.valeur.likelyhood > 0 && Random.Range(0, 100) < proceduralObj.valeur.likelyhood)//Condition qui est vrai si on doit instancier la pièce
-    //            {
-    //                proceduralObj.valeur.InstantiatedObj = proceduralObj.valeur.proceduralComponent.InstanciateProcedural(proceduralObj.Parent.valeur.InstantiatedObj.transform);
-    //                if (proceduralObj.valeur.InstantiatedObj != null)
-    //                {
-    //                    proceduralObj.valeur.InstantiatedObj.name = proceduralObj.valeur.InstantiatedObj.name + Random.Range(0, 100);
-    //                    for (int i = 0; i < proceduralObj.noeudsEnfants.Count; ++i)
-    //                    {
-    //                        proceduralObj.noeudsEnfants[i].Parent = proceduralObj;
-    //                        proceduralsQueue.Enqueue(proceduralObj.noeudsEnfants[i]);
-    //                        proceduralObj.noeudsEnfants[i].valeur.proceduralComponentCount = proceduralObj.noeudsEnfants[i].valeur.proceduralComponentAmount;
-    //                    }
-    //                    hierarchyVolume -= Algos.GetVector3Volume(Algos.GetRendererBounds(proceduralObj.valeur.InstantiatedObj).size);
-    //                }
-    //            }
-    //        }
-
-    //        parentHierarchy.hierarchyVolume = hierarchyVolume;
-    //        proceduralsQueue.Dequeue();
-    //    }
-
-    //}
 }

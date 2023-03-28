@@ -102,9 +102,9 @@ namespace Assets
                }
             }
          }
-        }
-
-        static bool AreRoomsConnected(RectangleInfo2d roomA, RectangleInfo2d roomB,float minOverlapOnASide)
+      }
+      
+      static bool AreRoomsConnected(RectangleInfo2d roomA, RectangleInfo2d roomB,float minOverlapOnASide)
       {
             Vector2 roomOverlap = GetRoomOverlap(roomA, roomB);
             bool isConnected = roomOverlap.x >= - GameConstants.ACCEPTABLE_ZERO_VALUE && roomOverlap.y >= - GameConstants.ACCEPTABLE_ZERO_VALUE;
@@ -112,6 +112,26 @@ namespace Assets
             return isConnected && overlapIsSufficient;
       }
 
+      //Fonction qui regarde si une pièce possède un côté qui est complètement connecté à l'extérieur
+      //(Cette fonction pourrait être améliorer pour tenir compte de certains cas spécials, mais pour la simplicité des
+      //choses, je vais la lasser tel qu'elle est)
+      static void TryAddOusideConnection(Noeud<RectangleInfo2d> roomNode, float minOverlapOnASide)
+      {
+       
+         
+         /*
+         for (int i = 0; i < roomNode.noeudsEnfants.Count; ++i)
+         {
+            Vector2 roomOverlap = GetRoomOverlap(roomNode.valeur, roomNode.noeudsEnfants[i].valeur);
+            if (Mathf.Max(roomOverlap.x, roomOverlap.y) == roomOverlap.y)//Si on est connecté en y
+            {
+               if(roomNode.valeur.coordinates.y > roomNode.noeudsEnfants[i].valeur.coordinates.y))
+                  
+            }
+         }
+         */
+      }
+      
       const int MAX_ITERATION_ATTEMPS = 100;
       void RandomlyRemoveRooms(List<Noeud<RectangleInfo2d>> rooms, float removalPercentage)
       {
@@ -149,7 +169,7 @@ namespace Assets
 
         private void InstantiateDoors(List<Noeud<RectangleInfo2d>> roomsNodes, Transform parent)
         {
-            int j;
+           int j;
             Noeud<RectangleInfo2d>[] roomNodesCopy =  roomsNodes.ToArray();
             for (int i = 0; i < roomsNodes.Count; ++i)
             {
