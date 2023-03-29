@@ -6,7 +6,6 @@ using UnityEngine;
 public class PlayerHealth : MonoBehaviour
 {
     private int vie;
-    // Start is called before the first frame update
     void Awake()
     {
         vie = 20;

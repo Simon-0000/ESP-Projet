@@ -8,4 +8,10 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/test oli.unity
     guid: eb55968d8715f1d479f4116630d985c2
+  - enabled: 1
+    path: Assets/Scenes/menu.unity
+    guid: 453058f63325b7d4bab4ede1033ed557
+  - enabled: 1
+    path: Assets/Scenes/Zombie tests.unity
+    guid: 96f593f6fcfacaf41b29a20916c82543
   m_configObjects: {}
