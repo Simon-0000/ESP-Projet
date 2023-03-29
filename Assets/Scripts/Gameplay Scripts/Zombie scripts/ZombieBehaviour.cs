@@ -41,7 +41,6 @@ public class ZombieBehaviour : MonoBehaviour
         DefinePatrolSequence();
         DefineTarget();
         GetComponent<NavMeshAgent>().speed = speed;
-        GetComponent<NavMeshAgent>().speed = speed * 1.5f;
         GetComponent<NavMeshAgent>().destination = patrolLocations[patrolIndexCounter];
     }
 
@@ -83,7 +82,10 @@ public class ZombieBehaviour : MonoBehaviour
                 int randomIndex = indexGenerator.Next(doors.Length);
                 if (!patrolLocations.Contains(doors[randomIndex].waypointLocation))
                     patrolLocations.Add(doors[randomIndex].waypointLocation);
-            } while (patrolLocations.Count < (doors.Length));
+
+                //comme je viens d'ajouter le point pour entrer du zombie je ne doit pas en tenir
+                //compte pour ajouter toutes les portes dans le patrol du zombie
+            } while (patrolLocations.Count-1 < doors.Length);
         }
     }
 
@@ -102,18 +104,35 @@ public class ZombieBehaviour : MonoBehaviour
     public void ManageChase()
     {
         GetComponent<NavMeshAgent>().destination = target.transform.position;
-        Debug.Log("chase update was made");
-        Debug.Log($" x:{target.transform.position.x} y:{target.transform.position.y} z:{target.transform.position.z}");
     }
 
-    public bool CanChangeState(float distanceWanted)
+
+    // pour l'instant cette function n'est pas finie
+    public bool CanChangeState(float actionRange)
     {
-        Vector3 direction = Algos.GetVectorAbs(transform.position - target.transform.position);
+        RaycastHit[] hits;
 
-        return Vector3.Angle(direction, Algos.GetVectorAbs(transform.forward)) <= fieldOfView && direction.magnitude <= distanceWanted;
+        Vector3 direction = Algos.GetVectorAbs(transform.position - target.transform.position);
+        hits = Physics.RaycastAll(transform.position, direction, 4);
+        bool isWithinRange = false;
+        bool canSeeTarget = false;
+        if (Vector3.Angle(direction, Algos.GetVectorAbs(transform.forward)) <= fieldOfView && direction.magnitude <= actionRange)
+        {
+            isWithinRange = true;
+            if (hits.Length != 0 && hits[0].Equals(target) )
+            {
+                canSeeTarget = true;
+            }
+        }
+
+        Debug.Log(isWithinRange);
+        if (isWithinRange && canSeeTarget)
+            return true;
+
+        return false;
+        //return Vector3.Angle(direction, Algos.GetVectorAbs(transform.forward)) <= fieldOfView && direction.magnitude <= distanceWanted;
     }
 
-    //besoin d'implementer le playerBehaviour
     public void Attack()
     {
         target.GetComponent<PlayerHealth>().takeDamage(damage);
