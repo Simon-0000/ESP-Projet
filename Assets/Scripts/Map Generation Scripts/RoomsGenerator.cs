@@ -13,6 +13,7 @@ namespace Assets
 {
    class RoomsGenerator
    {
+      const float LEAF_NODES_REMOVE_PERCENTAGE = 25;
       float roomSizeMin,roomSizeMax, grandeur;
       RectangleInfo2d mapDimensions;
       private GameObject doorObject;
@@ -23,21 +24,24 @@ namespace Assets
          this.roomSizeMax = roomSizeMax;
          this.mapDimensions = mapDimensions;
          doorObject = door;
-         doorBounds = Algos.GetRendererBounds(doorObject);
+         doorObject.TryAddComponent<BoundsManager>().Awake();
+         doorBounds = doorObject.GetComponent<BoundsManager>().objectBounds;
       }
       public List<Noeud<RectangleInfo2d>> GenerateRooms()
       {
-         List<Noeud<RectangleInfo2d>> leafNodes = Algos.FilterNoeudsFeuilles(BinarySpacePartitioning.GénérerBSP(new Noeud<RectangleInfo2d>(null, mapDimensions), TrySplitRoom));
+         //Créer les pièces et les connexions
+         List<Noeud<RectangleInfo2d>> leafNodes = Algos.FilterNoeudsFeuilles(BinarySpacePartitioning.GénérerBSP(new Noeud<RectangleInfo2d>(null, mapDimensions), TrySplitRoom),0);
          LinkRoomsByPhysicalConnections(leafNodes);
-         List<Noeud<RectangleInfo2d>>[] connections = new List<Noeud<RectangleInfo2d>>[2];
-         connections[0] = DepthFirstSearch.GetPath<RectangleInfo2d>(leafNodes,leafNodes[Random.Range(0, leafNodes.Count)], null,true);
-         connections[1] = DepthFirstSearch.GetPath<RectangleInfo2d>(leafNodes,leafNodes[Random.Range(0,leafNodes.Count)], leafNodes[Random.Range(0,leafNodes.Count)],true);
-         
+
+         //Filtrer les connexions
+         List<Noeud<RectangleInfo2d>>[] paths = new List<Noeud<RectangleInfo2d>>[2];
+         paths[0] = DepthFirstSearch.GetPath<RectangleInfo2d>(leafNodes,leafNodes[Random.Range(0, leafNodes.Count)], null,true);
+         paths[1] = DepthFirstSearch.GetPath<RectangleInfo2d>(leafNodes,leafNodes[Random.Range(0,leafNodes.Count)], leafNodes[Random.Range(0,leafNodes.Count)],true);
          Noeud<RectangleInfo2d>.ClearConnecions(leafNodes);
-         DepthFirstSearch.ConnectNodesAccordingToPath(connections[0]);
-         DepthFirstSearch.ConnectNodesAccordingToPath(connections[1]);
+         DepthFirstSearch.ConnectNodesAccordingToPath(paths[0]);
+         DepthFirstSearch.ConnectNodesAccordingToPath(paths[1]);
          
-         RandomlyRemoveRooms(leafNodes, 25);
+         RandomlyRemoveRooms(leafNodes, LEAF_NODES_REMOVE_PERCENTAGE);
          return leafNodes;
       }
       
@@ -85,10 +89,10 @@ namespace Assets
          
          return direction;
       }
-      
-      
-      
-      //Cette méthode permet de créer des liens entre les pièces selon leurs connexions physiques
+
+
+
+      //LinkRoomsByPhysicalConnections permet de créer des liens entre les pièces selon leurs connexions physiques
       //(deux pièces qui se touchent = une connexion)
       void LinkRoomsByPhysicalConnections(List<Noeud<RectangleInfo2d>> unlinkedRooms)
       {
@@ -112,44 +116,42 @@ namespace Assets
             return isConnected && overlapIsSufficient;
       }
 
-      //Fonction qui regarde si une pièce possède un côté qui est complètement connecté à l'extérieur
-      //(Cette fonction pourrait être améliorer pour tenir compte de certains cas spécials, mais pour la simplicité des
-      //choses, je vais la lasser tel qu'elle est)
-      static void TryAddOusideConnection(Noeud<RectangleInfo2d> roomNode, float minOverlapOnASide)
-      {
-       
-         
-         /*
-         for (int i = 0; i < roomNode.noeudsEnfants.Count; ++i)
-         {
-            Vector2 roomOverlap = GetRoomOverlap(roomNode.valeur, roomNode.noeudsEnfants[i].valeur);
-            if (Mathf.Max(roomOverlap.x, roomOverlap.y) == roomOverlap.y)//Si on est connecté en y
-            {
-               if(roomNode.valeur.coordinates.y > roomNode.noeudsEnfants[i].valeur.coordinates.y))
-                  
-            }
-         }
-         */
-      }
-      
-      const int MAX_ITERATION_ATTEMPS = 100;
+
+      //RandomlyRemoveRooms retire des noeuds feuille jusqu'à ce qu'un certain pourcentage de la carte a été retiré
       void RandomlyRemoveRooms(List<Noeud<RectangleInfo2d>> rooms, float removalPercentage)
       {
-         int iterationAttemps = 0;
-         while (removalPercentage > GameConstants.ACCEPTABLE_ZERO_VALUE && iterationAttemps <= MAX_ITERATION_ATTEMPS)
+         int iter = 0;
+         List<Noeud<RectangleInfo2d>> availableNodesToDelete = Algos.FilterNoeudsFeuilles(rooms,1);
+
+         while (availableNodesToDelete.Count != 0 && removalPercentage > 0)
          {
-            int roomIndex = Random.Range(0, rooms.Count);
-            float roomPercentage = 100 * (rooms[roomIndex].valeur.size.x * rooms[roomIndex].valeur.size.y) / (mapDimensions.size.x * mapDimensions.size.y);
-            if (rooms[roomIndex].noeudsEnfants.Count == 1 && removalPercentage - roomPercentage >  GameConstants.ACCEPTABLE_ZERO_VALUE)
+            ++iter;
+            int roomIndex = Random.Range(0, availableNodesToDelete.Count);
+
+            float roomPercentage = 100 * (availableNodesToDelete[roomIndex].valeur.size.x * availableNodesToDelete[roomIndex].valeur.size.y) / (mapDimensions.size.x * mapDimensions.size.y);
+            if (removalPercentage - roomPercentage >  GameConstants.ACCEPTABLE_ZERO_VALUE)
             {
-               Noeud<RectangleInfo2d>.EnleverLienRéciproque(rooms[roomIndex], rooms[roomIndex].noeudsEnfants[0]);
-               rooms.RemoveAt(roomIndex);
+               //Si la pièce connectée à celle qui va se faire enlever deviendra elle aussi un noeud feuille, on l'ajoute à availableNodesToDelete
+               if (availableNodesToDelete[roomIndex].noeudsEnfants[0].noeudsEnfants.Count == 2)
+                  availableNodesToDelete.Add(availableNodesToDelete[roomIndex].noeudsEnfants[0]);
+
+               //On détruit le lien entre les deux pièces, puis on enlève le noeud feuille de la liste
+               Noeud<RectangleInfo2d>.EnleverLienRéciproque(availableNodesToDelete[roomIndex], availableNodesToDelete[roomIndex].noeudsEnfants[0]);
+               availableNodesToDelete.RemoveAt(roomIndex);
                removalPercentage -= roomPercentage;
             }
-            ++iterationAttemps;
+            else
+            {
+                //Si on ne peut plus diminuer la grandeur de la carte, on termine la fonction
+                break;
+            }
          }
-      }
 
+         //On enlève tous les pièces qui ne sont pas connectées à une autre pièce
+         Algos.FilterNoeudsFeuilles(rooms, 0, true);
+        }
+
+        //InstantiateRooms s'occupe d'instancier les portes et les pièces de la carte
         public void InstantiateRooms(ProceduralRoom[] roomObjects, List<Noeud<RectangleInfo2d>> roomsNodes,Transform parent)
         {
            GameObject doorParent = new GameObject("Doors");
@@ -167,6 +169,7 @@ namespace Assets
             }
         }
 
+        //InstantiateDoors s'occupe de placer des portes s'il y a une connexion entre deux pièces
         private void InstantiateDoors(List<Noeud<RectangleInfo2d>> roomsNodes, Transform parent)
         {
            int j;
@@ -181,34 +184,48 @@ namespace Assets
                     int planeAxis = 0;
                     if (roomOverlap.x > doorBounds.size.x)
                     {
-                        doorRotation = Quaternion.identity;//Si la connection se trouve sur l'axe des x, on ne tourne pas la porte
+                        doorRotation = Quaternion.identity;
 
                     } else if (roomOverlap.y > doorBounds.size.x)
                     {
+                        //Si la connexion se trouve sur l'axe des y (z en 3d), on tourne la porte
                         planeAxis = 1;
-                        doorRotation = Quaternion.Euler(0,90,0);//Si la connection se trouve sur l'axe des y(y en 2d ou z en 3d), on tourne la porte
+                        doorRotation = Quaternion.Euler(0,90,0);
                     }
-                    else {
+                    else //Si une connexion entre deux pièces est invalide, on ignore la connexion
+                    {
                         Noeud<RectangleInfo2d>.EnleverLienRéciproque(roomNodesCopy[i], roomNodesCopy[i].noeudsEnfants[j]);
                         Debug.Log("UNEXPECTED CONNECTION");
-                        continue ;//Si une connection entre deux pièce est invalide on ignore la connection
+                        continue ;
                     }
+
                     if (roomNodesCopy[i].valeur.size[planeAxis] > roomNodesCopy[i].noeudsEnfants[j].valeur.size[planeAxis] )
                     {
+                        //On ignore la connexion si la pièce est plus grande que la pièce qui est connectée à celle-ci
+                        //On placera la porte quand on sera revenu à la plus petite pièce dans le loop
                         ++j;
                         continue;
                     }
+
+                    //Trouver le positionnement en 2d 
                     Vector2 distanceOffset = roomNodesCopy[i].valeur.size / 2 - new Vector2(Algos.FindRandomCut(roomOverlap.x, doorBounds.size.x), Algos.FindRandomCut(roomOverlap.y, doorBounds.size.x));
                     Vector2 connectionDirectionSign = -Algos.GetVectorSign(roomNodesCopy[i].valeur.coordinates - roomNodesCopy[i].noeudsEnfants[j].valeur.coordinates);
                     distanceOffset = Vector2.Scale(distanceOffset, connectionDirectionSign);
+
+                    //Traduire le positionnement 2d en 3d
                     Vector3 centerOffset = Algos.Vector2dTo3dVector(distanceOffset,-(GameConstants.ROOM_HEIGHT - doorBounds.size.y)/2);
+                    
+                    //Instancier les portes
                     GameObject.Instantiate(doorObject, Algos.Vector2dTo3dVector(roomNodesCopy[i].valeur.coordinates, 0) + centerOffset, doorRotation, parent);
+                    
+                    //On enlève le lien entre les pièces pour ne pas instancier la porte une seconde fois
                     Noeud<RectangleInfo2d>.EnleverLienRéciproque(roomNodesCopy[i],roomNodesCopy[i].noeudsEnfants[j]);
 
                 }
             }
         }
 
+        //GetRoomOverlap permet d'obtenir le chevauchement entre deux pièces
         static Vector2 GetRoomOverlap(RectangleInfo2d roomA, RectangleInfo2d roomB)
         {
             Vector2 distance = Algos.GetVectorAbs(roomA.coordinates - roomB.coordinates);

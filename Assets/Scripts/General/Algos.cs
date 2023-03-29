@@ -1,5 +1,5 @@
 ﻿//Auteurs: Simon Asmar
-//Explication: Cette classe «static» a pour but de contenir divers algorithmes simples qui sont utilisés dans les
+//Explication: Cette classe a pour but de contenir divers algorithmes simples qui sont utilisés dans les
 //             scripts.
 
 using UnityEngine;
@@ -64,24 +64,39 @@ namespace Assets
         }
 
 
-        //Filtrer à travers une liste de nœuds pour retourner ceux qui ne possèdent aucune connexion avec un nœud
-        //enfant (nœud feuille)
-        static public List<Noeud<T>> FilterNoeudsFeuilles<T>(List<Noeud<T>> bsp)
+        //FilterNoeudsFeuilles permet de filtrer à travers une liste de nœuds pour retourner ceux qui qui possède un
+        //nombre de connexions égales ou moins que nbrConnectionMax. On peut aussi enlever ces noeuds de la liste donnée en intrant.
+        static public List<Noeud<T>> FilterNoeudsFeuilles<T>(List<Noeud<T>> bsp, int nbrConnectionMax, bool removeFromList = false)
         {
             List<Noeud<T>> noeudsFeuilles = new();
+            List<int> leafIndexes = new();
             for (int i = 0; i < bsp.Count; ++i)
             {
-                if (bsp[i].noeudsEnfants.Count == 0)
+                if (bsp[i].noeudsEnfants.Count <= nbrConnectionMax)
                 {
                     noeudsFeuilles.Add(bsp[i]);
+                    if (removeFromList == true)
+                    {
+                        leafIndexes.Add(i);
+                    }
                 }
             }
 
+            if(removeFromList == true)
+            {
+                //Si on doit enlever les noeud feuille de la liste donnée, il faut parcourir la liste à l'envers,
+                //ce qui explique pourquoi on ne pouvait pas le faire dans le premier for loop (sinon noeudsFeuilles (la liste retournée)
+                //serait dans un ordre inversé ce qui pourrait être inattendu par ceux qui utilise cette fonction)
+                for (int i = leafIndexes.Count - 1; i >= 0; --i)
+                {
+                    bsp.RemoveAt(leafIndexes[i]);
+                }
+            }
             return noeudsFeuilles;
         }
 
-        // La fonction ci-dessous à pour but de centré les vertices d'un mesh. Elle est utilisé en combinaison avec la
-        // librarie: Parabox.CSG, puisque les mesh retourné par cette librarie sont décalé du centre 
+        //CenterVertices à pour but de centrer les vertices d'un mesh. Elle est utilisée en combinaison avec le
+        //package: pb_CSG, puisque les meshs retournés par ce package sont décalés du centre 
         static public Mesh CenterVertices(Mesh src)
         {
             Vector3[] vertices = src.vertices;
@@ -96,7 +111,9 @@ namespace Assets
             mesh.RecalculateNormals();
             return mesh;
         }
-        
+
+        //ChangePivotPosition change le point de pivot du Transform et de ses enfants, à un point donné
+        //Cette fonction est inspirée de "qqqqqqq" https://gamedev.stackexchange.com/questions/163649/how-to-change-the-pivot-in-unity
         public static void ChangePivotPosition(Transform objTransform,Vector3 newPivotPosition)
         {
             Vector3 centerOffset = objTransform.position - newPivotPosition;
@@ -106,7 +123,7 @@ namespace Assets
         }
 
 
-        //GetColliderOverlap donne une vecteur (en valeur absolue) qui représente le chevauchement entre un objet et
+        //GetColliderOverlap donne un vecteur (en valeur absolue) qui représente le chevauchement entre un objet et
         //un collider
         public static Vector3 GetColliderOverlap(GameObject obj, Collider collider)
         {
@@ -117,7 +134,7 @@ namespace Assets
                 distance.y - (sizeObj.y + sizeCollider.y) / 2, distance.z - (sizeObj.z + sizeCollider.z) / 2);
         }
 
-        //IsColliderOverlaping détermine si chaque axe (x,y,z) d'un chevauchement est assez grand pour les considéré
+        //IsColliderOverlaping détermine si chaque axe (x,y,z) d'un chevauchement est assez grand pour les considérés
         //comme étant un chevauchement physique en 3d
         public static bool IsColliderOverlaping(Vector3 overlap) =>
             IsColliderOverlaping(overlap, GameConstants.OVERLAP_TOLERANCE);
@@ -146,11 +163,10 @@ namespace Assets
             }
             return childParentTransform;
         }
-        
-        
-        //La fonction "TryAddComponent" a pour but d'essayer d'ajouter une composante si elle n'existe pas et de
-        //retourner la composante en question
-        public static T TryAddComponent<T>(this GameObject obj) where T : Component//Cette fonction/extension de GameObject a été pris (et modifié) de ChatGPT
+
+
+        //TryAddComponent a pour but d'essayer d'ajouter une composante si elle n'existe pas et de retourner la composante en question
+        public static T TryAddComponent<T>(this GameObject obj) where T : Component
         {
             T component = obj.GetComponent<T>();
             if (component == null)
@@ -163,7 +179,7 @@ namespace Assets
         
         
 
-        //La fonction ci-dessous (CopyComponent) a été prise par Shaffe:
+        //La fonction ci-dessous (CopyComponent) a été prise de Shaffe, elle a pour but de copier un composante dans un autre GameObject:
         //https://answers.unity.com/questions/458207/copy-a-component-at-runtime.html
         public static T CopyComponent<T>(T original, GameObject destination) where T : Component
         {
@@ -190,7 +206,7 @@ namespace Assets
         }
         
         
-        //Le code de cette fonction a été pris de turnipski:
+        //Le code de cette fonction a été pris de turnipski et à pour but de retourner le Bounds qui englobe un GameObject et ses enfants:
         //https://www.reddit.com/r/Unity3D/comments/30y46p/getting_the_total_bounds_of_a_prefab_with/
         public static Bounds GetRendererBounds(GameObject obj) 
         {

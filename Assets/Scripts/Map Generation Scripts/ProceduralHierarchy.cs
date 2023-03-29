@@ -1,19 +1,17 @@
 //Auteurs: Simon Asmar
-//Explication: Une hierarchie procédurale permet de générer tout ce qui est de type procédurale. Chaque procédural est
-//compris dans le type ProceduralHierarchyNodeValue et celui-ci agit comme des noeuds pouvant chacun posséder des
-//enfants (de type ProceduralHierarchyNodeValue).
-//Pour passer à travers un noeud, on utilise un système de probabilité (0 à 100).
-//On peut choisir le nombre de fois qu'on peut pigé à travers le même noeud pour par exemple générer 3 fois la
-//même "Procedural". 
-//Après l'instanciation d'un objet, on diminue le volume de cette hiérarchie, afin de s'assurer de ne pas remplir la
-//pièce à un volume qui excède l'espace disponible de la racine(la racine correspond au volume de la pièce)
-//À noter qu'on utilise un stack pour parcourir les noeuds, donc une hierarchie devra atteindre un enfant sans enfants
-//avant de passé à une autre branche
+//Explication: Une hiérarchie procédurale permet de générer tout ce qui est de type "Procedural". Chaque "Procedural" est
+//compris dans le type ProceduralHierarchyNodeValue et celui-ci agit comme la valeur des noeuds pouvant chacun posséder des
+//enfants (de valeur ProceduralHierarchyNodeValue).
+//Pour instancier un "Procedural", on utilise un système de probabilité (0 à 100).
+//On peut choisir le nombre de fois qu'on peut pigé à travers le même "Procedural" pour le générer autant de fois qu'on le désire
+//Après l'instanciation d'un objet, on diminue le volume de cette hiérarchie, afin de s'assurer de ne pas trop remplir la pièce
+//À noter qu'on utilise un stack pour parcourir les noeuds, donc une hiérarchie devra atteindre un enfant qui ne possède plus
+//d'enfants avant de passé à une autre branche
 //
 //Exemple d'implémentation: une table(ProceduralObject) est à la racine de la hiérarchie et possède une probabilité
 //de 100% d'être instancier. Lors de l'instanciation de cette table, il est possible d'instancier 3 assiettes
 //(ProceduralObject, 50% chacun) qui seront toutes relatives à la table. On réussit à instancier 2 assiettes sur 3 et
-//le volume disponible diminue de 10m^2
+//le volume disponible diminue proportionnellement à la table et aux assiettes,etc...
 using Assets;
 using System;
 using System.Collections.Generic;
@@ -45,7 +43,7 @@ public class ProceduralHierarchy : Procedural
 
 
     [NonSerialized]
-    public ProceduralHierarchy parentHierarchy;
+    public ProceduralHierarchy parentHierarchy;// le Hierarchy parent qui nous permet d'obtenir le volume restant à instancier
     [NonSerialized]
     public float hierarchyVolume;
 
@@ -62,14 +60,14 @@ public class ProceduralHierarchy : Procedural
     }
     public override GameObject InstanciateProcedural(Transform rootParent)
     {
-        //Trouver le parent de la hi�rarchie s'il n'est pas d�j� d�fini, s'il n'y a pas de parent,
-        //il n'y a pas de "hierarchyVolume" donc on ne peut pas g�n�rer la hi�rarchie
+        //Trouver le parent de la hiérarchie. S'il n'y a pas de parent,
+        //il n'y a pas de "hierarchyVolume" donc on ne peut pas générer la hiérarchie
 
         if (!TryConnectToNewParentHierarchy(rootParent))
             return null;
 
-        //Le volume max de cette hi�rarchie correspond au volume du parent, lorsque la g�n�ration de la hi�rarchie sera termin�,
-        //on met � jour la valeur de volume du parent
+        //Le volume max de cette hiérarchie correspond au volume du parent, lorsque la génération de la hiérarchie sera terminée,
+        //on met à jour la valeur de volume du parent
         hierarchyVolume = parentHierarchy.hierarchyVolume;
         InstantiateHierarchy(rootParent);
         parentHierarchy.hierarchyVolume = hierarchyVolume;
@@ -77,10 +75,10 @@ public class ProceduralHierarchy : Procedural
     }
     private void InstantiateHierarchy(Transform rootParent)
     {
-        //Cr�er un Queue de noeuds utilis� dans la surcharge/overload pour g�n�rer la hi�rarchie 
+        //Créer un Stack de noeuds utilisés dans la surcharge/overload pour générer la hiérarchie 
         Stack<Noeud<ProceduralHierarchyNodeValue>> proceduralsQueue = new(ProceduralRootNodes);
 
-        //Cr�er un noeud parent qui va englober notre hi�rarchie, et pr�parer les noeuds enfants � �tre utilis�s
+        //Préparer les noeuds enfants à être utilisés et créer un noeud parent qui va englober notre hiérarchie.
         Noeud<ProceduralHierarchyNodeValue> parentNode = new(null, new ProceduralHierarchyNodeValue());
         parentNode.valeur.InstantiatedObj = rootParent.gameObject;
         for (int i = 0; i < ProceduralRootNodes.Length; ++i)
@@ -92,38 +90,36 @@ public class ProceduralHierarchy : Procedural
         InstantiateHierarchy(proceduralsQueue);
     }
 
-    private void InstantiateHierarchy(Stack<Noeud<ProceduralHierarchyNodeValue>> proceduralsQueue) 
+    private void InstantiateHierarchy(Stack<Noeud<ProceduralHierarchyNodeValue>> proceduralsStack) 
     {
         Noeud<ProceduralHierarchyNodeValue> proceduralObj;
         float objSize;
-        while (proceduralsQueue.Count > GameConstants.ACCEPTABLE_ZERO_VALUE)
+        while (proceduralsStack.Count > 0)// Pour chaque noeuds qui peut être instancié
         {
-            proceduralObj = proceduralsQueue.Peek();
-            while (proceduralObj.valeur.proceduralComponentCount > 0 && hierarchyVolume > 0)
+            proceduralObj = proceduralsStack.Peek();
+            while (proceduralObj.valeur.proceduralComponentCount > 0 && hierarchyVolume > 0)//Pour chaque instance du même "Procedural" d'un noeud
             {
                 --proceduralObj.valeur.proceduralComponentCount;
 
-                if (proceduralObj.valeur.likelyhood > 0 && Random.Range(0, 100) < proceduralObj.valeur.likelyhood)//Condition qui est vrai si on doit instancier la pi�ce
+                if (proceduralObj.valeur.likelyhood > 0 && Random.Range(0, 100) < proceduralObj.valeur.likelyhood)//Condition qui est vraie si on pige le "Procedural" d'un noeud 
                 {
                     proceduralObj.valeur.InstantiatedObj = proceduralObj.valeur.proceduralComponent.InstanciateProcedural(proceduralObj.Parent.valeur.InstantiatedObj.transform);
-                    if (proceduralObj.valeur.InstantiatedObj != null)
+                    if (proceduralObj.valeur.InstantiatedObj != null)//condition qui est vraie si on a pu instancier le Procedural
                     {
-                        proceduralObj.valeur.InstantiatedObj.name = proceduralObj.valeur.InstantiatedObj.name + Random.Range(0, 100);
-                        for (int i = 0; i < proceduralObj.noeudsEnfants.Count; ++i)
+                        for (int i = 0; i < proceduralObj.noeudsEnfants.Count; ++i)//Pour chaque noeud enfant, on le prépare et on les met en haut du Stack
                         {
                             proceduralObj.noeudsEnfants[i].Parent = proceduralObj;
-                            proceduralsQueue.Push(proceduralObj.noeudsEnfants[i]);
+                            proceduralsStack.Push(proceduralObj.noeudsEnfants[i]);
                             proceduralObj.noeudsEnfants[i].valeur.proceduralComponentCount = proceduralObj.noeudsEnfants[i].valeur.proceduralComponentAmount;
                         }
+                        //On diminue le volume et on Peek au cas où il existe un noeud enfant qui se trouve en haut du stack
                         hierarchyVolume -= Algos.GetVector3Volume(proceduralObj.valeur.InstantiatedObj.GetComponent<BoundsManager>().objectBounds.size);
-                        proceduralObj = proceduralsQueue.Peek();
-
+                        proceduralObj = proceduralsStack.Peek();
                     }
                 }
             }
             parentHierarchy.hierarchyVolume = hierarchyVolume;
-            proceduralsQueue.Pop();
+            proceduralsStack.Pop();
         }
-
     }
 }

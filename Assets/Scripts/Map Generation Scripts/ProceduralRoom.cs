@@ -1,6 +1,5 @@
 //Auteurs: Simon Asmar
-//Explication: Ce script permet d'instancier une pièce (murs,sol,plafond) et les objets associés à cette
-//pièce (selon des probabilités (pas implémenté))
+//Explication: Ce script permet d'instancier une pièce (murs,sol,plafond) et les objets associés à cette pièce
 
 using System;
 using UnityEngine;
@@ -31,7 +30,7 @@ namespace Assets
 
 
 
-            //Innstancier la pièce
+            //Instancier la pièce
             GameObject roomObj = new GameObject(ROOM_NAME);
             roomObj.transform.parent = parentTransform;
             roomObj.transform.position = Algos.Vector2dTo3dVector(roomNode.valeur.coordinates);
@@ -42,6 +41,7 @@ namespace Assets
                 roomObj.TryAddComponent<BoundsManager>();
 
             roomObj.GetComponent<BoundsManager>().objectBounds.center = roomObj.transform.position;
+
             //On transforme la grandeur 2d du «RectangleInfo2d» de «roomNode» en une grandeur 3d
             Vector3 roomDimensions = Algos.Vector2dTo3dVector(roomNode.valeur.size, GameConstants.ROOM_HEIGHT);
             roomObj.GetComponent<BoundsManager>().objectBounds.size = roomDimensions;
@@ -57,15 +57,15 @@ namespace Assets
 
             //Instancier le plafond (pas implémenté pour les tests)
 
-            //Diminuer la gradeur de la pièce par rapport aux murs qui ont été instancié
+            //Garder la grandeur de la pièce en mémoire
+            roomObj.GetComponent<BoundsManager>().Awake();
 
             //Instancier les objets de la pièce
-            roomObj.GetComponent<BoundsManager>().Awake();
             InstantiateHierarchies(roomObj.transform,Algos.GetVector3Volume(roomDimensions) * roomFillPercentage);
         }
         private void InstantiateHierarchies(Transform parentTransform, float roomVolume)
         {
-            //On donne ProceduralHierarchy au parent, afin que les hiérarchies instanciées puissent
+            //On donne la composante ProceduralHierarchy au parent, afin que les hiérarchies instanciées puissent
             //se fier à son volume lors de la génération
             
             parentTransform.gameObject.TryAddComponent<ProceduralHierarchy>().hierarchyVolume = roomVolume;

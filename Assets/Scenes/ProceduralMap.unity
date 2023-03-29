@@ -691,8 +691,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   longueurMap: 35
   largeurMap: 35
-  wallSizeMin: 8
-  wallSizeMax: 12
+  wallSizeMin: 7
+  wallSizeMax: 14
   roomObjects:
   - {fileID: 7271430624650593193, guid: 491c178b4b960154f86a23e6d5b8c742, type: 3}
   doorObject: {fileID: 2430739564790736020, guid: 21b28f3efd218ab4a8ea5a7c522c44ad, type: 3}

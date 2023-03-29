@@ -27,7 +27,7 @@ namespace Assets
             for (int i = 0; i < roomObjects.Length; ++i)
                 Debug.Assert(roomObjects[i] != null);
             Debug.Assert(doorObject != null);
-            Debug.Assert(Mathf.Max(wallSizeMin, wallSizeMax) < Mathf.Max(longueurMap, largeurMap));
+            Debug.Assert(wallSizeMax + GameConstants.ACCEPTABLE_ZERO_VALUE >= wallSizeMin * 2);
          RefreshMap();
       }
 

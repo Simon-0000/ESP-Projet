@@ -3,6 +3,7 @@
 //certaine grandeur. On ne l'étire pas avec un «scale» et le «Material», mais plutôt avec les «vertices» et les «uvs»,
 //pour ne pas qu'un autre objet procédural qui dérive de celle-ci soit étiré (ex d'implémentation: faire un mur, des
 //ouvertures de grandeur différentes, etc...)
+//On a aussi la possibilité de contournée les objets qui se trouvent dans le chemin
 
 using UnityEngine;
 using Assets;
@@ -24,7 +25,7 @@ public class ProceduralTiledCubeObject : Procedural
                                 //une valeur positive va l'agrandir.
     
     [SerializeField]
-    bool wrapsAround = true;//Permet de contourner les objets qui se trouve dans le chemin (pas implémenté)
+    bool wrapsAround = true;//Permet de contourner les objets qui se trouvent dans le chemin
                             //(ex: un mur qui contourne une porte)
    
                             
@@ -65,13 +66,12 @@ public class ProceduralTiledCubeObject : Procedural
         return tuileObject;
         
     }
-    
-    
-    
+
+
+    //WrapMesh permet de trouver tous les objets valides qui rentre en collision avec obj afin de modifier
+    //le mesh de obj aux objets trouvés
     private void WrapMesh(GameObject obj, Vector3 size) 
     {
-        //On cherche tous ce rentre en collision avec l'objet et on le donne à
-
         Collider[] colliders = Physics.OverlapBox(obj.transform.position, size / 2,obj.transform.rotation);
         for (int i = 0; i < colliders.Length; ++i)
         {
@@ -88,7 +88,7 @@ public class ProceduralTiledCubeObject : Procedural
     {
         if (obj == null || substractedObj == null || substractedObj.GetComponent<MeshRenderer>() == null)
             return;
-
+        //Le try catch est là pour attraper les erreurs qui pourraient venir du package pb_CSG
         try
         {
             Model result = CSG.Subtract(obj, substractedObj);
@@ -99,43 +99,9 @@ public class ProceduralTiledCubeObject : Procedural
         }
         catch
         {
-            Debug.Log("ERROR: COULDNT USE CSG LIBRARY TO HOLLOW OUT TILE");
+            Debug.Log("ERROR: COULDNT USE pb_CSG PACKAGE TO HOLLOW OUT TILE");
         }
     }
-
-    //private static void ModifyMesh(GameObject obj, Model operationResult)
-    //{
-
-
-        //    //Vector3[] vertices = operationResult.mesh.vertices;
-        //    //Vector3 MinVertices = vertices[0],MaxVertices = MinVertices, Offset;
-        //    //for(int i = 0; i < vertices.Length; ++i)
-        //    //{
-        //    //    for(int j = 0; j < 3; ++j)
-        //    //    {
-        //    //        if (vertices[i][j] < MinVertices[j])
-        //    //            MinVertices[j] = vertices[i][j];
-        //    //        else if (vertices[i][j] > MaxVertices[j])
-        //    //            MaxVertices[j] = vertices[i][j];
-        //    //    }
-        //    //}
-        //    //Offset.x = -MinVertices.x - Mathf.Abs(MinVertices.x - MaxVertices.x) / 2;
-        //    //Offset.y = -MinVertices.y - Mathf.Abs(MinVertices.y - MaxVertices.y) / 2;
-        //    //Offset.z = -MinVertices.z - Mathf.Abs(MinVertices.z - MaxVertices.z) / 2;
-        //    //for (int i = 0; i < vertices.Length; ++i)
-        //    //{
-        //    //    vertices[i] += Offset;
-        //    //}
-        //    //obj.GetComponent<MeshFilter>().sharedMesh.vertices = vertices;
-        //    /*
-        //    GameObject intersection = new GameObject();
-        //    intersection.transform.parent = obj.transform.parent;
-
-        //    intersection.AddComponent<MeshFilter>().sharedMesh = operationResult.mesh;
-        //    intersection.AddComponent<MeshRenderer>().sharedMaterials = operationResult.materials.ToArray();
-        //    */
-        //}
-
 
 
 

@@ -1,7 +1,7 @@
 ﻿//Auteurs: Simon Asmar
-//Explication: Cette classe abstraite à pour but d'être implémenter par tous ceux qui être générer par rapport à un parent
-//Elle est utilisé par le script ProceduralHierarchy pour pouvoir générer des tuiles, des objets et d'autres hierarchies
-//de manière procédural
+//Explication: Cette classe abstraite à pour but d'être implémentée par tous ceux qui peuvent être générés relativement à un parent
+//Elle est utilisée par le script ProceduralHierarchy pour pouvoir générer des tuiles, des objets et d'autres hiérarchies
+//de manière procédurale
 
 using UnityEngine;
 
