@@ -6,6 +6,7 @@ using System.Runtime.InteropServices.ComTypes;
 using UnityEngine;
 using UnityEngine.UI;
 using Assets;
+using Unity.VisualScripting;
 using UnityEngine.PlayerLoop;
 
 [RequireComponent(typeof(Rigidbody))]
@@ -13,14 +14,21 @@ public class LazerComponent : MonoBehaviour
 {
     private float floatDamage = 75f;
     private int damage=75;
+    
     private ZombieBehaviour zombie;
+    
     private const float n1 = 1f;
    private float n2;
+   
    private float angelInDeg;
    private float angelInRad;
+   
    private Rigidbody rig;
+   
    private float time;
+   
    private const float speed = 500f;
+   
    [SerializeField] private int[] layers;
    
 
@@ -39,7 +47,7 @@ public class LazerComponent : MonoBehaviour
    {
        
        time += Time.deltaTime;
-       if(time>10f || damage<=0.001)
+       if(time>10f || damage<1)
            Destroy(gameObject);
        
    }
@@ -85,7 +93,11 @@ public class LazerComponent : MonoBehaviour
 
    void AdjustDammageToShlick(Collision collision)
    {
-        n2 = 1+collision.contacts[0].otherCollider.GetComponent<MeshRenderer>().materials[0].GetFloat("_Glossiness");
+       var smoothness=collision.contacts[0].otherCollider.GetComponent<MeshRenderer>().materials[0].GetFloat("_Glossiness");
+       if (smoothness <= GameConstants.ACCEPTABLE_ZERO_VALUE)
+       { damage = 0;
+           return; }
+       n2 = 1 + smoothness;
         angelInDeg = MathF.Abs(90-Vector3.Angle(rig.velocity, collision.contacts[0].normal));
        floatDamage *= Schlick(n1, n2, angelInDeg); 
        damage = (int)floatDamage;
