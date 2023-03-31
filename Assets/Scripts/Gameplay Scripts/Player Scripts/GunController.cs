@@ -34,21 +34,15 @@ public class GunController : MonoBehaviour
     [Header("crosshair")] 
     [SerializeField] private Image crosshair;
     [SerializeField] private RawImage aimedcrosshair;
-    
-   // pour régler la sensibilité
-    private PlayerLook lookie;
-    float basexSens;
-    float baseySens;
+
 
     private int ammo;
     private Camera cam;
     private const int maxAmmo = 30;
 
-    void Awake()
+    void Start()
     {
-        lookie = GetComponent<PlayerLook>();
-         basexSens=lookie.xSensitivity ;
-         baseySens= lookie.ySensitivity;
+        
 
         cam = Camera.main;
         SetCursor();
@@ -59,51 +53,53 @@ public class GunController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        // ReSharper disable once Unity.PerformanceCriticalCodeInvocation
-        if (Input.GetMouseButton(1))
+        if (!PlayerManager.isPaused)
         {
-            timeelapse = 0;
-
-            lookie.xSensitivity =basexSens/3;
-            lookie.ySensitivity =baseySens/3;
-            ZoomCamera(defaultFov / zoomMultiplier); 
-            gun.localPosition = Vector3.MoveTowards(gun.localPosition ,aimedposition, deplacement.magnitude/100);
-            gun.rotation = new Quaternion(0f,0f,0f,0f);
-            boucheDeCanon.rotation=new Quaternion(0f,0f,0f,0f);
-            crosshair.enabled = false;
-           aimedcrosshair.enabled = true;
-           gun.GetComponent<MeshRenderer>().enabled=false;
-        } 
-
-
-        else
-        {
-            if (timeelapse > 0.1f)
+            // ReSharper disable once Unity.PerformanceCriticalCodeInvocation
+            if (Input.GetMouseButton(1))
             {
-                gun.GetComponent<MeshRenderer>().enabled = true;
+                timeelapse = 0;
+
+                
+                ZoomCamera(defaultFov / zoomMultiplier);
+                gun.localPosition = Vector3.MoveTowards(gun.localPosition, aimedposition, deplacement.magnitude / 100);
+                gun.rotation = new Quaternion(0f, 0f, 0f, 0f);
+                boucheDeCanon.rotation = new Quaternion(0f, 0f, 0f, 0f);
+                crosshair.enabled = false;
+                aimedcrosshair.enabled = true;
+                gun.GetComponent<MeshRenderer>().enabled = false;
             }
+
+
             else
             {
-                timeelapse += Time.deltaTime;
-            }
-            lookie.xSensitivity =basexSens;
-            lookie.ySensitivity =baseySens;
-            AimGun();
-            gun.localPosition =
-                Vector3.MoveTowards(gun.localPosition, unAimedPosition, deplacement.magnitude / 100);
-            ZoomCamera(defaultFov);
-            crosshair.enabled = true;
-            aimedcrosshair.enabled = false;
-           
-           
-            crosshair.color = Color.green;
-            
-        }
+                if (timeelapse > 0.1f)
+                {
+                    gun.GetComponent<MeshRenderer>().enabled = true;
+                }
+                else
+                {
+                    timeelapse += Time.deltaTime;
+                }
 
-        if (Input.GetMouseButtonDown(0))
-            Shoot();
-        if (Input.GetKeyDown("r"))
-            Reload();
+                
+                AimGun();
+                gun.localPosition =
+                    Vector3.MoveTowards(gun.localPosition, unAimedPosition, deplacement.magnitude / 100);
+                ZoomCamera(defaultFov);
+                crosshair.enabled = true;
+                aimedcrosshair.enabled = false;
+
+
+                crosshair.color = Color.green;
+
+            }
+
+            if (Input.GetMouseButtonDown(0))
+                Shoot();
+            if (Input.GetKeyDown("r"))
+                Reload();
+        }
 
     }
 
