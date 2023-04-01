@@ -1043,7 +1043,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &3397463985806771691
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1510,7 +1510,7 @@ MonoBehaviour:
   m_MinValue: 0
   m_MaxValue: 100
   m_WholeNumbers: 0
-  m_Value: 0
+  m_Value: 30
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls:
@@ -1868,7 +1868,6 @@ GameObject:
   - component: {fileID: 4905684688789686073}
   - component: {fileID: 4905684688789686072}
   - component: {fileID: 1327523428344281903}
-  - component: {fileID: 4438932702750217939}
   m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
@@ -1973,19 +1972,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 79175fe5334e3e44a88d41ade0c86ce7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &4438932702750217939
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4905684688789686053}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 03a10bfd2ce936747a169a292765598a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  player: {fileID: 4905684690062875951}
 --- !u!1 &4905684689494864807
 GameObject:
   m_ObjectHideFlags: 0
@@ -2187,8 +2173,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cam: {fileID: 4905684690193178111}
   crosshair: {fileID: 4905684688314579034}
-  xSensitivity: 0
-  ySensitivity: 0
+  xSensitivity: 30
+  ySensitivity: 30
   xslider: {fileID: 8179512127600249312}
   yslider: {fileID: 3478992224919459859}
 --- !u!114 &4905684690062875950
@@ -2265,6 +2251,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aa7e6c7006d0add4a9ffbaddee16634e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  PauseMenuUI: {fileID: 2787721084015825039}
 --- !u!1 &4905684690193178105
 GameObject:
   m_ObjectHideFlags: 0
@@ -2758,7 +2745,7 @@ MonoBehaviour:
   m_MinValue: 0
   m_MaxValue: 100
   m_WholeNumbers: 0
-  m_Value: 32.3
+  m_Value: 30
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls:
