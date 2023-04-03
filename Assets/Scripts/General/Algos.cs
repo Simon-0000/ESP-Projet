@@ -48,6 +48,24 @@ namespace Assets
         {
             return src.x * src.y * src.z;
         }
+        public static void SwapValues<T>(ref T valA, ref T valB)
+        {
+            T temp = valA;
+            valA = valB;
+            valB = temp;
+        }
+        public static void RandomlyRemoveListElements<T>(List<T> src, int nbrOfRemovals)
+        {
+            if (nbrOfRemovals > src.Count)
+                nbrOfRemovals = src.Count;
+            while(nbrOfRemovals > 0)
+            {
+                int index = Random.Range(0,src.Count);
+                src.RemoveAt(index);
+                --nbrOfRemovals;
+            }
+
+        }
 
         //Cette fonction permet de prendre une certaine longueur (availableLength) et trouver une coupure aléatoire qui 
         //donnerait deux longueurs plus grandes ou égales à minimumCutLength 

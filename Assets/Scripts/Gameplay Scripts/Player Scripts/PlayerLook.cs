@@ -9,16 +9,33 @@ public class PlayerLook : MonoBehaviour
     public Camera cam;
     [SerializeField] private Image crosshair;
     private float yRotation = 0f;
-     public float xSensitivity ;
-     public float ySensitivity ;
+     public float xSensitivity =30;
+     public  float ySensitivity =30;
+     [SerializeField] private Slider xslider;
+     [SerializeField] private Slider yslider;
 
     private void Awake()
     {
         SetCursor();
         
     }
-    public void XSetSensitivity (float x)
+
+    private void Update()
     {
+        if (Input.GetMouseButton(1))
+        {
+            xSensitivity = xslider.value/3;
+            ySensitivity = yslider.value/3;
+        }
+        if (!Input.GetMouseButton(1))
+        {
+            xSensitivity = xslider.value;
+            ySensitivity = yslider.value;
+        }
+    }
+
+    public void XSetSensitivity (float x)
+    { 
         xSensitivity = x;
        
 

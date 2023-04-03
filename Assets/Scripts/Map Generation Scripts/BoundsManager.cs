@@ -13,13 +13,20 @@ public class BoundsManager : MonoBehaviour
 
     public bool centerMesh = false;
 
-    public Vector3 roomBoundsSizeOffset = Vector3.zero;
+    public Bounds roomBoundsOffset;
+
 
     public void Awake()
+    {
+        RefreshBounds();
+    }
+    public Bounds RefreshBounds()
     {
         objectBounds = Algos.GetRendererBounds(gameObject);
         if (centerMesh == true)
             Algos.ChangePivotPosition(gameObject.transform, objectBounds.center);
-        objectBounds.size += roomBoundsSizeOffset;
+        objectBounds.size += roomBoundsOffset.size;
+        return objectBounds;
     }
+    
 }

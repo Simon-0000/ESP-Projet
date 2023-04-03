@@ -125,7 +125,7 @@ public class ZombieBehaviour : MonoBehaviour
             }
         }
 
-        Debug.Log(isWithinRange);
+        //Debug.Log(isWithinRange);
         if (isWithinRange && canSeeTarget)
             return true;
 

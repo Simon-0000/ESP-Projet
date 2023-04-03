@@ -703,7 +703,7 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 398325570}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -712,8 +712,8 @@ RectTransform:
   - {fileID: 124995512}
   - {fileID: 1468918855}
   - {fileID: 894651891}
-  m_Father: {fileID: 1599087489}
-  m_RootOrder: 2
+  m_Father: {fileID: 590059000}
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -786,7 +786,9 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 791306091}
+  - {fileID: 398325571}
   m_Father: {fileID: 1599087489}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -856,7 +858,7 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 791306090}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -864,8 +866,8 @@ RectTransform:
   - {fileID: 1106047999}
   - {fileID: 1458121918}
   - {fileID: 338004124}
-  m_Father: {fileID: 1599087489}
-  m_RootOrder: 1
+  m_Father: {fileID: 590059000}
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -1875,7 +1877,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 79175fe5334e3e44a88d41ade0c86ce7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sceneName: Zombie tests
 --- !u!114 &1599087486
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1950,8 +1951,6 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 590059000}
-  - {fileID: 791306091}
-  - {fileID: 398325571}
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

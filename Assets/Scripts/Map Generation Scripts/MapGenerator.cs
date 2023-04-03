@@ -8,37 +8,40 @@ using System.Collections;
 
 namespace Assets
 {
-   public class MapGenerator : MonoBehaviour
-   {
-      [SerializeField]
-      uint longueurMap, largeurMap;
-      [SerializeField]
-      float wallSizeMin, wallSizeMax;
-      [SerializeField]
-      ProceduralRoom[] roomObjects;
+    public class MapGenerator : MonoBehaviour
+    {
+        [SerializeField]
+        uint longueurMap, largeurMap;
+        [SerializeField]
+        float wallSizeMin, wallSizeMax;
+        [SerializeField]
+        ProceduralRoom[] roomObjects;
 
-      [SerializeField] 
-      GameObject doorObject;
+        [SerializeField]
+        GameObject doorObject;
+
+        [SerializeField]
+        GameObject windowObject;
 
         bool mapHasRefreshed = true;
-      void Awake()
-      {
+        void Awake()
+        {
             Debug.Assert(roomObjects.Length != 0);
             for (int i = 0; i < roomObjects.Length; ++i)
                 Debug.Assert(roomObjects[i] != null);
             Debug.Assert(doorObject != null);
             Debug.Assert(wallSizeMax + GameConstants.ACCEPTABLE_ZERO_VALUE >= wallSizeMin * 2);
-         RefreshMap();
-      }
+            RefreshMap();
+        }
 
-      public void RefreshMap()
-      {
-         if (mapHasRefreshed == false)
+        public void RefreshMap()
+        {
+            if (mapHasRefreshed == false)
                 return;
 
             //On détruit la carte précédente
             for (int i = 0; i < transform.childCount; ++i)
-            Destroy(transform.GetChild(i).gameObject);
+                Destroy(transform.GetChild(i).gameObject);
             StartCoroutine(CreateMap());
 
         }
@@ -48,14 +51,14 @@ namespace Assets
 
             yield return new WaitForSeconds(0.25f);
             //On instancie le RoomsGenerator
-            RoomsGenerator bspPièces = new RoomsGenerator(new RectangleInfo2d(new Vector2(longueurMap, largeurMap), transform.position), wallSizeMin, wallSizeMax,doorObject);
+            RoomsGenerator bspPièces = new RoomsGenerator(new RectangleInfo2d(new Vector2(longueurMap, largeurMap), transform.position), wallSizeMin, wallSizeMax, doorObject);
 
             //On génère les pièces
             List<Noeud<RectangleInfo2d>> noeudsPièces = bspPièces.GenerateRooms();
 
 
             //On instancie les pièces
-            bspPièces.InstantiateRooms(roomObjects,noeudsPièces,transform);
+            bspPièces.InstantiateRooms(noeudsPièces, transform, roomObjects, doorObject, windowObject);
 
             //On roule l'algorithme A* (pas implémenté)
 
