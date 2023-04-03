@@ -1679,7 +1679,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 00ab5ae2c8fb3fd4f967774a6e4318f7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  nbWantedZombies: 100
+  nbWantedZombies: 1
   zombie: {fileID: 5091242709008108106, guid: 6d30ae6f59058ea4790c0d9389de2ac9, type: 3}
   spawnPoint: {x: 0, y: 0, z: 0}
   player: {fileID: 463104524}

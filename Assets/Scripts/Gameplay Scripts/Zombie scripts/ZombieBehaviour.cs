@@ -29,6 +29,8 @@ public class ZombieBehaviour : MonoBehaviour
     const int BaseDamage = 10;
     const int BaseSpeed = 3;
 
+    private Animator animator;
+ 
     void Start()
     {
         Team = new List<ZombieBehaviour>(3);
@@ -42,6 +44,8 @@ public class ZombieBehaviour : MonoBehaviour
         DefineTarget();
         GetComponent<NavMeshAgent>().speed = speed;
         GetComponent<NavMeshAgent>().destination = patrolLocations[patrolIndexCounter];
+        animator = GetComponent<Animator>();
+        animator.SetBool("walking", true);
     }
 
     private void Update()
@@ -62,6 +66,7 @@ public class ZombieBehaviour : MonoBehaviour
 
     private void DefinePatrolSequence()
     {
+      
         //trouver tout les GameObjects avec un EntryWaypoint ou DoorWaypoint
         EntryWaypoint[] windows = FindObjectsOfType<EntryWaypoint>();
         DoorWaypoint[] doors = FindObjectsOfType<DoorWaypoint>();
@@ -129,14 +134,21 @@ public class ZombieBehaviour : MonoBehaviour
         if (isWithinRange && canSeeTarget)
             return true;
 
-        return false;
-        //return Vector3.Angle(direction, Algos.GetVectorAbs(transform.forward)) <= fieldOfView && direction.magnitude <= distanceWanted;
+        //return false;
+       return Vector3.Angle(direction, Algos.GetVectorAbs(transform.forward)) <= fieldOfView && direction.magnitude <= actionRange;
     }
 
     public void Attack()
     {
+      
+
         target.GetComponent<PlayerHealth>().takeDamage(damage);
         Debug.Log("attack made");
+       
+         
+        
+       // animator.SetBool("attack",false);
+
         
     }
     public void TakeDamage(int damage)
@@ -150,6 +162,10 @@ public class ZombieBehaviour : MonoBehaviour
     public void ManageDeath()
     {
         isActive = false;
+       
+        animator.SetBool("walking",false);
+        animator.SetBool("attack",false);
+         animator.SetBool("dead",true);
         Destroy(GetComponent<BehaviourTreeRunner>());
         GetComponent<NavMeshAgent>().isStopped=true;
         if (isLeader)

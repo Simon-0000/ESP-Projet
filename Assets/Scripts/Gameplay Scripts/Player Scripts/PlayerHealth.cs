@@ -8,7 +8,7 @@ public class PlayerHealth : MonoBehaviour
     private int vie;
     void Awake()
     {
-        vie = 20;
+        vie = 100;
 
     }
 
