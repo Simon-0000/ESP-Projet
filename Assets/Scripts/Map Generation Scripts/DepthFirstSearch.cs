@@ -24,9 +24,10 @@ namespace Assets
 
             stackNode.Push(startingNode);
             Dictionary<Noeud<T>, bool> isVisited = new Dictionary<Noeud<T>, bool>();
-            for (int i = 0; i < nodes.Count; i++) 
+            isVisited.TryAdd(startingNode, true);
+            for (int i = 1; i < nodes.Count; i++) 
                 isVisited.TryAdd(nodes[i], false);
-            
+
             while (stackNode.Count > 0)
             {
                 var currentNode = stackNode.Peek();

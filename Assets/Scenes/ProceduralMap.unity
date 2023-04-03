@@ -696,3 +696,4 @@ MonoBehaviour:
   roomObjects:
   - {fileID: 7271430624650593193, guid: 491c178b4b960154f86a23e6d5b8c742, type: 3}
   doorObject: {fileID: 2430739564790736020, guid: 21b28f3efd218ab4a8ea5a7c522c44ad, type: 3}
+  windowObject: {fileID: 7842764880825554952, guid: b8fd88299b70a31479c54aa878d14e58, type: 3}
