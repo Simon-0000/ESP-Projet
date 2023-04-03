@@ -24,7 +24,7 @@ public class DroneBehaviour : MonoBehaviour {
     private Queue<Vector3> splinePoints = new(); // les points pour la spline
     private int splineDirection = 1; // -1 à droite, 1 à gauche
     const int KBN = 5; // multiplicateur des vecteurs bi-normaux
-    public float ptParMetre = 0.2f;
+    public float ptParMetre = 3.0f;
     private Hashtable args;
     private bool restartSplines = true;
     private Vector3 lastPLayerPoint;
@@ -41,8 +41,9 @@ public class DroneBehaviour : MonoBehaviour {
 
     void MakePath(Transform target)
     {
+        Debug.Log("QuelqueChose");
         // définir la hauteur du drone en Y
-        rnd = Random.Range(-2, 10);
+        //rnd = Random.Range(-2, 10);
         
         // Création des points pour la Spline
         Vector3 newPosition = transform.position;
@@ -53,20 +54,21 @@ public class DroneBehaviour : MonoBehaviour {
             return;
         }
             
-        int nbrPoints = ((int) (distanceObjet.magnitude / Mathf.Min(ptParMetre, distanceObjet.magnitude / 2 - GameConstants.ACCEPTABLE_ZERO_VALUE)) / 2) * 2;
+        int nbrPoints = 2*((int) (distanceObjet.magnitude / Mathf.Min(ptParMetre, distanceObjet.magnitude / 2 - GameConstants.ACCEPTABLE_ZERO_VALUE)) / 2) * 2;
         distanceObjet /= nbrPoints;
         Vector3 binormal = Vector3.Cross(distanceObjet, transform.up).normalized * KBN;
         List<Vector3> points = new List<Vector3>();
         for (int i = 0; i < nbrPoints; i++)
         {
             splineDirection *= -1;
-            newPosition += distanceObjet + splineDirection * binormal;
-            newPosition = new Vector3(newPosition.x, rnd, newPosition.z);
-            points.Add(newPosition);
+            newPosition += distanceObjet;
+            //newPosition = new Vector3(newPosition.x, rnd, newPosition.z);
+            points.Add(newPosition - distanceObjet / 2 + splineDirection * binormal / 2);
+            points.Add(newPosition + splineDirection * binormal);
         }
-
+        points.Add(newPosition);
         lastPLayerPoint = points[points.Count - 1];
-        float time = speed;//(distanceObjet.magnitude * nbrPoints) / speed;
+        float time = 1/speed;//(distanceObjet.magnitude * nbrPoints) / speed;
         
         splinePoints =new Queue<Vector3>(points);
         
@@ -76,7 +78,7 @@ public class DroneBehaviour : MonoBehaviour {
         args.Add("time", time);
         args.Add("oncomplete", "MoveToNextPoints" );
 
-        args.Add("easetype", iTween.EaseType.easeInSine);
+        args.Add("easetype", iTween.EaseType.linear);
         if (restartSplines)
         {
             restartSplines = false;
@@ -87,6 +89,7 @@ public class DroneBehaviour : MonoBehaviour {
 
     void MoveToNextPoints()
     {
+        splineDirection *= -1;
         if (splinePoints.Count == 0)
         {
             restartSplines = true;
@@ -94,16 +97,22 @@ public class DroneBehaviour : MonoBehaviour {
             return;
             
         }
-        Vector3[] nextPoints = new[] { splinePoints.Dequeue(), splinePoints.Dequeue() };
+
+        Vector3[] nextPoints;
+        splineDirection *= -1;
+        nextPoints = new[] { splinePoints.Dequeue(), splinePoints.Dequeue(), splinePoints.Peek() };
+        if (splinePoints.Count == 1)
+            splinePoints.Dequeue();
         args.Remove("path");
         args.Add("path", nextPoints);
         iTween.MoveTo(gameObject,args);
         lastPt = nextPoints[nextPoints.Length - 1];
+        Debug.Log("fuckuSerg");
 
 
     }
 
-    void Update ()
+    public void FollowPlayer ()
     {
         if (//Algos.GetVectorAbs(transform.position - lastPt).magnitude <= GameConstants.OVERLAP_TOLERANCE &&
             Algos.GetVectorAbs(target.transform.position - lastPLayerPoint).magnitude > maximumDistance)
