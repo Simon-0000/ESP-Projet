@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using TheKiwiCoder;
 
-//sergio abreao alvarez
+//sergio abreo alvarez
 [System.Serializable]
 public class Chase : ActionNode
 {

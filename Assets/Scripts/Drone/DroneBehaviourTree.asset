@@ -1,0 +1,67 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2d285eb63c2cdd74180de7cfceaa96ad, type: 3}
+  m_Name: DroneBehaviourTree
+  m_EditorClassIdentifier: 
+  rootNode:
+    rid: 7254375006923128832
+  nodes:
+  - rid: 7254375006923128832
+  - rid: 7254375006923128833
+  - rid: 7254375006923128834
+  treeState: 0
+  blackboard:
+    moveToPosition: {x: 0, y: 0, z: 0}
+  viewPosition: {x: 522.4, y: 120.8, z: 0}
+  viewScale: {x: 0.65751624, y: 0.65751624, z: 1}
+  references:
+    version: 2
+    RefIds:
+    - rid: 7254375006923128832
+      type: {class: RootNode, ns: TheKiwiCoder, asm: Assembly-CSharp}
+      data:
+        state: 0
+        started: 0
+        guid: c6fc489c-82c0-42d7-afd7-3d922bf5b14d
+        position: {x: -471.772, y: -74.01785}
+        blackboard:
+          moveToPosition: {x: 0, y: 0, z: 0}
+        description: 
+        drawGizmos: 0
+        child:
+          rid: 7254375006923128834
+    - rid: 7254375006923128833
+      type: {class: Follow, ns: , asm: Assembly-CSharp}
+      data:
+        state: 0
+        started: 0
+        guid: 2036e6b95ddf78e499a60f9f1b64822b
+        position: {x: -471.99985, y: 205.0811}
+        blackboard:
+          moveToPosition: {x: 0, y: 0, z: 0}
+        description: 
+        drawGizmos: 0
+    - rid: 7254375006923128834
+      type: {class: Repeat, ns: TheKiwiCoder, asm: Assembly-CSharp}
+      data:
+        state: 0
+        started: 0
+        guid: db18a0840307e2b448330efebc3916ae
+        position: {x: -471.19986, y: 61.951496}
+        blackboard:
+          moveToPosition: {x: 0, y: 0, z: 0}
+        description: 
+        drawGizmos: 0
+        child:
+          rid: 7254375006923128833
+        restartOnSuccess: 1
+        restartOnFailure: 0

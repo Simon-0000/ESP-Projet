@@ -13,6 +13,7 @@ namespace TheKiwiCoder {
     public class Context {
         public GameObject gameObject;
         public ZombieBehaviour zombie;
+        public DroneBehaviour drone;
         public Transform transform;
         public Animator animator;
         public Rigidbody physics;
@@ -27,7 +28,12 @@ namespace TheKiwiCoder {
             // Fetch all commonly used components
             Context context = new Context();
             context.gameObject = gameObject;
-            context.zombie = gameObject.GetComponent<ZombieBehaviour>();
+            ZombieBehaviour z = gameObject.GetComponent<ZombieBehaviour>();
+            if (z != null)
+                context.zombie = z;
+            DroneBehaviour d = gameObject.GetComponent<DroneBehaviour>();
+            if (d != null)
+                context.drone = d;
             context.transform = gameObject.transform;
             context.animator = gameObject.GetComponent<Animator>();
             context.physics = gameObject.GetComponent<Rigidbody>();
