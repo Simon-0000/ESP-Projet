@@ -19,7 +19,7 @@ namespace Assets
 
         const String ROOM_NAME = "Room";
 
-        public void InstanciateProceduralRoom(Noeud<RectangleInfo2d> roomNode,Transform parentTransform)
+        public GameObject InstanciateProceduralRoom(Noeud<RectangleInfo2d> roomNode,Transform parentTransform)
         {
             //On fait les «Awake» ici, puisqu'un «ProceduralObject» est utilisé comme un modèle qui nous fourni
             //l'information nécessaire pour instancier un gameObject, donc leur «Awake» ne sera jamais appelé si on
@@ -62,6 +62,8 @@ namespace Assets
 
             //Instancier les objets de la pièce
             InstantiateHierarchies(roomObj.transform,Algos.GetVector3Volume(roomDimensions) * roomFillPercentage);
+
+            return roomObj;
         }
         private void InstantiateHierarchies(Transform parentTransform, float roomVolume)
         {
