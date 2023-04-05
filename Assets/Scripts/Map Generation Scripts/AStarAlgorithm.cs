@@ -25,6 +25,7 @@ namespace Assets
                 visited = false;
             }
         }
+        
         public static List<Noeud<AStarNodeValue>> GetPath(Noeud<AStarNodeValue> startingNode, Noeud<AStarNodeValue> endNode)
         {
             List<Noeud<AStarNodeValue>> availableNodes = new();

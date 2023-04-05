@@ -229,19 +229,82 @@ namespace Assets
             List<Noeud<RectangleInfo2d>> windowList = GetEmptyWindowRooms(roomsNodes);
             Algos.RandomlyRemoveListElements(windowList, windowList.Count / 3);
 
-            InstantiateObjectBetweenRooms(windowList, windowObject, windowObject.TryAddComponent<BoundsManager>().RefreshBounds(), windowParent.transform);
-            InstantiateObjectBetweenRooms(roomsNodes, doorObject, doorObject.TryAddComponent<BoundsManager>().RefreshBounds(), doorParent.transform);
+            List<GameObject> aStarConnections = InstantiateObjectBetweenRooms(windowList, windowObject, windowObject.TryAddComponent<BoundsManager>().RefreshBounds(), windowParent.transform);
+
+            aStarConnections.AddRange(InstantiateObjectBetweenRooms(roomsNodes, doorObject,
+                doorObject.TryAddComponent<BoundsManager>().RefreshBounds(), doorParent.transform));
 
             for (int i = 0; i < roomsNodes.Count; ++i)
             {
                 int roomTypeIndex = Random.Range(0, possibleRooms.Length);
 
-                possibleRooms[roomTypeIndex].InstanciateProceduralRoom(roomsNodes[i], roomParent.transform);
+                GameObject room = possibleRooms[roomTypeIndex].InstanciateProceduralRoom(roomsNodes[i], roomParent.transform);
+                UseAStarOnRoom(room, GetObjectsInRoom(room,aStarConnections),doorBounds.size.y);
+
             }
-            UseAStarOnRoom(null, null);
         }
-        public void UseAStarOnRoom(GameObject room, List<GameObject> objectsToConnect)
+        const float ASTAR_NODE_SIZE = 2;
+
+        public List<GameObject> GetObjectsInRoom(GameObject room, List<GameObject> availableObjects)
         {
+            List<GameObject> objectsInRoom = new();
+            for (int i = 0; i < availableObjects.Count; ++i)
+            {
+                Vector2 roomSize = new(room.GetComponent<BoundsManager>().objectBounds.size.x,room.GetComponent<BoundsManager>().objectBounds.size.z);
+                Vector2 roomPosition = new(room.transform.position.x,room.transform.position.z);
+                RectangleInfo2d roomInfo = new(roomSize,roomPosition);
+                
+                Vector2 objSize = new(availableObjects[i].GetComponent<BoundsManager>().objectBounds.size.x,availableObjects[i].GetComponent<BoundsManager>().objectBounds.size.z);
+                Vector2 objPosition = new(availableObjects[i].GetComponent<BoundsManager>().objectBounds.center.x,availableObjects[i].GetComponent<BoundsManager>().objectBounds.center.z);
+                RectangleInfo2d objInfo = new(objSize,objPosition);
+
+                if (AreRoomsConnected(objInfo, roomInfo, GameConstants.OVERLAP_TOLERANCE))
+                    objectsInRoom.Add(availableObjects[i]);
+            }
+
+            return objectsInRoom;
+        }
+
+        public void UseAStarOnRoom(GameObject room, List<GameObject> objectsToConnect,float height)
+        {
+            Debug.Log("objectsToConnect: " + objectsToConnect.Count);
+            Dictionary<Noeud<AStarAlgorithm.AStarNodeValue>, GameObject> NodeToObjDictionary = new();
+            Vector2 roomDimensions = new Vector2(room.GetComponent<BoundsManager>().objectBounds.size.x,
+                room.GetComponent<BoundsManager>().objectBounds.size.z);
+            Vector2 leftSpace = roomDimensions;
+            while(leftSpace.x - ASTAR_NODE_SIZE > 0)
+            {
+                while (leftSpace.y - ASTAR_NODE_SIZE > 0)
+                {
+                    
+                    leftSpace.y -= ASTAR_NODE_SIZE;
+                }
+                //
+                leftSpace.x -= ASTAR_NODE_SIZE;
+
+            }
+            //
+            /*
+            for (int i = 0; i < objectsToConnect.Count; ++i)
+            {
+                AStarAlgorithm.AStarNodeValue startValue = new(objectsToConnect[i].)
+                Noeud<AStarAlgorithm.AStarNodeValue> startNode = new Noeud<AStarAlgorithm.AStarNodeValue>();
+                objectsToConnect[i]
+            }
+            
+*/
+            /*
+            while (currentXDimension > 0)
+            {
+                while (currentYDimension > 0)
+                {
+                    //AStarAlgorithm.AStarNodeValue roomNodeValue = new();
+                    //Noeud<AStarAlgorithm.AStarNodeValue> roomNode = new(null,)
+                }
+    
+                currentYDimension = roomDimensions.y;
+            }
+            */
             //   Bounds roomBounds = room.GetComponent<BoundsManager>().objectBounds;
             Noeud<AStarAlgorithm.AStarNodeValue> nodeA = new(null,new AStarAlgorithm.AStarNodeValue(new Vector2(0,0),0));
             Noeud<AStarAlgorithm.AStarNodeValue> nodeB = new(null,new AStarAlgorithm.AStarNodeValue(new Vector2(1, 0), 1000));
@@ -262,10 +325,10 @@ namespace Assets
 
 
         //InstantiateDoors s'occupe de placer des portes s'il y a une connexion entre deux pièces
-        static private void InstantiateObjectBetweenRooms(List<Noeud<RectangleInfo2d>> roomsNodes, GameObject templateObject, Bounds templateBounds, Transform parent)
+        static private List<GameObject> InstantiateObjectBetweenRooms(List<Noeud<RectangleInfo2d>> roomsNodes, GameObject templateObject, Bounds templateBounds, Transform parent)
         {
             int j;
-
+            List<GameObject> objects = new();
             for (int i = 0; i < roomsNodes.Count; ++i)
             {
                 j = 0;
@@ -297,8 +360,6 @@ namespace Assets
 
                     if (smallerRoom.valeur.size[planeAxis] > biggerRoom.valeur.size[planeAxis] + GameConstants.OVERLAP_TOLERANCE)
                     {
-                        //++j;
-                        //continue;
                         Algos.SwapValues<Noeud<RectangleInfo2d>>(ref smallerRoom, ref biggerRoom);
                     }
 
@@ -311,12 +372,14 @@ namespace Assets
                     Vector3 centerOffset = Algos.Vector2dTo3dVector(distanceOffset, -(GameConstants.ROOM_HEIGHT - templateBounds.size.y) / 2);
 
                     //Instancier l'objet
-                    GameObject.Instantiate(templateObject, Algos.Vector2dTo3dVector(smallerRoom.valeur.coordinates, 0) + centerOffset, doorRotation, parent);
+                    objects.Add(GameObject.Instantiate(templateObject, Algos.Vector2dTo3dVector(smallerRoom.valeur.coordinates, 0) + centerOffset, doorRotation, parent));
 
                     //On enlève le lien entre les pièces pour ne pas instancier l'objet une seconde fois
                     Noeud<RectangleInfo2d>.EnleverLienRéciproque(smallerRoom, biggerRoom);
                 }
             }
+
+            return objects;
         }
 
         //GetRoomOverlap permet d'obtenir le chevauchement entre deux pièces
