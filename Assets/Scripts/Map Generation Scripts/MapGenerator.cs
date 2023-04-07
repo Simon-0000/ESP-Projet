@@ -51,7 +51,7 @@ namespace Assets
 
             yield return new WaitForSeconds(0.25f);
             //On instancie le RoomsGenerator
-            RoomsGenerator bspPièces = new RoomsGenerator(new RectangleInfo2d(new Vector2(longueurMap, largeurMap), transform.position), wallSizeMin, wallSizeMax, doorObject);
+            RoomsGenerator bspPièces = new RoomsGenerator(new Vector2(longueurMap, largeurMap), wallSizeMin, wallSizeMax, doorObject);
 
             //On génère les pièces
             List<Noeud<RectangleInfo2d>> noeudsPièces = bspPièces.GenerateRooms();

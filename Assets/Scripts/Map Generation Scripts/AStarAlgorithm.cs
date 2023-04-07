@@ -63,6 +63,8 @@ namespace Assets
                         availableNodes.Add(currentNode.noeudsEnfants[i]);
                 }
             }
+            if (currentNode != endNode)
+                Debug.Log("ASTAR FAILED");
             List<Noeud<AStarNodeValue>> path = Noeud<AStarNodeValue>.GetParents(currentNode);
             path.Reverse();
             return path;
