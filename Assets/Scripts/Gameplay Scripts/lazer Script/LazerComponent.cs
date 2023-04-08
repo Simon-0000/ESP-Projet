@@ -101,12 +101,12 @@ public class LazerComponent : MonoBehaviour
         angelInDeg = MathF.Abs(90-Vector3.Angle(rig.velocity, collision.contacts[0].normal));
        floatDamage *= Schlick(n1, n2, angelInDeg); 
        damage = (int)floatDamage;
-       Debug.Log((damage));
+       
    }
 
    void DoDamageToZombie(Collision collision)
    {
-       zombie= collision.contacts[0].otherCollider.GetComponent<ZombieBehaviour>();
+       zombie= collision.contacts[0].otherCollider.GetComponentInParent<ZombieBehaviour>();
        zombie.TakeDamage(damage);
        Destroy(gameObject);
    }
@@ -117,7 +117,7 @@ public class LazerComponent : MonoBehaviour
            float x = 1 - cosTheta;
            float val = r0 + (1 - r0) * Mathf.Pow(x,5);
            return Mathf.Clamp(val*2,0,1) ;
-           // on retourne la valuer x2 puisuqe selon shlick, le dommage aurait été minime et 
+           // on retourne la valeur x2 puisque selon shlick, le dommage aurait été minime et 
            // défie le principe de notre jeu 
        }
 }

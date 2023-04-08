@@ -34,6 +34,8 @@ public class GunController : MonoBehaviour
     [Header("crosshair")] 
     [SerializeField] private Image crosshair;
     [SerializeField] private RawImage aimedcrosshair;
+    
+    [SerializeField] AudioSource gunShoot;
 
 
     private int ammo;
@@ -119,6 +121,7 @@ public class GunController : MonoBehaviour
         if (ammo > 0)
         {
             Instantiate(bullet, boucheDeCanon.position, boucheDeCanon.rotation);
+            gunShoot.Play();
             ammo -= 1;
         }
 

@@ -586,6 +586,26 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &632908814 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2787721084015825039, guid: df59ce2af26605649a337c3ec26ab484, type: 3}
+  m_PrefabInstance: {fileID: 546826842}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &632908818
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 632908814}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 76c392e42b5098c458856cdf6ecaaaa1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_FirstSelected: {fileID: 0}
+  m_sendNavigationEvents: 1
+  m_DragThreshold: 10
 --- !u!1 &758040903
 GameObject:
   m_ObjectHideFlags: 0
@@ -1681,7 +1701,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   nbWantedZombies: 1
   zombie: {fileID: 5091242709008108106, guid: 6d30ae6f59058ea4790c0d9389de2ac9, type: 3}
-  spawnPoint: {x: 0, y: 0, z: 0}
+  spawnPoint: {x: 0.01, y: 27.28, z: 0}
   player: {fileID: 463104524}
 --- !u!4 &2066289969
 Transform:
