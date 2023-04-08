@@ -8,8 +8,7 @@ using System;
 
 public class BoundsManager : MonoBehaviour
 {
-    [NonSerialized]
-    public Bounds objectBounds;
+    public Bounds objectBoundsWorld,objectBoundsLocal;
 
     public bool centerMesh = false;
 
@@ -22,11 +21,17 @@ public class BoundsManager : MonoBehaviour
     }
     public Bounds RefreshBounds()
     {
-        objectBounds = Algos.GetRendererBounds(gameObject);
+        Quaternion objRotation = transform.rotation;
+        objectBoundsWorld = Algos.GetRendererBounds(gameObject);
         if (centerMesh == true)
-            Algos.ChangePivotPosition(gameObject.transform, objectBounds.center);
-        objectBounds.size += roomBoundsOffset.size;
-        return objectBounds;
+            Algos.ChangePivotPosition(gameObject.transform, objectBoundsWorld.center);
+        objectBoundsLocal.center = objectBoundsWorld.center;
+
+        transform.rotation = Quaternion.identity;
+        objectBoundsLocal = Algos.GetRendererBounds(gameObject);
+        transform.rotation = objRotation;
+
+        objectBoundsWorld.size = transform.TransformVector(transform.InverseTransformVector(objectBoundsWorld.size) + roomBoundsOffset.size);
+        return objectBoundsWorld;
     }
-    
 }

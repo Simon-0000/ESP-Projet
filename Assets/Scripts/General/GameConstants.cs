@@ -1,5 +1,5 @@
-//Auteurs:  Sergio Abreo Alvarez, Simon Asmar, Michaël Bruneau, Olivier Castonguay
-//Explication: Cette classe contient quelques constantes utilisées dans le jeu
+//Auteurs:  Sergio Abreo Alvarez, Simon Asmar, Michaï¿½l Bruneau, Olivier Castonguay
+//Explication: Cette classe contient quelques constantes utilisï¿½es dans le jeu
 
 
 namespace Assets
@@ -10,7 +10,7 @@ namespace Assets
         public const float OVERLAP_TOLERANCE = 0.002f;
         public const float ACCEPTABLE_ZERO_VALUE = 0.00001f;
         public const int MAX_ITERATIONS = 100;
-        public const int ROOM_HEIGHT = 3;
+        public const float ROOM_HEIGHT = 4f;
 
     }
 }

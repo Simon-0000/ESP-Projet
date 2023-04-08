@@ -34,6 +34,16 @@ namespace Assets
             return new Vector2(Mathf.Abs(src.x), Mathf.Abs(src.y));
         }
 
+        public static Vector3 GetVectorMod(this Vector3 src, float mod)
+        {
+            return new Vector3(src.x % mod, src.y % mod, src.z % mod);
+        }
+
+        public static Vector2 GetVectorMod(this Vector2 src,float mod)
+        {
+            return new Vector2(src.x % mod, src.y % mod);
+        }
+
         public static Vector3 Vector2dTo3dVector(Vector2 vector2)
         {
             return Vector2dTo3dVector(vector2, 0);
