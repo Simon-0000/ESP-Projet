@@ -237,8 +237,6 @@ namespace Assets
                 doorObject.TryAddComponent<BoundsManager>().RefreshBounds(), doorParent.transform));
 
             Dictionary<Noeud<RectangleInfo2d>, ProceduralRoom> nodeToRoomTypeDictionary = new(roomsNodes.Count);
-            for (int i = 1; i < roomsNodes.Count; i++)
-                nodeToRoomTypeDictionary.TryAdd(roomsNodes[i], null);
 
             
             for (int i = 0; i < roomsNodes.Count; ++i)
@@ -248,10 +246,12 @@ namespace Assets
                 {
                     ProceduralRoom childProceduralRoomType = nodeToRoomTypeDictionary.GetValueOrDefault(roomsNodes[i].noeudsEnfants[j],null);
                     if (childProceduralRoomType != null)
+                    {
                         availableRooms.Remove(childProceduralRoomType);
-                    Debug.Log("OKKKK");
+                        Debug.Log("Removed");
+
+                    }
                 }
-                Debug.Log("next");
 
                 ProceduralRoom proceduralRoomType;
                 if (availableRooms.Count > 0)
@@ -259,7 +259,7 @@ namespace Assets
                 else
                     proceduralRoomType = possibleRooms[Random.Range(0, possibleRooms.Length)];
 
-                nodeToRoomTypeDictionary.TryAdd(roomsNodes[i], proceduralRoomType);
+                nodeToRoomTypeDictionary.Add(roomsNodes[i], proceduralRoomType);
 
                 GameObject room = proceduralRoomType.InstanciateProceduralRoom(roomsNodes[i], roomParent.transform);
                 UseAStarOnRoom(room, aStarConnections);
@@ -297,7 +297,7 @@ namespace Assets
             Vector2 nodeSize = new Vector2(roomDimensions.x / nodeAmount.x, roomDimensions.y / nodeAmount.y);
             Vector2 roomCorner = -roomDimensions / 2 + nodeSize / 2;
 
-            Debug.Log("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXxxXXXX IS ROOM NODE------------------------------------------------------");
+//            Debug.Log("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXxxXXXX IS ROOM NODE------------------------------------------------------");
             for (int i = 0; i < nodeAmount.x; ++i)
             {
                 for(int j = 0; j < nodeAmount.y; ++j)
@@ -381,7 +381,7 @@ namespace Assets
                     for (int j = 0; j < objectToDelete.Length; ++j)
                         if (objectToDelete[j] != null)
                         {
-                            Debug.Log("XXXXXXXXXXXXXX DESTROYING: " + objectToDelete[j].name);
+//                            Debug.Log("XXXXXXXXXXXXXX DESTROYING: " + objectToDelete[j].name);
 
                             GameObject.Destroy(objectToDelete[j]);
                         }
@@ -397,6 +397,7 @@ namespace Assets
         {
             int j;
             List<GameObject> objects = new();
+            List<(Noeud<RectangleInfo2d>,Noeud<RectangleInfo2d>)> destroyedLinks = new();
             for (int i = 0; i < roomsNodes.Count; ++i)
             {
                 j = 0;
@@ -444,9 +445,13 @@ namespace Assets
 
                     //On enlève le lien entre les pièces pour ne pas instancier l'objet une seconde fois
                     Noeud<RectangleInfo2d>.EnleverLienRéciproque(smallerRoom, biggerRoom);
+                    destroyedLinks.Add((smallerRoom, biggerRoom));
                 }
             }
-
+            for(int i = 0; i < destroyedLinks.Count; ++i)
+            {
+                Noeud<RectangleInfo2d>.FormerLienRéciproque(destroyedLinks[i].Item1,destroyedLinks[i].Item2);
+            }
             return objects;
         }
 

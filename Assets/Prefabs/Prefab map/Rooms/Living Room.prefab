@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 6083584432078699225}
   - component: {fileID: 7328155059994315458}
   - component: {fileID: 6088786914816179284}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Wall
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -108,7 +108,7 @@ GameObject:
   - component: {fileID: 1737222629808090218}
   - component: {fileID: 267105012156637242}
   - component: {fileID: 6878102553625256934}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: TableObj
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -198,7 +198,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8945570279150670898}
   - component: {fileID: 6055405112310893068}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: LampHierarchy
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -256,7 +256,7 @@ GameObject:
   - component: {fileID: 8383618131504135746}
   - component: {fileID: 3183394960504068209}
   - component: {fileID: 1018625573218568548}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Walls
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -403,7 +403,7 @@ GameObject:
   - component: {fileID: 7759696420195694226}
   - component: {fileID: 2102859864030618151}
   - component: {fileID: 3680977644289164220}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Petal (3)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -498,7 +498,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3915766537897562582}
   - component: {fileID: 8804535930258130700}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: VaseObj
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -560,7 +560,7 @@ GameObject:
   - component: {fileID: 5720043501631602142}
   - component: {fileID: 4213655110735891635}
   - component: {fileID: 6027408811520051526}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Cube
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -657,7 +657,7 @@ GameObject:
   - component: {fileID: 4135023141284051834}
   - component: {fileID: 5540616767861425120}
   - component: {fileID: 7013952110337572275}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: bottomOutline
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -752,7 +752,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3322247865509104900}
   - component: {fileID: 7013206232255649185}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: BookCaseObj
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -832,7 +832,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4274184329078994968}
   - component: {fileID: 7409818131220891801}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: CarpetHierarchy
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -883,7 +883,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6555180769098492228}
   - component: {fileID: 4327715884798234366}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: RareVaseLightObj
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -945,7 +945,7 @@ GameObject:
   - component: {fileID: 7996200180612720018}
   - component: {fileID: 4906845402425228905}
   - component: {fileID: 8406677977763059558}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: FlowerBase
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1040,7 +1040,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2911797235033697489}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: LampModel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1076,7 +1076,7 @@ GameObject:
   - component: {fileID: 2426760056015239126}
   - component: {fileID: 413634245388266689}
   - component: {fileID: 6486913665867047565}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Floor2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1173,7 +1173,7 @@ GameObject:
   - component: {fileID: 2520652732511719618}
   - component: {fileID: 4233883508710534570}
   - component: {fileID: 455289204115173270}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: rightOutline
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1270,7 +1270,7 @@ GameObject:
   - component: {fileID: 4821311626464618070}
   - component: {fileID: 1660930382866041105}
   - component: {fileID: 2082629683456502197}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: topOutline
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1366,7 +1366,7 @@ GameObject:
   - component: {fileID: 1334472322166136969}
   - component: {fileID: 7271430624650593193}
   - component: {fileID: 5560650536591786425}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Living Room
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1451,7 +1451,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6565079063546954824}
   - component: {fileID: 2023608494565940968}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: VaseHierarchy
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1508,7 +1508,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8033203953475916517}
   - component: {fileID: 6100173184701978359}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: PaintingObj
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1594,7 +1594,7 @@ GameObject:
   - component: {fileID: 7567733023551766007}
   - component: {fileID: 1320353309330823021}
   - component: {fileID: 1875587217571798545}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: FlowerHead
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1700,7 +1700,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5766740100120385742}
   - component: {fileID: 2048904956588143391}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: TableHierarchy
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1763,7 +1763,7 @@ GameObject:
   - component: {fileID: 12191477494450160}
   - component: {fileID: 1620903404537325541}
   - component: {fileID: 2331293808277364513}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Petal
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1860,7 +1860,7 @@ GameObject:
   - component: {fileID: 8011746534549568361}
   - component: {fileID: 1035987308779892643}
   - component: {fileID: 9155981392007882856}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Painting
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1955,7 +1955,7 @@ GameObject:
   m_Component:
   - component: {fileID: 862445092275367869}
   - component: {fileID: 6193674579474364273}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: BookCaseModel_Sergio
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2016,7 +2016,7 @@ GameObject:
   - component: {fileID: 6626102611111589173}
   - component: {fileID: 8029915595683284754}
   - component: {fileID: 6859425448449619028}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: leftOutline
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2113,7 +2113,7 @@ GameObject:
   - component: {fileID: 7331452805191975519}
   - component: {fileID: 2818397385096295599}
   - component: {fileID: 3443410178345978956}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Petal (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2210,7 +2210,7 @@ GameObject:
   - component: {fileID: 8462768005293157435}
   - component: {fileID: 4513662581679544325}
   - component: {fileID: 6567649246296309402}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: leftOutline
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2307,7 +2307,7 @@ GameObject:
   - component: {fileID: 8732720432324804661}
   - component: {fileID: 3064957551388079573}
   - component: {fileID: 701363641970430510}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Petal (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2404,7 +2404,7 @@ GameObject:
   - component: {fileID: 6252872546471487014}
   - component: {fileID: 2254468443763723136}
   - component: {fileID: 4083629866916802079}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Petal (5)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2501,7 +2501,7 @@ GameObject:
   - component: {fileID: 4567187297477148844}
   - component: {fileID: 4279440471263437583}
   - component: {fileID: 6305764690341945839}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: leftOutline
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2596,7 +2596,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5850917819519373517}
   - component: {fileID: 4666761851052417067}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: BookCaseModel_Mic
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2655,7 +2655,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1917362611735980009}
   - component: {fileID: 3175596478141991234}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: BookCaseModel_Oli
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2716,7 +2716,7 @@ GameObject:
   - component: {fileID: 2633051571228601622}
   - component: {fileID: 6488792942500649811}
   - component: {fileID: 2413527147872939715}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: topOutline
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2812,7 +2812,7 @@ GameObject:
   - component: {fileID: 4639454092989513486}
   - component: {fileID: 8506804210192058159}
   - component: {fileID: 7479127106588890818}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: BookCaseModel 2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2881,7 +2881,7 @@ GameObject:
   - component: {fileID: 4651581768609051950}
   - component: {fileID: 3279529186676927133}
   - component: {fileID: 4795300168272144762}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: SofaModel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2951,7 +2951,7 @@ GameObject:
   - component: {fileID: 8076436522020211488}
   - component: {fileID: 5330993758990183631}
   - component: {fileID: 7062087833033329820}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Painting
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3048,7 +3048,7 @@ GameObject:
   - component: {fileID: 719380151397187662}
   - component: {fileID: 7780409253049978077}
   - component: {fileID: 1160667481450257361}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Petal
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3143,7 +3143,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1598771179666200859}
   - component: {fileID: 1149008649541941880}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Sofa Hierarchy
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3196,7 +3196,7 @@ GameObject:
   - component: {fileID: 2910878947377755031}
   - component: {fileID: 8146378062086944742}
   - component: {fileID: 2376833937990134748}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Petal (4)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3292,7 +3292,7 @@ GameObject:
   - component: {fileID: 1294970490138019232}
   - component: {fileID: 5982558431242423035}
   - component: {fileID: 3543934344430740189}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Area Light1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3407,7 +3407,7 @@ GameObject:
   - component: {fileID: 2783290358313112093}
   - component: {fileID: 5194791691614029394}
   - component: {fileID: 1411858200863850712}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: bottomOutline
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3504,7 +3504,7 @@ GameObject:
   - component: {fileID: 3243967028538344754}
   - component: {fileID: 3133378532138997284}
   - component: {fileID: 8710719047881431273}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: leftOutline
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3600,7 +3600,7 @@ GameObject:
   - component: {fileID: 6662700461505106767}
   - component: {fileID: 535763209133109063}
   - component: {fileID: 5919781526630102045}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: LampObj
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3684,7 +3684,7 @@ GameObject:
   - component: {fileID: 771336094768449879}
   - component: {fileID: 5822020640490654837}
   - component: {fileID: 4565775234866824239}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Floor
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3780,7 +3780,7 @@ GameObject:
   - component: {fileID: 5490453690440922214}
   - component: {fileID: 4184797708010356235}
   - component: {fileID: 315658282314385049}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: CoffeTableModel2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3850,7 +3850,7 @@ GameObject:
   - component: {fileID: 417170816013510203}
   - component: {fileID: 6325224733464746698}
   - component: {fileID: 2847406379497618225}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Petal
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3947,7 +3947,7 @@ GameObject:
   - component: {fileID: 6756667329938957641}
   - component: {fileID: 2906430138738755202}
   - component: {fileID: 664012907251348922}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Painting
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4044,7 +4044,7 @@ GameObject:
   - component: {fileID: 1161274188137392998}
   - component: {fileID: 8610748372510482019}
   - component: {fileID: 1497332042262857514}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Painting
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4139,7 +4139,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6949684654809087484}
   - component: {fileID: 2382795246462478967}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: PaintingHierarchy
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4190,7 +4190,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6839367203047314680}
   - component: {fileID: 4197200111506573153}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: BookCaseModel_Simon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4251,7 +4251,7 @@ GameObject:
   - component: {fileID: 8374592713025851859}
   - component: {fileID: 3818171142107973501}
   - component: {fileID: 2939529831786751885}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: bottomOutline
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4346,7 +4346,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5588506592449891260}
   - component: {fileID: 7515451915051902815}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: FlowerModel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4405,7 +4405,7 @@ GameObject:
   - component: {fileID: 3838595542542260460}
   - component: {fileID: 3533218527531183921}
   - component: {fileID: 8176878357744524080}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: rightOutline
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4500,7 +4500,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7926051844665893282}
   - component: {fileID: 4189485426261564774}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: SofaObj
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4580,7 +4580,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6084686096495402813}
   - component: {fileID: 306688856340786446}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: BookCaseHierarchy
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4631,7 +4631,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5634294771475171398}
   - component: {fileID: 1093887986476027132}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: LampLightObj
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4694,7 +4694,7 @@ GameObject:
   - component: {fileID: 2808928541480157371}
   - component: {fileID: 8320899077626994727}
   - component: {fileID: 3666781514934443399}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: SofaModel 2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4762,7 +4762,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7236221392052584234}
   - component: {fileID: 7269814581258453281}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: CarpetObject
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4830,7 +4830,7 @@ GameObject:
   - component: {fileID: 4090937446901269468}
   - component: {fileID: 1902440217402886749}
   - component: {fileID: 2956627328167554219}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Floors
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4929,7 +4929,7 @@ GameObject:
   - component: {fileID: 8846121539728952923}
   - component: {fileID: 6003448925948868436}
   - component: {fileID: 8475817754745255086}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Petal (7)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5025,7 +5025,7 @@ GameObject:
   - component: {fileID: 28472852600053784}
   - component: {fileID: 6094005753800880773}
   - component: {fileID: 7290546433189682025}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: BookCaseModel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5095,7 +5095,7 @@ GameObject:
   - component: {fileID: 428801048345984900}
   - component: {fileID: 3412378165694989782}
   - component: {fileID: 3144367994031904488}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: CarpetModelCube
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5192,7 +5192,7 @@ GameObject:
   - component: {fileID: 3581112846768041057}
   - component: {fileID: 417013332948920728}
   - component: {fileID: 2146728773441327310}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Wall2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5289,7 +5289,7 @@ GameObject:
   - component: {fileID: 4816476800562775219}
   - component: {fileID: 4091765413425838609}
   - component: {fileID: 2148543332962051602}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: VaseBaseCube
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5386,7 +5386,7 @@ GameObject:
   - component: {fileID: 6921085988609755569}
   - component: {fileID: 1843092239757379756}
   - component: {fileID: 8833098934445092684}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Petal (6)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5482,7 +5482,7 @@ GameObject:
   - component: {fileID: 3043984206261352269}
   - component: {fileID: 3624051856288268884}
   - component: {fileID: 7764382486364140078}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: CoffeTableModel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5552,7 +5552,7 @@ GameObject:
   - component: {fileID: 3523713204328569489}
   - component: {fileID: 3644507649304895491}
   - component: {fileID: 5698032542681857545}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: topOutline
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5647,7 +5647,7 @@ GameObject:
   m_Component:
   - component: {fileID: 9026556290996260385}
   - component: {fileID: 1976291272422184602}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Area Light2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5743,7 +5743,7 @@ GameObject:
   - component: {fileID: 5059648557133103609}
   - component: {fileID: 6386011982584231467}
   - component: {fileID: 3766380948173337532}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: topOutline
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5839,7 +5839,7 @@ GameObject:
   - component: {fileID: 82229366233238714}
   - component: {fileID: 8121924943840111715}
   - component: {fileID: 1086601385743677057}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Area Light2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5954,7 +5954,7 @@ GameObject:
   - component: {fileID: 7098338244633937638}
   - component: {fileID: 7289529711346238385}
   - component: {fileID: 5830139329815962329}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: bottomOutline
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -6051,7 +6051,7 @@ GameObject:
   - component: {fileID: 6843387796877978798}
   - component: {fileID: 7957616241751676636}
   - component: {fileID: 2223064844584842267}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: rightOutline
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -6148,7 +6148,7 @@ GameObject:
   - component: {fileID: 7126907980974869824}
   - component: {fileID: 4982475075846239821}
   - component: {fileID: 4242065657548578667}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: rightOutline
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -6245,7 +6245,7 @@ GameObject:
   - component: {fileID: 2973050773066275675}
   - component: {fileID: 3772899170549184809}
   - component: {fileID: 7720387983533361099}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Cylinder
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -6343,7 +6343,7 @@ GameObject:
   - component: {fileID: 1542863929964843308}
   - component: {fileID: 8838285169113831649}
   - component: {fileID: 7440052921631282499}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Petal
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -6439,6 +6439,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: CoffeTableModel
       objectReference: {fileID: 0}
+    - target: {fileID: 184304, guid: 84b3095a92ec27d448532647a747bbf9, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 499684, guid: 84b3095a92ec27d448532647a747bbf9, type: 3}
       propertyPath: m_RootOrder
       value: 0
@@ -6500,6 +6504,10 @@ PrefabInstance:
     - target: {fileID: 197846, guid: 2e56118484113a44faa3c8e83481b418, type: 3}
       propertyPath: m_Name
       value: BookCase_1
+      objectReference: {fileID: 0}
+    - target: {fileID: 197846, guid: 2e56118484113a44faa3c8e83481b418, type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 422290, guid: 2e56118484113a44faa3c8e83481b418, type: 3}
       propertyPath: m_RootOrder
@@ -6563,6 +6571,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: BookCase_2
       objectReference: {fileID: 0}
+    - target: {fileID: 113604, guid: 08a5f3a4f1a5afa47b54e6eddc350ddc, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 409950, guid: 08a5f3a4f1a5afa47b54e6eddc350ddc, type: 3}
       propertyPath: m_RootOrder
       value: 0
@@ -6624,6 +6636,10 @@ PrefabInstance:
     - target: {fileID: 127242, guid: 2145aca4677bd374bb41e3f80a5b53d6, type: 3}
       propertyPath: m_Name
       value: Couch_3
+      objectReference: {fileID: 0}
+    - target: {fileID: 127242, guid: 2145aca4677bd374bb41e3f80a5b53d6, type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 420958, guid: 2145aca4677bd374bb41e3f80a5b53d6, type: 3}
       propertyPath: m_RootOrder
@@ -6687,6 +6703,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: CoffeTable_4
       objectReference: {fileID: 0}
+    - target: {fileID: 175830, guid: 76ad0c5c9efae324b940fda5e601d62c, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 428598, guid: 76ad0c5c9efae324b940fda5e601d62c, type: 3}
       propertyPath: m_RootOrder
       value: 0
@@ -6748,6 +6768,10 @@ PrefabInstance:
     - target: {fileID: 104078, guid: 57a32613b8338fb46b75889d19358690, type: 3}
       propertyPath: m_Name
       value: Couch_1
+      objectReference: {fileID: 0}
+    - target: {fileID: 104078, guid: 57a32613b8338fb46b75889d19358690, type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 491612, guid: 57a32613b8338fb46b75889d19358690, type: 3}
       propertyPath: m_RootOrder

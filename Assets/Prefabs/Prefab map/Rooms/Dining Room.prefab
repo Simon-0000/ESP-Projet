@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 6083584432078699225}
   - component: {fileID: 7328155059994315458}
   - component: {fileID: 6088786914816179284}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Wall
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -108,7 +108,7 @@ GameObject:
   - component: {fileID: 6974697090304142427}
   - component: {fileID: 7648190682818253814}
   - component: {fileID: 5726041577826792571}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: ChairObj
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -209,7 +209,7 @@ GameObject:
   - component: {fileID: 8383618131504135746}
   - component: {fileID: 3183394960504068209}
   - component: {fileID: 1018625573218568548}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Walls
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -352,7 +352,7 @@ GameObject:
   - component: {fileID: 7316731527268283528}
   - component: {fileID: 7217324756105594342}
   - component: {fileID: 6590796854803777347}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: 'Dining Table Model '
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -420,7 +420,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8546837400866871491}
   - component: {fileID: 6919708992467225947}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: ChairHierarchy
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -472,7 +472,7 @@ GameObject:
   - component: {fileID: 1334472322166136969}
   - component: {fileID: 7271430624650593193}
   - component: {fileID: 5560650536591786425}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Dining Room
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -553,7 +553,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2565612293717556099}
   - component: {fileID: 8131567376631257248}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: PlateObj
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -615,7 +615,7 @@ GameObject:
   - component: {fileID: 2540326885633015266}
   - component: {fileID: 1945772062449950869}
   - component: {fileID: 2283866460377524936}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: CeilingLightCase
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -711,7 +711,7 @@ GameObject:
   - component: {fileID: 7749587867090703012}
   - component: {fileID: 3155719928917450640}
   - component: {fileID: 3904926495561054949}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: DiningTableObj
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -800,7 +800,7 @@ GameObject:
   - component: {fileID: 5227439692923246797}
   - component: {fileID: 8896240245951091646}
   - component: {fileID: 335719644423321236}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: CounterModel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -870,7 +870,7 @@ GameObject:
   - component: {fileID: 4061570956714817009}
   - component: {fileID: 7392689743258335775}
   - component: {fileID: 3016818520972933078}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Plate
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -966,7 +966,7 @@ GameObject:
   - component: {fileID: 3166826549293885223}
   - component: {fileID: 8033860354072153826}
   - component: {fileID: 9097412039282215420}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: CeilingLightModel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1035,7 +1035,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5190112084502933668}
   - component: {fileID: 2079935138038577748}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: DiningTableHierarchy
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1096,7 +1096,7 @@ GameObject:
   m_Component:
   - component: {fileID: 48488164088421395}
   - component: {fileID: 2945845306039637702}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: CeilingLightHierarchy
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1147,7 +1147,7 @@ GameObject:
   m_Component:
   - component: {fileID: 834523416314940586}
   - component: {fileID: 4529867406588560583}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: PlateModel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1204,7 +1204,7 @@ GameObject:
   - component: {fileID: 771336094768449879}
   - component: {fileID: 5822020640490654837}
   - component: {fileID: 4565775234866824239}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Floor
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1300,7 +1300,7 @@ GameObject:
   - component: {fileID: 8139996214844569959}
   - component: {fileID: 547142834605094696}
   - component: {fileID: 1309829943015042759}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Chair Model
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1368,7 +1368,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4119128010223071380}
   - component: {fileID: 3396519493469057048}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: CounterObj
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1446,7 +1446,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7993241475777560952}
   - component: {fileID: 1540523225801023417}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: CeilingLightObj
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1525,7 +1525,7 @@ GameObject:
   - component: {fileID: 4090937446901269468}
   - component: {fileID: 1902440217402886749}
   - component: {fileID: 2956627328167554219}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Floors
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1619,7 +1619,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3774997353920116650}
   - component: {fileID: 5072371541293996581}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Area Light
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1713,7 +1713,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7673514080435797807}
   - component: {fileID: 5734874931686109907}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: PlateHierarchy
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1764,7 +1764,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7434627398251332506}
   - component: {fileID: 5242775275181262277}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Counter Hierarchy
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1815,6 +1815,42 @@ PrefabInstance:
     - target: {fileID: 102072, guid: e8e3d84b4df91a24892ed822cd330e12, type: 3}
       propertyPath: m_Name
       value: ModularCounter_3
+      objectReference: {fileID: 0}
+    - target: {fileID: 102072, guid: e8e3d84b4df91a24892ed822cd330e12, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 103546, guid: e8e3d84b4df91a24892ed822cd330e12, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 110076, guid: e8e3d84b4df91a24892ed822cd330e12, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 114792, guid: e8e3d84b4df91a24892ed822cd330e12, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 116828, guid: e8e3d84b4df91a24892ed822cd330e12, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 123538, guid: e8e3d84b4df91a24892ed822cd330e12, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 152328, guid: e8e3d84b4df91a24892ed822cd330e12, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 155366, guid: e8e3d84b4df91a24892ed822cd330e12, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 166588, guid: e8e3d84b4df91a24892ed822cd330e12, type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 475676, guid: e8e3d84b4df91a24892ed822cd330e12, type: 3}
       propertyPath: m_RootOrder
@@ -1890,6 +1926,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Chair_8
       objectReference: {fileID: 0}
+    - target: {fileID: 187640, guid: d6caea8253c81d34bb7c579c61127646, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 479304, guid: d6caea8253c81d34bb7c579c61127646, type: 3}
       propertyPath: m_RootOrder
       value: 0
@@ -1951,6 +1991,10 @@ PrefabInstance:
     - target: {fileID: 122334, guid: 09782e9b245027943b80aeaafb397b6b, type: 3}
       propertyPath: m_Name
       value: DiningTable_1
+      objectReference: {fileID: 0}
+    - target: {fileID: 122334, guid: 09782e9b245027943b80aeaafb397b6b, type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 437898, guid: 09782e9b245027943b80aeaafb397b6b, type: 3}
       propertyPath: m_RootOrder
@@ -2025,6 +2069,10 @@ PrefabInstance:
     - target: {fileID: 105568, guid: 2794e48d8bf5c7349b42f50bb23e5e4b, type: 3}
       propertyPath: m_Name
       value: Counter_1_1
+      objectReference: {fileID: 0}
+    - target: {fileID: 105568, guid: 2794e48d8bf5c7349b42f50bb23e5e4b, type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 418214, guid: 2794e48d8bf5c7349b42f50bb23e5e4b, type: 3}
       propertyPath: m_RootOrder

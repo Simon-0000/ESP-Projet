@@ -78,6 +78,7 @@ public class ProceduralTiledCubeObject : ProceduralObject
         {
             if (obj != colliders[i].gameObject)
             {
+                
                 Vector3 roomOverlap = Algos.GetColliderOverlap(obj, colliders[i]);
                 if (!Algos.IsColliderOverlaping(roomOverlap)) 
                     continue;
