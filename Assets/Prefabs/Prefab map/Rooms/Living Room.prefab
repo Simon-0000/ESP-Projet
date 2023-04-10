@@ -244,7 +244,7 @@ MonoBehaviour:
     valeur:
       likelyhood: 50
       proceduralComponent: {fileID: 5919781526630102045}
-      proceduralComponentAmount: 3
+      proceduralComponentAmount: 2
 --- !u!1 &632013498564839036
 GameObject:
   m_ObjectHideFlags: 0
@@ -1415,9 +1415,9 @@ MonoBehaviour:
   roomHierarchyRoots:
   - {fileID: 2048904956588143391}
   - {fileID: 1149008649541941880}
-  - {fileID: 6055405112310893068}
   - {fileID: 306688856340786446}
   - {fileID: 2382795246462478967}
+  - {fileID: 6055405112310893068}
   roomFillPercentage: 1
 --- !u!114 &5560650536591786425
 MonoBehaviour:
