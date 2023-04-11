@@ -93,7 +93,7 @@ public class LazerComponent : MonoBehaviour
 
    void AdjustDammageToShlick(Collision collision)
    {
-       var smoothness=collision.contacts[0].otherCollider.GetComponent<MeshRenderer>().materials[0].GetFloat("_Glossiness");
+       var smoothness=collision.contacts[0].otherCollider.GetComponentInChildren<MeshRenderer>().materials[0].GetFloat("_Glossiness");
        if (smoothness <= GameConstants.ACCEPTABLE_ZERO_VALUE)
        { damage = 0;
            return; }
