@@ -278,6 +278,10 @@ namespace Assets
         const float ASTAR_NODE_SIZE = 1.5f;
         const float ASTAR_NODE_HEIGHT = 2;
         const float ASTAR_OBJECT_COST = 1000;
+        const int ASTAR_INERMEDIATE_NODES = 4;//représente le nombre de noeuds intermédiaire qui doivent être utiliser
+                                                //entre chaque noeud principale, est utilisé pour rendre l'algorithme
+                                                //plus précis et préférable éviter de détruire des objets qui se
+                                                //trouvera à la limite d'un noeud 
 
         public void UseAStarOnRoom(GameObject room, List<GameObject> objectsToConnect)
         {
@@ -286,71 +290,85 @@ namespace Assets
 
             Dictionary<Noeud<AStarAlgorithm.AStarNodeValue>, GameObject[]> NodeToObjDictionary = new();
             List<Noeud<AStarAlgorithm.AStarNodeValue>> startEndNodes = new();
-            List<GameObject> foundObjectsToConnect = new();
+            List<GameObject> startEndObjects = new();
 
 
             Vector3 roomDimensions3d = room.transform.InverseTransformVector(room.GetComponent<BoundsManager>().objectBoundsWorld.size);
             Vector2 roomDimensions = new Vector2(roomDimensions3d.x,
                 roomDimensions3d.z);
 
-            Vector2Int nodeAmount = new Vector2Int((int)(roomDimensions.x / ASTAR_NODE_SIZE), (int)(roomDimensions.y / ASTAR_NODE_SIZE));
-            Vector2 nodeSize = new Vector2(roomDimensions.x / nodeAmount.x, roomDimensions.y / nodeAmount.y);
+            Vector2Int mainNodeAmount = new Vector2Int((int)(roomDimensions.x / ASTAR_NODE_SIZE), (int)(roomDimensions.y / ASTAR_NODE_SIZE));
+            Vector2 nodeSize = new Vector2(roomDimensions.x / mainNodeAmount.x, roomDimensions.y / mainNodeAmount.y);
             Vector2 roomCorner = -roomDimensions / 2 + nodeSize / 2;
-
-//            Debug.Log("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXxxXXXX IS ROOM NODE------------------------------------------------------");
-            for (int i = 0; i < nodeAmount.x; ++i)
+            Vector2Int nodeAmount = Vector2Int.Scale(mainNodeAmount, Vector2Int.one * ASTAR_INERMEDIATE_NODES);
+            nodeAmount.x -= ASTAR_INERMEDIATE_NODES-1;
+            nodeAmount.y -= ASTAR_INERMEDIATE_NODES-1;
+            for (int i = 0; i < nodeAmount.x  ; ++i)
             {
-                for(int j = 0; j < nodeAmount.y; ++j)
+
+                for(int j = 0; j < nodeAmount.y ; ++j)
                 {
-                    Vector2 position = roomCorner + Vector2.Scale(nodeSize,new Vector2(i,j));
-                    Collider[] colliders = Physics.OverlapBox(room.transform.TransformPoint(new Vector3(position.x,-GameConstants.ROOM_HEIGHT / 2  + ASTAR_NODE_HEIGHT/2,position.y)), new Vector3(nodeSize.x, ASTAR_NODE_HEIGHT, nodeSize.y)/2 - Vector3.one * GameConstants.OVERLAP_TOLERANCE, room.transform.rotation);
-                    //Trouver tous les instances d'objets qui sont dans le noeud
-                    GameObject[] nodeObjects = colliders.Select(collider => collider.GetComponentInParent<BoundsManager>()).Where(boundManager=> boundManager!= null).Select(boundManager=>boundManager.gameObject).Distinct().ToArray();
-                    
-                    //Trouver tous les instances d'obstacles parmi les objets du noeud
-                    GameObject[] nodeObstacles = nodeObjects.Where(obj => !objectsToConnect.Exists(o => o == obj)).ToArray();
 
-                    //Trouver tous les instances des débuts/fins du A* parmi les objets du noeud
-                    int oldconnectionCount = foundObjectsToConnect.Count;
-                    foundObjectsToConnect.AddRange(nodeObjects.Where(obj => objectsToConnect.Exists(o => o == obj) && !foundObjectsToConnect.Exists(o => o == obj)).ToArray());
-                    foundObjectsToConnect = foundObjectsToConnect.Distinct().ToList();
+                        Vector2 position = roomCorner + Vector2.Scale(nodeSize,new Vector2(i * 1/(float)ASTAR_INERMEDIATE_NODES ,j * 1/(float)ASTAR_INERMEDIATE_NODES ));
+                     //   Debug.Log("position" + position + "data:" + j +"," + k + "," + j+(1/(float)ASTAR_INERMEDIATE_NODES * (k)));
+                        Collider[] colliders = Physics.OverlapBox(room.transform.TransformPoint(new Vector3(position.x,-GameConstants.ROOM_HEIGHT / 2  + ASTAR_NODE_HEIGHT/2,position.y)), new Vector3(nodeSize.x, ASTAR_NODE_HEIGHT, nodeSize.y)/2 - Vector3.one * GameConstants.OVERLAP_TOLERANCE, room.transform.rotation);
+                        //Trouver tous les instances d'objets qui sont dans le noeud
+                        GameObject[] nodeObjects = colliders.Select(collider => collider.GetComponentInParent<BoundsManager>()).Where(boundManager=> boundManager!= null).Select(boundManager=>boundManager.gameObject).Distinct().ToArray();
+                        
+                        //Trouver tous les instances d'obstacles parmi les objets du noeud
+                        GameObject[] nodeObstacles = nodeObjects.Where(obj => !objectsToConnect.Exists(o => o == obj)).ToArray();
 
-                    //Créer le noeud qui représente l'information récolté
-                    Noeud<AStarAlgorithm.AStarNodeValue> gridNode = new(null, new(position, nodeObstacles.Length * ASTAR_OBJECT_COST));
+                        //Trouver tous les instances des débuts/fins du A* parmi les objets du noeud
+                        int oldconnectionCount = startEndObjects.Count;
+                        startEndObjects.AddRange(nodeObjects.Where(obj => objectsToConnect.Exists(o => o == obj) && !startEndObjects.Exists(o => o == obj)).ToArray());
 
-                    //Connecter le noeud avec les noeuds collé à celui-ci
-                    
-                    List<int> dictionaryNodesToConnect = new();
-                    if(i != 0)
-                    {
-                        dictionaryNodesToConnect.Add((i - 1) * (nodeAmount.y) + j);//top
+                        //Créer le noeud qui représente l'information récolté
+                        Noeud<AStarAlgorithm.AStarNodeValue> gridNode = new(null, new(position, nodeObstacles.Length * ASTAR_OBJECT_COST));
+                        
+                        //Connecter le noeud avec les noeuds collé à celui-ci
+                        
+                        List<int> dictionaryNodesToConnect = new();
+                        if(i != 0)
+                        {
+                            dictionaryNodesToConnect.Add((i - 1) * (nodeAmount.y) + j );//top
+                            if (j != 0)
+                                dictionaryNodesToConnect.Add((i - 1) * (nodeAmount.y) + (j - 1));//top left
+                            if (j != nodeAmount.y - 1)
+                                dictionaryNodesToConnect.Add((i - 1) * (nodeAmount.y) + (j + 1));//top right
+
+                        }
                         if (j != 0)
-                            dictionaryNodesToConnect.Add((i - 1) * (nodeAmount.y) + (j - 1));//top left
-                        if (j != nodeAmount.y - 1)
-                            dictionaryNodesToConnect.Add((i - 1) * (nodeAmount.y) + (j + 1));//top right
+                        {
+                            dictionaryNodesToConnect.Add(i * (nodeAmount.y) + (j - 1));//left
+                        }
 
-                    }
-                    if (j != 0)
-                    {
-                        dictionaryNodesToConnect.Add(i * (nodeAmount.y) + (j - 1));//left
-                    }
-
-                    for (int k = 0; k < dictionaryNodesToConnect.Count; ++k)
-                    {
-                        //Debug.Log("XXXXXXXCONNECTING: " + gridNode.valeur.position +" TO: " + NodeToObjDictionary.ElementAt(dictionaryNodesToConnect[k]).Key.valeur.position);
-                        Noeud<AStarAlgorithm.AStarNodeValue>.TryFormerLienRéciproque(gridNode,NodeToObjDictionary.ElementAt(dictionaryNodesToConnect[k]).Key);
-                    }
-                    //Debug.Log("XXXXXXXXXxnext node...");
-                    NodeToObjDictionary.Add(gridNode, nodeObstacles);
-                    if (oldconnectionCount != foundObjectsToConnect.Count)
-                        startEndNodes.Add(gridNode);
+                        for (int n = 0; n < dictionaryNodesToConnect.Count; ++n)
+                        {
+                            Noeud<AStarAlgorithm.AStarNodeValue>.TryFormerLienRéciproque(gridNode,NodeToObjDictionary.ElementAt(dictionaryNodesToConnect[n]).Key);
+                        }
+                        //Debug.Log("XXXXXXXXXxnext node...");
+                        NodeToObjDictionary.Add(gridNode, nodeObstacles);
+                        if (oldconnectionCount != startEndObjects.Count)
+                            startEndNodes.Add(gridNode);
                 }
             }
+
+/*
+            foreach (var VARIABLE in NodeToObjDictionary)
+            {
+                GameObject cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                cube.transform.parent = room.transform;
+                Vector2 position2d = VARIABLE.Key.valeur.position;
+                Vector3 position3d = new Vector3(position2d.x, -ASTAR_NODE_HEIGHT / 2, position2d.y);
+                cube.transform.position = room.transform.TransformPoint(position3d);
+                cube.transform.localScale = new Vector3(nodeSize.x, ASTAR_NODE_HEIGHT, nodeSize.y);
+                cube.GetComponent<Renderer>().material.color = Color.red;
+            }
+            */
             List<Noeud<AStarAlgorithm.AStarNodeValue>> nodesPath = new();
-            for(int i = 0; i < startEndNodes.Count - 1; ++ i)
+            for(int i = 0; i < startEndNodes.Count - 1; ++i)
             {
                 var nextObjectTodelete = AStarAlgorithm.GetPath(startEndNodes[i], startEndNodes[i+1]);
-                //Debug.Log("reseting...");
                 Noeud<AStarAlgorithm.AStarNodeValue>.ForEachHierarchieChildren(startEndNodes[i],null,n=>n.Parent = null);
                 Noeud<AStarAlgorithm.AStarNodeValue>.ForEachHierarchieChildren(startEndNodes[i], null, n => n.valeur.visited = false);
 
@@ -359,16 +377,17 @@ namespace Assets
 
 
 
-                //for (int j = 0; j < nextObjectTodelete.Count; ++j)
-                //{
-                //    GameObject cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
-                //    Vector2 position2d = nextObjectTodelete[j].valeur.position;
-                //    Vector3 position3d = new Vector3(position2d.x, -ASTAR_NODE_HEIGHT / 2, position2d.y);
-                //    cube.transform.position = room.transform.TransformPoint(position3d);
-                //    cube.transform.localScale = new Vector3(nodeSize.x, ASTAR_NODE_HEIGHT, nodeSize.y);
-                //    cube.GetComponent<Renderer>().material.color = Color.red;
-                //}
-
+                for (int j = 0; j < nextObjectTodelete.Count; ++j)
+                {
+                    GameObject cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                    cube.transform.parent = room.transform;
+                    Vector2 position2d = nextObjectTodelete[j].valeur.position;
+                    Vector3 position3d = new Vector3(position2d.x, -ASTAR_NODE_HEIGHT / 2, position2d.y);
+                    cube.transform.position = room.transform.TransformPoint(position3d);
+                    cube.transform.localScale = new Vector3(nodeSize.x, ASTAR_NODE_HEIGHT, nodeSize.y);
+                    cube.GetComponent<Renderer>().material.color = Color.red;
+                }
+                
                 nodesPath.AddRange(nextObjectTodelete);
             }
             for(int i = 0; i < nodesPath.Count; ++i)
@@ -388,7 +407,6 @@ namespace Assets
                 }
             }
             Physics.autoSimulation = true;
-
         }
 
 
