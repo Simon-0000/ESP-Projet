@@ -12,18 +12,18 @@ public class ZombieManager : MonoBehaviour
     private int nbActiveZombies;
     private List<GameObject> ActiveZombies;
     [SerializeField] private GameObject zombie;
-    [SerializeField] private Vector3 spawnPoint;
+    [SerializeField] private SpawnLocation[] spawnPoints;
     [SerializeField] public GameObject player;
     private float ellapsedTime = 0;
     private GameObject CreateNewZombie()
     {
-        return Instantiate(zombie, spawnPoint,new Quaternion(0,0,0,0));
+        return Instantiate(zombie, spawnPoints[Random.Range(0,spawnPoints.Length)].spawnLocation,new Quaternion(0,0,0,0));
     }
 
     void Awake()
     {
         ActiveZombies = new List<GameObject>(nbWantedZombies);
-        spawnPoint = transform.position;
+        spawnPoints = FindObjectsOfType<SpawnLocation>();
     }
 
     // Update is called once per frame

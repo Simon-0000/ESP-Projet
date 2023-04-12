@@ -16,20 +16,23 @@ public class ZombieBehaviour : MonoBehaviour
     [SerializeField] public bool isActive;
     [SerializeField] public bool isOnTeam;
     [SerializeField] public bool isLeader;
+    [SerializeField] public bool isChasingTarget;
     [SerializeField] private int health;
     [SerializeField] private int damage;
     [SerializeField] public int speed;
     [SerializeField] public List<ZombieBehaviour> Team;
     [SerializeField] public List<Vector3> patrolLocations;
+    [SerializeField] public EntryWaypoint entryLocation;
     [SerializeField] private float inactiveTime;
     [SerializeField] private float fieldOfView = 90;
     [SerializeField] private GameObject target;
+    public Animator animator;
+    public NavMeshAgent agent;
     int patrolIndexCounter = 0;
     const int BaseHealth = 100;
     const int BaseDamage = 10;
     const int BaseSpeed = 3;
-
-    private Animator animator;
+    
  
     void Start()
     {
@@ -40,10 +43,14 @@ public class ZombieBehaviour : MonoBehaviour
         isActive = true;
         isOnTeam = false;
         isLeader = false;
+        isChasingTarget = false;
+        EntryWaypoint[] entryLocations = FindObjectsOfType<EntryWaypoint>();
+        entryLocation = entryLocations[UnityEngine.Random.Range(0, entryLocations.Length)];
         DefinePatrolSequence();
         DefineTarget();
-        GetComponent<NavMeshAgent>().speed = speed;
-        GetComponent<NavMeshAgent>().destination = patrolLocations[patrolIndexCounter];
+        agent = GetComponent<NavMeshAgent>();
+        agent.speed = speed;
+        agent.destination = entryLocation.entryWaypoint;
         animator = GetComponent<Animator>();
         animator.SetBool("walking", true);
     }
@@ -68,18 +75,14 @@ public class ZombieBehaviour : MonoBehaviour
     {
       
         //trouver tout les GameObjects avec un EntryWaypoint ou DoorWaypoint
-        EntryWaypoint[] windows = FindObjectsOfType<EntryWaypoint>();
         DoorWaypoint[] doors = FindObjectsOfType<DoorWaypoint>();
 
         //choisir un point d'entré random pour que le zombie entre dans la carte de jeux
         System.Random indexGenerator = new System.Random();
 
         //ajouter la postion de l'entrée pour dans la liste de waypoints
-        if(windows.Length + doors.Length > 0)
+        if(doors.Length > 0)
         {
-
-            patrolLocations.Add(windows[indexGenerator.Next(windows.Length)].entryWaypoint);
-
             //ajouter les points de patroulle pour le zombie en ordre aleatoire,
             //on veut remplir la liste avec toutes les positions de toutes portes de la carte et une fenêtre de la carte
             do
@@ -88,15 +91,12 @@ public class ZombieBehaviour : MonoBehaviour
                 if (!patrolLocations.Contains(doors[randomIndex].waypointLocation))
                     patrolLocations.Add(doors[randomIndex].waypointLocation);
 
-                //comme je viens d'ajouter le point pour entrer du zombie je ne doit pas en tenir
-                //compte pour ajouter toutes les portes dans le patrol du zombie
-            } while (patrolLocations.Count-1 < doors.Length);
+            } while (patrolLocations.Count < doors.Length);
         }
     }
 
     public void ManagePatrol()
     {
-       // GetComponent<NavMeshAgent>().destination = patrolLocations[patrolIndexCounter];
        // Debug.Log("patrol update was made");
         if ((transform.position - GetComponent<NavMeshAgent>().destination).magnitude < 2)
         {
@@ -111,52 +111,49 @@ public class ZombieBehaviour : MonoBehaviour
         GetComponent<NavMeshAgent>().destination = target.transform.position;
     }
 
+    public bool CanEnterMap()
+    {
+        Vector3 direction = transform.position - entryLocation.entryWaypoint;
+        return direction.magnitude <= 0.5f;
+    }
 
     // pour l'instant cette function n'est pas finie
     public bool CanChangeState(float actionRange)
     {
-        RaycastHit[] hits;
-
-        Vector3 direction = Algos.GetVectorAbs(transform.position - target.transform.position);
-        hits = Physics.RaycastAll(transform.position, direction, 4);
+        RaycastHit hit;
         bool isWithinRange = false;
         bool canSeeTarget = false;
-        if (Vector3.Angle(direction, Algos.GetVectorAbs(transform.forward)) <= fieldOfView && direction.magnitude <= actionRange)
-        {
-            isWithinRange = true;
-            if (hits.Length != 0 && hits[0].Equals(target) )
-            {
-                canSeeTarget = true;
-            }
-        }
 
-        //Debug.Log(isWithinRange);
+        Vector3 direction = transform.position - target.transform.position;
+        Vector3 offset = new(0, 1, 0);
+        if(Physics.Raycast(transform.position + offset, direction, out hit, actionRange, 7))
+        {
+            Debug.Log(hit.collider.gameObject);
+
+            if (hit.collider.gameObject.Equals(target))
+                canSeeTarget = true;
+            if (Vector3.Angle(direction, Algos.GetVectorAbs(transform.forward)) <= fieldOfView && direction.magnitude <= actionRange)
+                isWithinRange = true;
+        }
+       
+        
         if (isWithinRange && canSeeTarget)
             return true;
 
-        //return false;
-       return Vector3.Angle(direction, Algos.GetVectorAbs(transform.forward)) <= fieldOfView && direction.magnitude <= actionRange;
+        return false;
+       //return Vector3.Angle(direction, Algos.GetVectorAbs(transform.forward)) <= fieldOfView && direction.magnitude <= actionRange;
     }
 
     public void Attack()
     {
-      
-
         target.GetComponent<PlayerHealth>().takeDamage(damage);
-        Debug.Log("attack made");
-       
-         
-        
-       // animator.SetBool("attack",false);
-
-        
+        Debug.Log("attack made"); 
     }
     public void TakeDamage(int damage)
     {
         health -= damage;
         if (health <= 0)
             ManageDeath();
-        
     }
 
     public void ManageDeath()
@@ -165,7 +162,7 @@ public class ZombieBehaviour : MonoBehaviour
        
         animator.SetBool("walking",false);
         animator.SetBool("attack",false);
-         animator.SetBool("dead",true);
+        animator.SetBool("dead",true);
         Destroy(GetComponent<BehaviourTreeRunner>());
         GetComponent<NavMeshAgent>().isStopped=true;
         if (isLeader)
