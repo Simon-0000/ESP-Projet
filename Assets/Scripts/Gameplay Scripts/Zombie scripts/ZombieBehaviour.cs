@@ -36,6 +36,7 @@ public class ZombieBehaviour : MonoBehaviour
  
     void Start()
     {
+       
         Team = new List<ZombieBehaviour>(3);
         health = BaseHealth;
         damage = BaseDamage;
@@ -52,7 +53,7 @@ public class ZombieBehaviour : MonoBehaviour
         agent.speed = speed;
         agent.destination = entryLocation.entryWaypoint;
         animator = GetComponent<Animator>();
-        animator.SetBool("walking", true);
+        //animator.SetBool("walking", true);
     }
 
     private void Update()
@@ -126,22 +127,22 @@ public class ZombieBehaviour : MonoBehaviour
 
         Vector3 direction = transform.position - target.transform.position;
         Vector3 offset = new(0, 1, 0);
-        if(Physics.Raycast(transform.position + offset, direction, out hit, actionRange, 7))
+        if(Physics.Raycast(transform.position, -direction.normalized, out hit, actionRange))
         {
             Debug.Log(hit.collider.gameObject);
+            Debug.Log(-direction.normalized);
+            Debug.Log(transform.position);
 
-            if (hit.collider.gameObject.Equals(target))
+            if (hit.collider.gameObject.Equals(target) || Algos.FindFirstParentInstance(hit.collider.gameObject, p => p == target.transform) == target.transform)
                 canSeeTarget = true;
             if (Vector3.Angle(direction, Algos.GetVectorAbs(transform.forward)) <= fieldOfView && direction.magnitude <= actionRange)
                 isWithinRange = true;
         }
-       
-        
+
         if (isWithinRange && canSeeTarget)
             return true;
 
         return false;
-       //return Vector3.Angle(direction, Algos.GetVectorAbs(transform.forward)) <= fieldOfView && direction.magnitude <= actionRange;
     }
 
     public void Attack()

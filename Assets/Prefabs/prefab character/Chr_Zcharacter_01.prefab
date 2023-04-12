@@ -140,14 +140,18 @@ MonoBehaviour:
   isActive: 0
   isOnTeam: 0
   isLeader: 0
+  isChasingTarget: 0
   health: 100
   damage: 12
   speed: 10
   Team: []
   patrolLocations: []
+  entryLocation: {fileID: 0}
   inactiveTime: 0
   fieldOfView: 90
   target: {fileID: 0}
+  animator: {fileID: 0}
+  agent: {fileID: 0}
 --- !u!54 &7266004983122568409
 Rigidbody:
   m_ObjectHideFlags: 0
