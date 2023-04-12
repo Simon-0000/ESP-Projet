@@ -45,7 +45,6 @@ GameObject:
   - component: {fileID: 9128390537487290016}
   - component: {fileID: 4590547775407005202}
   - component: {fileID: 5252343992659684766}
-  - component: {fileID: 7266004983122568409}
   m_Layer: 7
   m_Name: Chr_Zcharacter_01
   m_TagString: Untagged
@@ -150,6 +149,7 @@ MonoBehaviour:
   inactiveTime: 0
   fieldOfView: 90
   target: {fileID: 0}
+<<<<<<< HEAD
   animator: {fileID: 0}
   agent: {fileID: 0}
 --- !u!54 &7266004983122568409
@@ -168,6 +168,8 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+=======
+>>>>>>> a14540b0f5471a3e3eadd831c7bc406ffd8307e4
 --- !u!1 &5091242709008108108
 GameObject:
   m_ObjectHideFlags: 0
