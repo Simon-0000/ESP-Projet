@@ -2,30 +2,35 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UIElements;
+ 
 
 public class PlayerHealth : MonoBehaviour
 {
     public int vie;
+    public Healthbar healthbar;
     private const int viemax = 100;
     private float timeSpendBeetweenregen = 0;
 
     void Awake()
     {
+       // healthbar.SetMaxHealth(viemax);
         vie = viemax;
+        
+        
 
     }
 
     private void Update()
     {
-       timeSpendBeetweenregen += Time.deltaTime;
+       timeSpendBeetweenregen+= Time.deltaTime;
        if (vie < viemax)
            if(timeSpendBeetweenregen > 5f)
-       {
-           RegenHealth();
-       }
-
-        
-        if (vie <= 0)
+           {
+               
+               RegenHealth();
+           }
+       if (vie <= 0)
             Destroy(gameObject);
     }
 
@@ -33,15 +38,12 @@ public class PlayerHealth : MonoBehaviour
 
     void RegenHealth()
     {
-        Debug.Log(vie);
-        Debug.Log(vie<viemax);
         if (vie + 5 > viemax)
             vie = viemax;
-        
-            vie += 5;
-            vie = Mathf.Clamp(vie, 0, 100);
-
-            timeSpendBeetweenregen = 0;
+        vie += 5;
+        vie = Mathf.Clamp(vie, 0, 100);
+        healthbar.updateHealthbar(vie);
+        timeSpendBeetweenregen = 0;
         
             
     }
@@ -50,5 +52,6 @@ public class PlayerHealth : MonoBehaviour
      public void takeDamage(int damage)
      {  vie -= damage;
          timeSpendBeetweenregen = 0;
+         healthbar.updateHealthbar(vie);
      }
 }
