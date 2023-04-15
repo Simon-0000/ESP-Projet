@@ -63,7 +63,7 @@ public class ProceduralObject : Procedural
         //information manuellement
         BoundsManager parentBoundsManager = parentTransform.gameObject.GetComponent<BoundsManager>();
         if (parentBoundsManager != null)
-            TrySetRandomRelativePlacement(ref obj, parentBoundsManager.objectBoundsWorld.size);
+            TrySetRandomRelativePlacement(ref obj, parentBoundsManager.objectBoundsLocal.size);
         else
             TrySetRandomRelativePlacement(ref obj, Algos.GetRendererBounds(parentTransform.gameObject).size);
         return obj;
@@ -78,10 +78,10 @@ public class ProceduralObject : Procedural
     {
         int iterationAttemps = 0;
         bool invalidLocation;
+        obj.TryAddComponent<BoundsManager>().RefreshBounds();
         do
         {
             int placementIndex = placementIndexes[Random.Range(0, placementIndexes.Length)];
-            obj.TryAddComponent<BoundsManager>().Awake();
             invalidLocation = TrySetRandomRelativePlacement(ref obj, parentWorldDimensions, (positions[placementIndex], orientations[placementIndex], offsets[placementIndex]));
             ++iterationAttemps;
         }
@@ -90,6 +90,11 @@ public class ProceduralObject : Procedural
         {
             Destroy(obj);
             obj = null;
+        }
+        else
+        {
+            //Prendre les dimensions sans la rotation pour que les enfants qui dépendent de cet objet soient bien positionnés 
+            obj.GetComponent<BoundsManager>().RefreshBounds();
         }
     }
 
@@ -115,7 +120,7 @@ public class ProceduralObject : Procedural
         //On doit prendre les mesures de l'objet après la rotation (pour le bougé adéquatement),
         //mais on ne peut pas le tourner pour le moment, sinon un mouvement par rapport aux axes x,y,z (local) ne sera pas valide
         obj.transform.localRotation = Quaternion.Euler(relativeOrientation.x, relativeOrientation.y, relativeOrientation.z);//-------
-        obj.GetComponent<BoundsManager>().Awake();
+        obj.GetComponent<BoundsManager>().RefreshBounds();
         objWorldDimensions = obj.GetComponent<BoundsManager>().objectBoundsWorld.size;
         objLocalDimensions = obj.GetComponent<BoundsManager>().objectBoundsLocal.size;
         obj.transform.localRotation = Quaternion.identity;
@@ -126,16 +131,12 @@ public class ProceduralObject : Procedural
             parentWorldDimensions.y * relativePosition.y,
             parentWorldDimensions.z * relativePosition.z));
 
-
-        if (obj.transform.localPosition.x > parentWorldDimensions.x || obj.transform.localPosition.y > parentWorldDimensions.y || obj.transform.localPosition.z > parentWorldDimensions.z)
-            Debug.Log("Must have been the wind: " + obj.name + obj.transform.localPosition + ", " + parentWorldDimensions);
-
         //Décaler l'objet
         offset.Scale(Algos.GetVectorSign(obj.transform.localPosition));
         obj.transform.localPosition += offset;
 
-        //Prendre les dimensions sans la rotation pour que les enfants qui dépendent de cet objet soient bien positionnés 
-        obj.GetComponent<BoundsManager>().Awake();
+        ////Prendre les dimensions sans la rotation pour que les enfants qui dépendent de cet objet soient bien positionnés 
+       // obj.GetComponent<BoundsManager>().RefreshBounds();
 
         //Tourner l'objet
         obj.transform.localRotation = Quaternion.Euler(relativeOrientation.x, relativeOrientation.y, relativeOrientation.z);
@@ -148,7 +149,7 @@ public class ProceduralObject : Procedural
             {
                 if (Algos.IsColliderOverlaping(Algos.GetColliderOverlap(obj, colliders[i])))
                 {
-                    BoundsManager colliderParentBoundsManager = colliders[i].gameObject.GetComponentInParent<BoundsManager>();
+                    BoundsManager colliderParentBoundsManager = colliders[i].gameObject.GetComponent<BoundsManager>();
                     if (colliderParentBoundsManager == null)
                         colliderParentBoundsManager = colliders[i].gameObject.GetComponentInParent<BoundsManager>();
 

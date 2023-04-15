@@ -172,7 +172,7 @@ MonoBehaviour:
     endAt: {x: 1, y: 0, z: 0}
   - startAt: {x: 1, y: 0, z: 0}
     endAt: {x: 1, y: 0, z: 0}
-  repositionAtCollision: 0
+  repositionAtCollision: 1
   XIsConstrained: 1
   YIsConstrained: 1
   ZIsConstrained: 1

@@ -22,7 +22,7 @@ namespace Assets
         {
             this.roomSizeMin = roomSizeMin;
             this.roomSizeMax = roomSizeMax;
-            mapDimensions = new RectangleInfo2d(mapSize,Vector2.zero);
+            mapDimensions = new RectangleInfo2d(mapSize, Vector2.zero);
             doorObject = door;
             doorObject.TryAddComponent<BoundsManager>().Awake();
             doorBounds = doorObject.GetComponent<BoundsManager>().objectBoundsWorld;
@@ -31,12 +31,12 @@ namespace Assets
         {
             //Créer les pièces et les connexions
             List<Noeud<RectangleInfo2d>> leafNodes = Algos.FilterNoeudsFeuilles(BinarySpacePartitioning.GénérerBSP(new Noeud<RectangleInfo2d>(null, mapDimensions), TrySplitRoom), 0);
-            LinkRoomsByPhysicalConnections(leafNodes,doorBounds.size.x);
+            LinkRoomsByPhysicalConnections(leafNodes, doorBounds.size.x);
 
             //Filtrer les connexions
             List<Noeud<RectangleInfo2d>>[] paths = new List<Noeud<RectangleInfo2d>>[2];
             paths[0] = DepthFirstSearch.GetPath<RectangleInfo2d>(leafNodes, leafNodes[Random.Range(0, leafNodes.Count)], null, true);
-            paths[1] = DepthFirstSearch.GetPath<RectangleInfo2d>(leafNodes, leafNodes[Random.Range(0, leafNodes.Count)], leafNodes[Random.Range(0, leafNodes.Count)], true);
+            paths[1] = DepthFirstSearch.GetPath<RectangleInfo2d>(leafNodes, leafNodes[Random.Range(0, leafNodes.Count)], null, true);
             Noeud<RectangleInfo2d>.ClearConnecions(leafNodes);
             DepthFirstSearch.ConnectNodesAccordingToPath(paths[0]);
             DepthFirstSearch.ConnectNodesAccordingToPath(paths[1]);
@@ -96,7 +96,7 @@ namespace Assets
 
         //LinkRoomsByPhysicalConnections permet de créer des liens entre les pièces selon leurs connexions physiques
         //(deux pièces qui se touchent = une connexion)
-        static void LinkRoomsByPhysicalConnections(List<Noeud<RectangleInfo2d>> unlinkedRooms,float minOverlapOnASide)
+        static void LinkRoomsByPhysicalConnections(List<Noeud<RectangleInfo2d>> unlinkedRooms, float minOverlapOnASide)
         {
             for (int i = 0; i < unlinkedRooms.Count - 1; ++i)
             {
@@ -228,23 +228,23 @@ namespace Assets
             GameObject windowParent = new GameObject("Windows");
             windowParent.transform.parent = parent;
 
-            List<Noeud<RectangleInfo2d>> windowList = GetEmptyWindowRooms(roomsNodes);
-            Algos.RandomlyRemoveListElements(windowList, windowList.Count / 3);
+            List<Noeud<RectangleInfo2d>> windowRooms = GetEmptyWindowRooms(roomsNodes);
+            Algos.RandomlyRemoveListElements(windowRooms, windowRooms.Count / 3);
 
-            List<GameObject> aStarConnections = InstantiateObjectBetweenRooms(windowList, windowObject, windowObject.TryAddComponent<BoundsManager>().RefreshBounds(), windowParent.transform);
+            List<GameObject> aStarConnections = InstantiateObjectBetweenRooms(windowRooms, windowObject, windowObject.TryAddComponent<BoundsManager>().RefreshBounds(), windowParent.transform);
 
             aStarConnections.AddRange(InstantiateObjectBetweenRooms(roomsNodes, doorObject,
                 doorObject.TryAddComponent<BoundsManager>().RefreshBounds(), doorParent.transform));
 
             Dictionary<Noeud<RectangleInfo2d>, ProceduralRoom> nodeToRoomTypeDictionary = new(roomsNodes.Count);
 
-            
+
             for (int i = 0; i < roomsNodes.Count; ++i)
             {
                 List<ProceduralRoom> availableRooms = new(possibleRooms);
-                for(int j = 0; j < roomsNodes[i].noeudsEnfants.Count; ++j)
+                for (int j = 0; j < roomsNodes[i].noeudsEnfants.Count; ++j)
                 {
-                    ProceduralRoom childProceduralRoomType = nodeToRoomTypeDictionary.GetValueOrDefault(roomsNodes[i].noeudsEnfants[j],null);
+                    ProceduralRoom childProceduralRoomType = nodeToRoomTypeDictionary.GetValueOrDefault(roomsNodes[i].noeudsEnfants[j], null);
                     if (childProceduralRoomType != null)
                     {
                         availableRooms.Remove(childProceduralRoomType);
@@ -277,11 +277,11 @@ namespace Assets
 
         const float ASTAR_NODE_SIZE = 1.5f;
         const float ASTAR_NODE_HEIGHT = 2;
-        const float ASTAR_OBJECT_COST = 1000;
+        const float ASTAR_OBJECT_COST_PER_CUBE = 100;
         const int ASTAR_INERMEDIATE_NODES = 4;//représente le nombre de noeuds intermédiaire qui doivent être utiliser
-                                                //entre chaque noeud principale, est utilisé pour rendre l'algorithme
-                                                //plus précis et préférable éviter de détruire des objets qui se
-                                                //trouvera à la limite d'un noeud 
+                                              //entre chaque noeud principale, est utilisé pour rendre l'algorithme
+                                              //plus précis et préférable éviter de détruire des objets qui se
+                                              //trouvera à la limite d'un noeud 
 
         public void UseAStarOnRoom(GameObject room, List<GameObject> objectsToConnect)
         {
@@ -291,121 +291,180 @@ namespace Assets
             Dictionary<Noeud<AStarAlgorithm.AStarNodeValue>, GameObject[]> NodeToObjDictionary = new();
             List<Noeud<AStarAlgorithm.AStarNodeValue>> startEndNodes = new();
             List<GameObject> startEndObjects = new();
+            List<Noeud<AStarAlgorithm.AStarNodeValue>> nodesToDelete = new();
+            List<Noeud<AStarAlgorithm.AStarNodeValue>> nodesToDeleteOnObjects = new();
 
 
             Vector3 roomDimensions3d = room.transform.InverseTransformVector(room.GetComponent<BoundsManager>().objectBoundsWorld.size);
-            Vector2 roomDimensions = new Vector2(roomDimensions3d.x,
-                roomDimensions3d.z);
+            Vector2 roomDimensions = new Vector2(roomDimensions3d.x, roomDimensions3d.z);
 
             Vector2Int mainNodeAmount = new Vector2Int((int)(roomDimensions.x / ASTAR_NODE_SIZE), (int)(roomDimensions.y / ASTAR_NODE_SIZE));
             Vector2 nodeSize = new Vector2(roomDimensions.x / mainNodeAmount.x, roomDimensions.y / mainNodeAmount.y);
             Vector2 roomCorner = -roomDimensions / 2 + nodeSize / 2;
             Vector2Int nodeAmount = Vector2Int.Scale(mainNodeAmount, Vector2Int.one * ASTAR_INERMEDIATE_NODES);
-            nodeAmount.x -= ASTAR_INERMEDIATE_NODES-1;
-            nodeAmount.y -= ASTAR_INERMEDIATE_NODES-1;
-            for (int i = 0; i < nodeAmount.x  ; ++i)
+            nodeAmount.x -= ASTAR_INERMEDIATE_NODES - 1;
+            nodeAmount.y -= ASTAR_INERMEDIATE_NODES - 1;
+            for (int i = 0; i < nodeAmount.x; ++i)
             {
 
-                for(int j = 0; j < nodeAmount.y ; ++j)
+                for (int j = 0; j < nodeAmount.y; ++j)
                 {
 
-                        Vector2 position = roomCorner + Vector2.Scale(nodeSize,new Vector2(i * 1/(float)ASTAR_INERMEDIATE_NODES ,j * 1/(float)ASTAR_INERMEDIATE_NODES ));
-                     //   Debug.Log("position" + position + "data:" + j +"," + k + "," + j+(1/(float)ASTAR_INERMEDIATE_NODES * (k)));
-                        Collider[] colliders = Physics.OverlapBox(room.transform.TransformPoint(new Vector3(position.x,-GameConstants.ROOM_HEIGHT / 2  + ASTAR_NODE_HEIGHT/2,position.y)), new Vector3(nodeSize.x, ASTAR_NODE_HEIGHT, nodeSize.y)/2 - Vector3.one * GameConstants.OVERLAP_TOLERANCE, room.transform.rotation);
-                        //Trouver tous les instances d'objets qui sont dans le noeud
-                        GameObject[] nodeObjects = colliders.Select(collider => collider.GetComponentInParent<BoundsManager>()).Where(boundManager=> boundManager!= null).Select(boundManager=>boundManager.gameObject).Distinct().ToArray();
-                        
-                        //Trouver tous les instances d'obstacles parmi les objets du noeud
-                        GameObject[] nodeObstacles = nodeObjects.Where(obj => !objectsToConnect.Exists(o => o == obj)).ToArray();
+                    Vector2 position = roomCorner + Vector2.Scale(nodeSize, new Vector2(i * 1 / (float)ASTAR_INERMEDIATE_NODES, j * 1 / (float)ASTAR_INERMEDIATE_NODES));
 
-                        //Trouver tous les instances des débuts/fins du A* parmi les objets du noeud
-                        int oldconnectionCount = startEndObjects.Count;
-                        startEndObjects.AddRange(nodeObjects.Where(obj => objectsToConnect.Exists(o => o == obj) && !startEndObjects.Exists(o => o == obj)).ToArray());
+                    Collider[] colliders = Physics.OverlapBox(room.transform.TransformPoint(new Vector3(position.x, -GameConstants.ROOM_HEIGHT / 2 + ASTAR_NODE_HEIGHT / 2, position.y)), new Vector3(nodeSize.x, ASTAR_NODE_HEIGHT, nodeSize.y) / 2 - Vector3.one * GameConstants.OVERLAP_TOLERANCE, room.transform.rotation);
+                    //Trouver tous les instances d'objets qui sont dans le noeud
+                    GameObject[] nodeObjects = colliders.Select(collider => collider.GetComponentInParent<BoundsManager>()).Where(boundManager => boundManager != null).Select(boundManager => boundManager.gameObject).Distinct().ToArray();
 
-                        //Créer le noeud qui représente l'information récolté
-                        Noeud<AStarAlgorithm.AStarNodeValue> gridNode = new(null, new(position, nodeObstacles.Length * ASTAR_OBJECT_COST));
-                        
-                        //Connecter le noeud avec les noeuds collé à celui-ci
-                        
-                        List<int> dictionaryNodesToConnect = new();
-                        if(i != 0)
-                        {
-                            dictionaryNodesToConnect.Add((i - 1) * (nodeAmount.y) + j );//top
-                            if (j != 0)
-                                dictionaryNodesToConnect.Add((i - 1) * (nodeAmount.y) + (j - 1));//top left
-                            if (j != nodeAmount.y - 1)
-                                dictionaryNodesToConnect.Add((i - 1) * (nodeAmount.y) + (j + 1));//top right
+                    //Trouver tous les instances d'obstacles parmi les objets du noeud
+                    GameObject[] nodeObstacles = nodeObjects.Where(obj => !objectsToConnect.Exists(o => o == obj)).ToArray();
+                    //nodeObstacles = nodeObstacles.Where(nodeObstacles.All(obj =>obj.GetComponentInParent<BoundsManager>()))
+                    //Trouver tous les instances des débuts/fins du A* parmi les objets du noeud
+                    bool isStartEndNode = false;
+                    int oldconnectionCount = startEndObjects.Count;
 
-                        }
+                    startEndObjects.AddRange(nodeObjects.Where(obj => objectsToConnect.Exists(o => o == obj)).ToArray());
+                    if (startEndObjects.Count != oldconnectionCount)
+                        isStartEndNode = true;
+                    startEndObjects = startEndObjects.Distinct().ToList();
+
+                    //Créer le noeud qui représente l'information récolté
+                    float cost = 0;
+                    for (int k = 0; k < nodeObstacles.Length; ++k)
+                    {
+                        BoundsManager[] boundsManagers = nodeObstacles[k].GetComponentsInChildren<BoundsManager>(); 
+                        for(int l = 0; l < boundsManagers.Length; ++l)
+                            cost += Algos.GetVector3Volume(boundsManagers[l].objectBoundsLocal.size) * ASTAR_OBJECT_COST_PER_CUBE;
+
+                    }
+                    Noeud<AStarAlgorithm.AStarNodeValue> gridNode = new(null, new(position, cost));
+
+                    //Connecter le noeud avec les noeuds collé à celui-ci
+                    List<int> dictionaryNodesToConnect = new();
+                    if (i != 0)
+                    {
+                        dictionaryNodesToConnect.Add((i - 1) * (nodeAmount.y) + j);//top
                         if (j != 0)
-                        {
-                            dictionaryNodesToConnect.Add(i * (nodeAmount.y) + (j - 1));//left
-                        }
+                            dictionaryNodesToConnect.Add((i - 1) * (nodeAmount.y) + (j - 1));//top left
+                        if (j != nodeAmount.y - 1)
+                            dictionaryNodesToConnect.Add((i - 1) * (nodeAmount.y) + (j + 1));//top right
+                    }
+                    if (j != 0)
+                    {
+                        dictionaryNodesToConnect.Add(i * (nodeAmount.y) + (j - 1));//left
+                    }
 
-                        for (int n = 0; n < dictionaryNodesToConnect.Count; ++n)
-                        {
-                            Noeud<AStarAlgorithm.AStarNodeValue>.TryFormerLienRéciproque(gridNode,NodeToObjDictionary.ElementAt(dictionaryNodesToConnect[n]).Key);
-                        }
-                        //Debug.Log("XXXXXXXXXxnext node...");
-                        NodeToObjDictionary.Add(gridNode, nodeObstacles);
-                        if (oldconnectionCount != startEndObjects.Count)
-                            startEndNodes.Add(gridNode);
+                    for (int n = 0; n < dictionaryNodesToConnect.Count; ++n)
+                    {
+                        Noeud<AStarAlgorithm.AStarNodeValue>.TryFormerLienRéciproque(gridNode, NodeToObjDictionary.ElementAt(dictionaryNodesToConnect[n]).Key);
+                    }
+
+                    NodeToObjDictionary.Add(gridNode, nodeObstacles);
+
+                    if (isStartEndNode)
+                        nodesToDeleteOnObjects.Add(gridNode);
                 }
             }
-
-/*
-            foreach (var VARIABLE in NodeToObjDictionary)
+            nodesToDeleteOnObjects = nodesToDeleteOnObjects.Distinct().ToList();
+            startEndObjects = startEndObjects.Distinct().ToList();
+            (float, int) closestNode;
+            for (int i = 0; i < startEndObjects.Count; ++i)
             {
-                GameObject cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
-                cube.transform.parent = room.transform;
-                Vector2 position2d = VARIABLE.Key.valeur.position;
-                Vector3 position3d = new Vector3(position2d.x, -ASTAR_NODE_HEIGHT / 2, position2d.y);
-                cube.transform.position = room.transform.TransformPoint(position3d);
-                cube.transform.localScale = new Vector3(nodeSize.x, ASTAR_NODE_HEIGHT, nodeSize.y);
-                cube.GetComponent<Renderer>().material.color = Color.red;
+                closestNode = (10000,10000);
+                Bounds objectBounds = startEndObjects[i].GetComponent<BoundsManager>().objectBoundsLocal;
+                for (int j = 0; j < nodesToDeleteOnObjects.Count; ++j)
+                {
+                    Vector3 nodePosition = room.transform.TransformPoint( new Vector3(nodesToDeleteOnObjects[j].valeur.position.x, 0, nodesToDeleteOnObjects[j].valeur.position.y));
+                    float nodeDistance = (startEndObjects[i].transform.position - nodePosition).magnitude;
+                    if (nodeDistance < closestNode.Item1)
+                    {
+                        closestNode = (nodeDistance, j);
+                    }
+                }
+                if (closestNode != (10000, 10000))
+                    startEndNodes.Add(nodesToDeleteOnObjects[closestNode.Item2]);
             }
-            */
-            List<Noeud<AStarAlgorithm.AStarNodeValue>> nodesPath = new();
-            for(int i = 0; i < startEndNodes.Count - 1; ++i)
+            //Trouver le chemin
+            for (int i = 0; i < startEndNodes.Count - 1; ++i)
             {
-                var nextObjectTodelete = AStarAlgorithm.GetPath(startEndNodes[i], startEndNodes[i+1]);
-                Noeud<AStarAlgorithm.AStarNodeValue>.ForEachHierarchieChildren(startEndNodes[i],null,n=>n.Parent = null);
+                var nextObjectTodelete = AStarAlgorithm.GetPath(startEndNodes[i], startEndNodes[i + 1]);
+                Noeud<AStarAlgorithm.AStarNodeValue>.ForEachHierarchieChildren(startEndNodes[i], null, n => n.Parent = null);
                 Noeud<AStarAlgorithm.AStarNodeValue>.ForEachHierarchieChildren(startEndNodes[i], null, n => n.valeur.visited = false);
 
-                //Remove the cost to go through a node
+                //Elever le cout pour les objets qui seront détruit, afin de facilement repasser par ce noeud pour les prochains chemin
                 nextObjectTodelete.ForEach(node => node.valeur.costOffset = 0);
 
 
+                //for (int j = 0; j < nextObjectTodelete.Count; ++j)
+                //{
+                //    GameObject cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                //    cube.transform.parent = room.transform;
+                //    Vector2 position2d = nextObjectTodelete[j].valeur.position;
+                //    Vector3 position3d = new Vector3(position2d.x, -ASTAR_NODE_HEIGHT / 2, position2d.y);
+                //    cube.transform.position = room.transform.TransformPoint(position3d);
+                //    cube.transform.localScale = new Vector3(nodeSize.x, ASTAR_NODE_HEIGHT, nodeSize.y);
+                //    cube.GetComponent<Renderer>().material.color = Color.black;
+                //}
 
-                for (int j = 0; j < nextObjectTodelete.Count; ++j)
-                {
-                    GameObject cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
-                    cube.transform.parent = room.transform;
-                    Vector2 position2d = nextObjectTodelete[j].valeur.position;
-                    Vector3 position3d = new Vector3(position2d.x, -ASTAR_NODE_HEIGHT / 2, position2d.y);
-                    cube.transform.position = room.transform.TransformPoint(position3d);
-                    cube.transform.localScale = new Vector3(nodeSize.x, ASTAR_NODE_HEIGHT, nodeSize.y);
-                    cube.GetComponent<Renderer>().material.color = Color.red;
-                }
-                
-                nodesPath.AddRange(nextObjectTodelete);
+                nodesToDelete.AddRange(nextObjectTodelete);
             }
-            for(int i = 0; i < nodesPath.Count; ++i)
+
+            //Détruire les objets qui se trouve dans le chemin
+            for (int i = 0; i < nodesToDelete.Count; ++i)
             {
                 GameObject[] objectToDelete;
-                NodeToObjDictionary.TryGetValue(nodesPath[i], out objectToDelete);
+                NodeToObjDictionary.TryGetValue(nodesToDelete[i], out objectToDelete);
 
                 if (objectToDelete != null)
                 {
                     for (int j = 0; j < objectToDelete.Length; ++j)
                         if (objectToDelete[j] != null)
                         {
-//                            Debug.Log("XXXXXXXXXXXXXX DESTROYING: " + objectToDelete[j].name);
-
                             GameObject.Destroy(objectToDelete[j]);
+                            //GameObject cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                            //cube.transform.parent = room.transform;
+                            //cube.transform.position = objectToDelete[j].transform.position;
+                            //cube.transform.localScale = new Vector3(nodeSize.x, ASTAR_NODE_HEIGHT, nodeSize.y);
+                            //cube.GetComponent<Renderer>().material.color = Color.red;
                         }
                 }
             }
+
+            for (int i = 0; i < nodesToDeleteOnObjects.Count; ++i)
+            {
+                GameObject[] possibleObjectsToDelete = NodeToObjDictionary.GetValueOrDefault(nodesToDeleteOnObjects[i], null);
+                if (possibleObjectsToDelete != null)
+                {
+                    for (int j = 0; j < startEndObjects.Count; ++j)
+                    {
+                        Bounds startEndObjectBounds = startEndObjects[j].GetComponent<BoundsManager>().RefreshBounds();
+                        startEndObjectBounds.size += startEndObjects[j].transform.forward * ASTAR_NODE_SIZE;
+                        for (int k = 0; k < possibleObjectsToDelete.Length; ++k)
+                        {
+                            if (startEndObjectBounds.Intersects(possibleObjectsToDelete[k].GetComponent<BoundsManager>().objectBoundsWorld))
+                            {
+                                //Debug.Log("POSSIBLE" + possibleObjectsToDelete[k].name);
+                                //GameObject cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                                //cube.transform.parent = room.transform;
+                                //Vector2 position2d = nodesToDeleteOnObjects[i].valeur.position;
+                                //Vector3 position3d = new Vector3(position2d.x, -ASTAR_NODE_HEIGHT / 2, position2d.y);
+                                //cube.transform.position = room.transform.TransformPoint(position3d);
+                                //cube.transform.localScale = new Vector3(nodeSize.x, ASTAR_NODE_HEIGHT, nodeSize.y);
+                                //cube.GetComponent<Renderer>().material.color = Color.blue;
+                                
+                                GameObject.Destroy(possibleObjectsToDelete[k]);
+                                //GameObject cube2 = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                                //cube2.transform.position = possibleObjectsToDelete[k].transform.position;
+                                //cube2.transform.localScale = new Vector3(nodeSize.x, ASTAR_NODE_HEIGHT, nodeSize.y);
+                                //cube2.transform.parent = possibleObjectsToDelete[k].transform;
+                                //cube2.GetComponent<Renderer>().material.color = Color.red;
+                            }
+                        }
+                    }
+                }
+            }
+
+
             Physics.autoSimulation = true;
         }
 
@@ -415,7 +474,7 @@ namespace Assets
         {
             int j;
             List<GameObject> objects = new();
-            List<(Noeud<RectangleInfo2d>,Noeud<RectangleInfo2d>)> destroyedLinks = new();
+            List<(Noeud<RectangleInfo2d>, Noeud<RectangleInfo2d>)> destroyedLinks = new();
             for (int i = 0; i < roomsNodes.Count; ++i)
             {
                 j = 0;
@@ -466,9 +525,9 @@ namespace Assets
                     destroyedLinks.Add((smallerRoom, biggerRoom));
                 }
             }
-            for(int i = 0; i < destroyedLinks.Count; ++i)
+            for (int i = 0; i < destroyedLinks.Count; ++i)
             {
-                Noeud<RectangleInfo2d>.FormerLienRéciproque(destroyedLinks[i].Item1,destroyedLinks[i].Item2);
+                Noeud<RectangleInfo2d>.FormerLienRéciproque(destroyedLinks[i].Item1, destroyedLinks[i].Item2);
             }
             return objects;
         }

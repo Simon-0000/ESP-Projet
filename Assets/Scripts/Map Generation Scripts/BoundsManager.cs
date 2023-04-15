@@ -24,14 +24,17 @@ public class BoundsManager : MonoBehaviour
         Quaternion objRotation = transform.rotation;
         objectBoundsWorld = Algos.GetRendererBounds(gameObject);
         if (centerMesh == true)
+        {
             Algos.ChangePivotPosition(gameObject.transform, objectBoundsWorld.center);
+        }
         objectBoundsLocal.center = objectBoundsWorld.center;
-
+        
         transform.rotation = Quaternion.identity;
         objectBoundsLocal = Algos.GetRendererBounds(gameObject);
         transform.rotation = objRotation;
 
         objectBoundsWorld.size = transform.TransformVector(transform.InverseTransformVector(objectBoundsWorld.size) + roomBoundsOffset.size);
+
         return objectBoundsWorld;
     }
 }
