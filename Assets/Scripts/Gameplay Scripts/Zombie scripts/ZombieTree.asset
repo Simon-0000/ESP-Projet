@@ -25,10 +25,11 @@ MonoBehaviour:
   - rid: 710362776824971271
   - rid: 6658596522572382208
   - rid: 6658596522572382209
+  - rid: 4710396172188778496
   treeState: 0
   blackboard:
     moveToPosition: {x: 0, y: 0, z: 0}
-  viewPosition: {x: 498, y: 247.33333, z: 0}
+  viewPosition: {x: 559.2, y: 193.6, z: 0}
   viewScale: {x: 0.7561437, y: 0.7561437, z: 1}
   references:
     version: 2
@@ -136,6 +137,18 @@ MonoBehaviour:
         description: "temps de repos apr\xE8s avoir frapp\xE9 le joueur"
         drawGizmos: 0
         duration: 2
+    - rid: 4710396172188778496
+      type: {class: Wait, ns: TheKiwiCoder, asm: Assembly-CSharp}
+      data:
+        state: 0
+        started: 0
+        guid: afaa1199c79910140807c25dd801c986
+        position: {x: -573.19995, y: 295.2}
+        blackboard:
+          moveToPosition: {x: 0, y: 0, z: 0}
+        description: 
+        drawGizmos: 0
+        duration: 1
     - rid: 6658596522572382208
       type: {class: Sequencer, ns: TheKiwiCoder, asm: Assembly-CSharp}
       data:
@@ -149,6 +162,7 @@ MonoBehaviour:
         drawGizmos: 0
         children:
         - rid: 6658596522572382209
+        - rid: 4710396172188778496
         - rid: 710362776824971265
     - rid: 6658596522572382209
       type: {class: EnterMap, ns: , asm: Assembly-CSharp}

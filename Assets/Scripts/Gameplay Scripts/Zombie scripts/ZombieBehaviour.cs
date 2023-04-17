@@ -53,7 +53,7 @@ public class ZombieBehaviour : MonoBehaviour
         agent.speed = speed;
         agent.destination = entryLocation.entryWaypoint;
         animator = GetComponent<Animator>();
-        //animator.SetBool("walking", true);
+        animator.SetBool("walking", true);
     }
 
     private void Update()
@@ -127,7 +127,7 @@ public class ZombieBehaviour : MonoBehaviour
 
         Vector3 direction = transform.position - target.transform.position;
         Vector3 offset = new(0, 1, 0);
-        if(Physics.Raycast(transform.position, -direction.normalized, out hit, actionRange))
+        if(Physics.Raycast(transform.position, -direction.normalized, out hit, actionRange,7))
         {
             Debug.Log(hit.collider.gameObject);
             Debug.Log(-direction.normalized);
