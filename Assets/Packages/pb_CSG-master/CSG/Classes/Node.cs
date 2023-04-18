@@ -100,6 +100,7 @@ namespace Parabox.CSG
 
             if (polygons == null)
                 polygons = new List<Polygon>();
+                
             var listFront = new List<Polygon>();
             var listBack = new List<Polygon>();
 
@@ -203,8 +204,9 @@ namespace Parabox.CSG
         
             a.Build(b.AllPolygons());
         
+            Node ret = new Node(a.AllPolygons());
         
-            return new Node(a.AllPolygons());
+            return ret;
         }
         
         // Return a new CSG solid representing space in this solid but not in the
@@ -223,8 +225,9 @@ namespace Parabox.CSG
             a.Build(b.AllPolygons());
             a.Invert();
         
+            Node ret = new Node(a.AllPolygons());
         
-            return new Node(a.AllPolygons());
+            return ret;
         }
 
         // Return a new CSG solid representing space both this solid and in the
@@ -243,7 +246,9 @@ namespace Parabox.CSG
             a.Build(b.AllPolygons());
             a.Invert();
 
-            return new Node(a.AllPolygons());
+            Node ret = new Node(a.AllPolygons());
+
+            return ret;
         }
 
         #endregion
