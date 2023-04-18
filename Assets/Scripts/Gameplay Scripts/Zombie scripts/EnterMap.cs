@@ -17,9 +17,8 @@ public class EnterMap : ActionNode
     protected override State OnUpdate() {
         if(host.CanEnterMap())
         {
-            Debug.Log( host.animator.GetBool("vault"));
+            host.transform.LookAt(host.entryLocation.entryWaypoint);
             host.animator.SetBool("vault", true);
-            Debug.Log( host.animator.GetBool("vault"));
             return State.Success;
         }
         
