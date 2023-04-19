@@ -488,14 +488,21 @@ namespace Assets
 
                     if (roomOverlap.x > templateBounds.size.x)
                     {
-                        doorRotation = Quaternion.identity;
+                        if (biggerRoom.valeur.coordinates.y > smallerRoom.valeur.coordinates.y)
+                            doorRotation = Quaternion.Euler(0, 180, 0);
+                        else
+                            doorRotation = Quaternion.identity;
 
                     }
                     else if (roomOverlap.y > templateBounds.size.x)
                     {
                         //Si la connexion se trouve sur l'axe des y (z en 3d), on tourne la porte
                         planeAxis = 1;
-                        doorRotation = Quaternion.Euler(0, 90, 0);
+                        if (biggerRoom.valeur.coordinates.x > smallerRoom.valeur.coordinates.x)
+                            doorRotation = Quaternion.Euler(0, 270, 0);
+                        else
+                            doorRotation = Quaternion.Euler(0, 90, 0);
+
                     }
                     else //Si une connexion entre deux pièces est invalide, on ignore la connexion
                     {
