@@ -13,10 +13,10 @@ using Assets;
 public class ZombieBehaviour : MonoBehaviour
 {
    // [SerializeField] public Zombie zombie;
-    [SerializeField] public bool isActive;
+    [SerializeField] public bool isActive = true;
     [SerializeField] public bool isOnTeam;
     [SerializeField] public bool isLeader;
-    [SerializeField] public bool isChasingTarget;
+    [SerializeField] public bool isChasingTarget = false;
     [SerializeField] private int health;
     [SerializeField] private int damage;
     [SerializeField] public int speed;
@@ -26,6 +26,8 @@ public class ZombieBehaviour : MonoBehaviour
     [SerializeField] private float inactiveTime;
     [SerializeField] private float fieldOfView = 90;
     [SerializeField] private GameObject target;
+    private Vector3 entryOffset;
+    public bool canEnterMap = false;
     public Animator animator;
     public NavMeshAgent agent;
     int patrolIndexCounter = 0;
@@ -44,15 +46,15 @@ public class ZombieBehaviour : MonoBehaviour
         isActive = true;
         isOnTeam = false;
         isLeader = false;
-        isChasingTarget = false;
         EntryWaypoint[] entryLocations = FindObjectsOfType<EntryWaypoint>();
         entryLocation = entryLocations[UnityEngine.Random.Range(0, entryLocations.Length)];
-        entryLocation.entryWaypoint.y = 0f;
+        entryOffset = entryLocation.entryWaypoint + entryLocation.transform.forward * 5;
+        //entryLocation.entryWaypoint.y = 0f;
         DefinePatrolSequence();
         DefineTarget();
         agent = GetComponent<NavMeshAgent>();
         agent.speed = speed;
-        agent.destination = entryLocation.entryWaypoint;
+        agent.destination = entryOffset;
         animator = GetComponent<Animator>();
         animator.SetBool("walking", true);
     }
@@ -100,9 +102,9 @@ public class ZombieBehaviour : MonoBehaviour
     public void ManagePatrol()
     {
        // Debug.Log("patrol update was made");
-        if ((transform.position - GetComponent<NavMeshAgent>().destination).magnitude < 2)
+        if ((transform.position - agent.destination).magnitude < 2)
         {
-            GetComponent<NavMeshAgent>().destination = patrolLocations[patrolIndexCounter++];
+            agent.destination = patrolLocations[patrolIndexCounter++];
             if (patrolIndexCounter == patrolLocations.Count)
                 patrolIndexCounter = 0;
         }
@@ -110,29 +112,41 @@ public class ZombieBehaviour : MonoBehaviour
 
     public void ManageChase()
     {
-        GetComponent<NavMeshAgent>().destination = target.transform.position;
+        agent.destination = target.transform.position;
+    }
+
+    public void ManageMapEntry()
+    {
+        Debug.Log("manageMapEntry was called");
+        
+        if ((transform.position - entryOffset).magnitude <= 2)
+        {
+            canEnterMap = true;
+            agent.destination = entryLocation.entryWaypoint;
+            Debug.Log(agent.hasPath);
+        }
+          
     }
 
     public bool CanEnterMap()
     {
-        Debug.Log( GetComponent<NavMeshAgent>().hasPath);
         Vector3 direction = transform.position - entryLocation.entryWaypoint;
         return direction.magnitude <= 2;
     }
 
-    // pour l'instant cette function n'est pas finie
+    
     public bool CanChangeState(float actionRange)
     {
         RaycastHit hit;
         bool isWithinRange = false;
         bool canSeeTarget = false;
 
-        Vector3 direction = transform.position - target.transform.position;
+        Vector3 direction =  target.transform.position - transform.position;
         Vector3 offset = new(0, 1, 0);
-        if(Physics.Raycast(transform.position, -direction.normalized, out hit, actionRange,7))
+        if(Physics.Raycast(transform.position, direction.normalized, out hit, actionRange,7))
         {
             Debug.Log(hit.collider.gameObject);
-            Debug.Log(-direction.normalized);
+            Debug.Log(direction.normalized);
             Debug.Log(transform.position);
 
             if (hit.collider.gameObject.Equals(target) || Algos.FindFirstParentInstance(hit.collider.gameObject, p => p == target.transform) == target.transform)
@@ -167,7 +181,7 @@ public class ZombieBehaviour : MonoBehaviour
         animator.SetBool("attack",false);
         animator.SetBool("dead",true);
         Destroy(GetComponent<BehaviourTreeRunner>());
-        GetComponent<NavMeshAgent>().isStopped=true;
+        agent.isStopped=true;
         if (isLeader)
             ManageLeaderDeath();
     }

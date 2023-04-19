@@ -15,6 +15,9 @@ public class EnterMap : ActionNode
     }
 
     protected override State OnUpdate() {
+        if (!host.canEnterMap)
+            host.ManageMapEntry();
+
         if(host.CanEnterMap())
         {
             host.transform.LookAt(host.entryLocation.entryWaypoint);

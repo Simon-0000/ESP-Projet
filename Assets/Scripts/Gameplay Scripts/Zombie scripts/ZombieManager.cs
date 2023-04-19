@@ -11,6 +11,7 @@ public class ZombieManager : MonoBehaviour
     [SerializeField] private int nbWantedZombies = 50;
     private int nbActiveZombies;
     private List<GameObject> ActiveZombies;
+    public List<GameObject> AttackingZombies;
     [SerializeField] private GameObject zombie;
     [SerializeField] private SpawnLocation[] spawnPoints;
     [SerializeField] public GameObject player;
@@ -33,6 +34,12 @@ public class ZombieManager : MonoBehaviour
         {
             if (!ActiveZombies[i].GetComponent<ZombieBehaviour>().isActive)
                 ActiveZombies.Remove(ActiveZombies[i]);
+        }
+
+        for(int i = 0; i < ActiveZombies.Count; ++i)
+        {
+            if (ActiveZombies[i].GetComponent<ZombieBehaviour>().isChasingTarget)
+                AttackingZombies.Add(ActiveZombies[i]);
         }
 
         ellapsedTime += Time.deltaTime;
