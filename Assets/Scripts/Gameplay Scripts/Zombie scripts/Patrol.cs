@@ -12,7 +12,7 @@ public class Patrol : ActionNode
     protected override void OnStart() {
         host = context.zombie;
         host.agent.destination = host.patrolLocations[0];
-        host.animator.SetBool("vault", false);
+       // host.animator.SetBool("vault", false);
         host.ManagePatrol();
     }
 

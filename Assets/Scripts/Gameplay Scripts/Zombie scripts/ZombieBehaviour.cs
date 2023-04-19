@@ -47,13 +47,14 @@ public class ZombieBehaviour : MonoBehaviour
         isChasingTarget = false;
         EntryWaypoint[] entryLocations = FindObjectsOfType<EntryWaypoint>();
         entryLocation = entryLocations[UnityEngine.Random.Range(0, entryLocations.Length)];
+        entryLocation.entryWaypoint.y = 0f;
         DefinePatrolSequence();
         DefineTarget();
         agent = GetComponent<NavMeshAgent>();
         agent.speed = speed;
         agent.destination = entryLocation.entryWaypoint;
         animator = GetComponent<Animator>();
-        //animator.SetBool("walking", true);
+        animator.SetBool("walking", true);
     }
 
     private void Update()
@@ -114,8 +115,9 @@ public class ZombieBehaviour : MonoBehaviour
 
     public bool CanEnterMap()
     {
+        Debug.Log( GetComponent<NavMeshAgent>().hasPath);
         Vector3 direction = transform.position - entryLocation.entryWaypoint;
-        return direction.magnitude <= 0.5f;
+        return direction.magnitude <= 2;
     }
 
     // pour l'instant cette function n'est pas finie
@@ -127,7 +129,7 @@ public class ZombieBehaviour : MonoBehaviour
 
         Vector3 direction = transform.position - target.transform.position;
         Vector3 offset = new(0, 1, 0);
-        if(Physics.Raycast(transform.position, -direction.normalized, out hit, actionRange))
+        if(Physics.Raycast(transform.position, -direction.normalized, out hit, actionRange,7))
         {
             Debug.Log(hit.collider.gameObject);
             Debug.Log(-direction.normalized);
