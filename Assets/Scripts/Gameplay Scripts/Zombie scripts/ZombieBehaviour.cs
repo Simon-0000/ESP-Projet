@@ -63,16 +63,6 @@ public class ZombieBehaviour : MonoBehaviour
 
     private void Update()
     {
-        if(canUseWindow)
-        {
-            
-            transform.position = Vector3.MoveTowards(transform.position, entryLocation.entryWaypoint, speed * Time.deltaTime);
-            if(Vector3.Distance(transform.position, entryLocation.entryWaypoint) <= 0.01)
-            {
-                canUseWindow = false;
-            }
-        }
-
         if (!isActive)
         {
             inactiveTime += Time.deltaTime;
@@ -134,7 +124,7 @@ public class ZombieBehaviour : MonoBehaviour
         if (agent.remainingDistance <= 0.1f)
         {
             canUseWindow = true;
-            //agent.destination = entryLocation.entryWaypoint;
+            agent.destination = entryLocation.entryWaypoint;
             Debug.Log(agent.hasPath);
         }
           
