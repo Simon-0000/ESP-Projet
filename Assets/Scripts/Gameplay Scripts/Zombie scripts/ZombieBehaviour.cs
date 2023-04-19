@@ -27,7 +27,7 @@ public class ZombieBehaviour : MonoBehaviour
     [SerializeField] private float fieldOfView = 90;
     [SerializeField] private GameObject target;
     private Vector3 entryOffset;
-    public bool canEnterMap = false;
+    public bool canUseWindow = false;
     public Animator animator;
     public NavMeshAgent agent;
     int patrolIndexCounter = 0;
@@ -48,8 +48,10 @@ public class ZombieBehaviour : MonoBehaviour
         isLeader = false;
         EntryWaypoint[] entryLocations = FindObjectsOfType<EntryWaypoint>();
         entryLocation = entryLocations[UnityEngine.Random.Range(0, entryLocations.Length)];
-        entryOffset = entryLocation.entryWaypoint + entryLocation.transform.forward * 5;
-        //entryLocation.entryWaypoint.y = 0f;
+        entryOffset = entryLocation.entryWaypoint + entryLocation.transform.forward * 3;
+        Debug.Log(entryLocation.entryWaypoint);
+        entryLocation.entryWaypoint.y = entryLocation.entryWaypoint.y - 1;
+        Debug.Log(entryLocation.entryWaypoint);
         DefinePatrolSequence();
         DefineTarget();
         agent = GetComponent<NavMeshAgent>();
@@ -61,6 +63,16 @@ public class ZombieBehaviour : MonoBehaviour
 
     private void Update()
     {
+        if(canUseWindow)
+        {
+            
+            transform.position = Vector3.MoveTowards(transform.position, entryLocation.entryWaypoint, speed * Time.deltaTime);
+            if(Vector3.Distance(transform.position, entryLocation.entryWaypoint) <= 0.01)
+            {
+                canUseWindow = false;
+            }
+        }
+
         if (!isActive)
         {
             inactiveTime += Time.deltaTime;
@@ -117,12 +129,12 @@ public class ZombieBehaviour : MonoBehaviour
 
     public void ManageMapEntry()
     {
-        Debug.Log("manageMapEntry was called");
+        //Debug.Log("manageMapEntry was called");
         
-        if ((transform.position - entryOffset).magnitude <= 2)
+        if (agent.remainingDistance <= 0.1f)
         {
-            canEnterMap = true;
-            agent.destination = entryLocation.entryWaypoint;
+            canUseWindow = true;
+            //agent.destination = entryLocation.entryWaypoint;
             Debug.Log(agent.hasPath);
         }
           
@@ -131,7 +143,7 @@ public class ZombieBehaviour : MonoBehaviour
     public bool CanEnterMap()
     {
         Vector3 direction = transform.position - entryLocation.entryWaypoint;
-        return direction.magnitude <= 1;
+        return direction.magnitude <= 1.5f;
     }
 
     

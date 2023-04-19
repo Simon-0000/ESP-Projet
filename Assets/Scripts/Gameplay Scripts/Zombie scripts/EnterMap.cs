@@ -15,8 +15,11 @@ public class EnterMap : ActionNode
     }
 
     protected override State OnUpdate() {
-        if (!host.canEnterMap)
+        if (!host.canUseWindow)
+        {
             host.ManageMapEntry();
+        }
+           
 
         if(host.CanEnterMap())
         {

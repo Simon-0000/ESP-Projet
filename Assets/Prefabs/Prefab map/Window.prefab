@@ -301,7 +301,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6899297967437846420}
   - component: {fileID: -499769648750349568}
-  - component: {fileID: 2064082013203851728}
+  - component: {fileID: 528278018945251723}
   m_Layer: 0
   m_Name: Window
   m_TagString: Untagged
@@ -351,7 +351,7 @@ MonoBehaviour:
   roomBoundsOffset:
     m_Center: {x: 0, y: 0.75, z: 0}
     m_Extent: {x: 0, y: 0.75, z: 0}
---- !u!114 &2064082013203851728
+--- !u!114 &528278018945251723
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
