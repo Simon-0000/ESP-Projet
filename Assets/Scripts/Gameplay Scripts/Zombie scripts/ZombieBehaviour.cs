@@ -131,7 +131,7 @@ public class ZombieBehaviour : MonoBehaviour
     public bool CanEnterMap()
     {
         Vector3 direction = transform.position - entryLocation.entryWaypoint;
-        return direction.magnitude <= 2;
+        return direction.magnitude <= 1;
     }
 
     
