@@ -38,7 +38,6 @@ namespace Parabox.CSG
         }
 
         public Model(GameObject gameObject) :
-            
             this(gameObject.GetComponent<MeshFilter>()?.sharedMesh,
                 gameObject.GetComponent<MeshRenderer>()?.sharedMaterials,
                 gameObject.GetComponent<Transform>())
@@ -68,8 +67,6 @@ namespace Parabox.CSG
                 mesh.GetIndices(indices, i);
                 m_Indices.Add(indices);
             }
-
-
         }
 
         internal Model(List<Polygon> polygons)
@@ -99,6 +96,7 @@ namespace Parabox.CSG
                     indices.Add(p++);
                 }
             }
+
             m_Materials = submeshes.Keys.ToList();
             m_Indices = submeshes.Values.ToList();
         }
@@ -106,10 +104,7 @@ namespace Parabox.CSG
         internal List<Polygon> ToPolygons()
         {
             List<Polygon> list = new List<Polygon>();
-            if (m_Materials.Count != m_Indices.Count)
-            {
-                m_Materials.Add(m_Materials[m_Materials.Count - 1]);
-            }
+
             for (int s = 0, c = m_Indices.Count; s < c; s++)
             {
                 var indices = m_Indices[s];

@@ -107,6 +107,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4995584254943338898}
   - component: {fileID: 3513094810292328447}
+  - component: {fileID: 8001725621022159313}
   m_Layer: 0
   m_Name: Door
   m_TagString: Untagged
@@ -147,15 +148,28 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   objectBoundsWorld:
-    m_Center: {x: 0, y: 0, z: 0}
-    m_Extent: {x: 0, y: 0, z: 0}
+    m_Center: {x: 0, y: 0.060624957, z: 0}
+    m_Extent: {x: 1, y: 1.303125, z: 0.2}
   objectBoundsLocal:
-    m_Center: {x: 0, y: 0, z: 0}
-    m_Extent: {x: 0, y: 0, z: 0}
+    m_Center: {x: 0, y: 0.060624957, z: 0}
+    m_Extent: {x: 1, y: 1.303125, z: 0.2}
   centerMesh: 1
   roomBoundsOffset:
     m_Center: {x: 0.25, y: 0, z: 0}
     m_Extent: {x: 0, y: 0, z: 0}
+--- !u!114 &8001725621022159313
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2430739564790736020}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ea02ece0b438a454d83d1b0827ace047, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  waypointLocation: {x: 0, y: 0, z: 0}
 --- !u!1 &4474722375574946658
 GameObject:
   m_ObjectHideFlags: 0
