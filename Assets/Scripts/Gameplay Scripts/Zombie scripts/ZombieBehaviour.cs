@@ -117,7 +117,7 @@ public class ZombieBehaviour : MonoBehaviour
     {
         Debug.Log( GetComponent<NavMeshAgent>().hasPath);
         Vector3 direction = transform.position - entryLocation.entryWaypoint;
-        return direction.magnitude <= 2;
+        return direction.magnitude <= 1;
     }
 
     // pour l'instant cette function n'est pas finie

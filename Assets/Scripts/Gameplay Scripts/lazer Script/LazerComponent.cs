@@ -27,9 +27,12 @@ public class LazerComponent : MonoBehaviour
    
    private float time;
    
+   
    private const float speed = 500f;
    
    [SerializeField] private int[] layers;
+   int bounce = 0;
+   private int framecount = 0;
    
 
 
@@ -43,29 +46,40 @@ public class LazerComponent : MonoBehaviour
 
    }
 
+   
    private void Update()
    {
        
        time += Time.deltaTime;
+      
        if(time>10f || damage<1)
            Destroy(gameObject);
-       
+       framecount++; 
+      // if(framecount>1) 
+          // GetComponentInChildren<SphereCollider>().enabled = true;
+                       
+
    }
 
    private void LateUpdate()
    {
        lastVel = rig.velocity;
-   }
+    }
+      
 
 
    private void OnCollisionEnter(Collision collision)
    {
+       
        for (int i = 0; i < layers.Length; i++)
        {
          if (collision.contacts[0].otherCollider.gameObject.layer == layers[i])
          { 
              Bounce(collision);
              AdjustDammageToShlick(collision);
+             Debug.Log(++bounce);
+             framecount = 0;
+             //GetComponentInChildren<SphereCollider>().enabled = false;
              break;
 
 
@@ -99,6 +113,7 @@ public class LazerComponent : MonoBehaviour
            return; }
        n2 = 1 + smoothness;
         angelInDeg = MathF.Abs(90-Vector3.Angle(rig.velocity, collision.contacts[0].normal));
+        Debug.Log(angelInDeg);
        floatDamage *= Schlick(n1, n2, angelInDeg); 
        damage = (int)floatDamage;
        
