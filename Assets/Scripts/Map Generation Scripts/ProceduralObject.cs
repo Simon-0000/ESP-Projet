@@ -102,7 +102,7 @@ public class ProceduralObject : Procedural
     private bool TrySetRandomRelativePlacement(ref GameObject obj, Vector3 parentWorldDimensions, (VectorRange position, VectorRange orientation, VectorRange offset) placement)
     {
         bool invalidLocation = false;
-        Vector3 objWorldDimensions, objLocalDimensions;
+        Vector3 objLocalDimensions,objWorldDimensions;
 
         //les lignes de codes avec Physics.autoSimulation et Physics.Simulate ont été prises par Pablo Lanza et derHugo
         //https://stackoverflow.com/questions/69055600/bad-usage-of-physics-overlapbox
@@ -141,14 +141,17 @@ public class ProceduralObject : Procedural
         //Tourner l'objet
         obj.transform.localRotation = Quaternion.Euler(relativeOrientation.x, relativeOrientation.y, relativeOrientation.z);
 
+
         //Repositionner l'objet s'il rentre en collision avec d'autres objets
         if (repositionAtCollision)
         {
             Collider[] colliders = Physics.OverlapBox(obj.transform.position, objLocalDimensions * 0.5f - Vector3.one * GameConstants.OVERLAP_TOLERANCE, obj.transform.rotation);
+
             for (int i = 0; i < colliders.Length; ++i)
             {
-                if (Algos.IsColliderOverlaping(Algos.GetColliderOverlap(obj, colliders[i])))
+                if (Algos.IsColliderOverlaping(Algos.GetColliderOverlap((obj.transform.position,objLocalDimensions), colliders[i])))
                 {
+
                     BoundsManager colliderParentBoundsManager = colliders[i].gameObject.GetComponent<BoundsManager>();
                     if (colliderParentBoundsManager == null)
                         colliderParentBoundsManager = colliders[i].gameObject.GetComponentInParent<BoundsManager>();
@@ -158,7 +161,7 @@ public class ProceduralObject : Procedural
                         GameObject parentProcedural = colliderParentBoundsManager.gameObject;
                         if (parentProcedural != obj && parentProcedural != obj.transform.parent.gameObject)
                         {
-                            Debug.Log("Collider: " + obj.name + " With: " + colliders[i].gameObject.name + "OBJ Size: " + objWorldDimensions * 0.5f + "Overlap = " + Algos.GetColliderOverlap(obj, colliders[i]));
+                           // Debug.Log("Collider: " + obj.name + " With: " + colliders[i].gameObject.name + "OBJ Size: " +  "Overlap = " + Algos.GetColliderOverlap(obj, colliders[i]));
                             invalidLocation = true;
                             break;
                         }
@@ -168,7 +171,20 @@ public class ProceduralObject : Procedural
             }
             Physics.autoSimulation = true;
         }
+        
         return invalidLocation;
+    }
+    
+    GameObject BuildBox(Transform parent,Vector3 position, Vector3 size, Quaternion rotation) {
+        GameObject box = GameObject.CreatePrimitive(PrimitiveType.Cube); // Create a new cube game object
+        //box.transform.parent = parent;
+        box.transform.position = position + Vector3.forward*8; // Set the position of the box
+        box.transform.localScale = size; // Set the size of the box
+        box.transform.rotation = rotation; // Set the rotation of the box
+        
+        Destroy(box.GetComponent<BoxCollider>());
+        //box.transform.parent = null;
+        return box;
     }
 
     //TryConstrainRelativePosition retourne une position relative qui ne dépasse pas les limites XYZ de son parent si

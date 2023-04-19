@@ -5,6 +5,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 using System;
+using Pixelplacement.TweenSystem;
 using Random = UnityEngine.Random;
 namespace Assets
 {
@@ -153,15 +154,17 @@ namespace Assets
 
         //GetColliderOverlap donne un vecteur (en valeur absolue) qui représente le chevauchement entre un objet et
         //un collider
-        public static Vector3 GetColliderOverlap(GameObject obj, Collider collider)
+
+
+        public static Vector3 GetColliderOverlap((Vector3 position, Vector3 size) obj, Collider collider)
         {
-            Vector3 distance = Algos.GetVectorAbs(obj.transform.position - collider.transform.position);
-            Vector3 sizeObj = Algos.GetRendererBounds(obj).size;
+            Vector3 distance = Algos.GetVectorAbs(obj.position - collider.transform.position);
+            Vector3 sizeObj = obj.size;
             Vector3 sizeCollider = collider.bounds.size;
             return -new Vector3(distance.x - (sizeObj.x + sizeCollider.x) / 2,
                 distance.y - (sizeObj.y + sizeCollider.y) / 2, distance.z - (sizeObj.z + sizeCollider.z) / 2);
         }
-
+        
         //IsColliderOverlaping détermine si chaque axe (x,y,z) d'un chevauchement est assez grand pour les considérés
         //comme étant un chevauchement physique en 3d
         public static bool IsColliderOverlaping(Vector3 overlap) =>
