@@ -27,7 +27,6 @@ public class ZombieBehaviour : MonoBehaviour
     [SerializeField] private float fieldOfView = 90;
     [SerializeField] private GameObject target;
     private Vector3 entryOffset;
-    public bool canUseWindow = false;
     public Animator animator;
     public NavMeshAgent agent;
     int patrolIndexCounter = 0;
@@ -48,10 +47,7 @@ public class ZombieBehaviour : MonoBehaviour
         isLeader = false;
         EntryWaypoint[] entryLocations = FindObjectsOfType<EntryWaypoint>();
         entryLocation = entryLocations[UnityEngine.Random.Range(0, entryLocations.Length)];
-        entryOffset = entryLocation.entryWaypoint + entryLocation.transform.forward * 3;
-        Debug.Log(entryLocation.entryWaypoint);
-        entryLocation.entryWaypoint.y = entryLocation.entryWaypoint.y - 1;
-        Debug.Log(entryLocation.entryWaypoint);
+        entryOffset = entryLocation.entryWaypoint.position;
         DefinePatrolSequence();
         DefineTarget();
         agent = GetComponent<NavMeshAgent>();
@@ -117,23 +113,10 @@ public class ZombieBehaviour : MonoBehaviour
         agent.destination = target.transform.position;
     }
 
-    public void ManageMapEntry()
-    {
-        //Debug.Log("manageMapEntry was called");
-        
-        if (agent.remainingDistance <= 0.1f)
-        {
-            canUseWindow = true;
-            agent.destination = entryLocation.entryWaypoint;
-            Debug.Log(agent.hasPath);
-        }
-          
-    }
 
-    public bool CanEnterMap()
+    public bool HasReachedPath()
     {
-        Vector3 direction = transform.position - entryLocation.entryWaypoint;
-        return direction.magnitude <= 1.5f;
+        return !agent.pathPending && agent.remainingDistance <= 0.01f;
     }
 
     

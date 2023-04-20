@@ -437,11 +437,11 @@ namespace Assets
                 {
                     for (int j = 0; j < startEndObjects.Count; ++j)
                     {
-                        Bounds startEndObjectBounds = startEndObjects[j].GetComponent<BoundsManager>().RefreshBounds();
+                        Bounds startEndObjectBounds = startEndObjects[j].GetComponent<BoundsManager>().objectBoundsWorld;
                         startEndObjectBounds.size += startEndObjects[j].transform.forward * ASTAR_NODE_SIZE;
                         for (int k = 0; k < possibleObjectsToDelete.Length; ++k)
                         {
-                            if (startEndObjectBounds.Intersects(possibleObjectsToDelete[k].GetComponent<BoundsManager>().objectBoundsWorld))
+                            if (startEndObjectBounds.Intersects(Algos.GetRendererBounds(possibleObjectsToDelete[k])))
                             {
                                 //Debug.Log("POSSIBLE" + possibleObjectsToDelete[k].name);
                                 //GameObject cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
@@ -524,8 +524,10 @@ namespace Assets
                     //Traduire le positionnement 2d en 3d
                     Vector3 centerOffset = Algos.Vector2dTo3dVector(distanceOffset, -(GameConstants.ROOM_HEIGHT - templateBounds.size.y) / 2);
 
+
                     //Instancier l'objet
                     objects.Add(GameObject.Instantiate(templateObject, Algos.Vector2dTo3dVector(smallerRoom.valeur.coordinates, 0) + centerOffset, doorRotation, parent));
+
 
                     //On enlève le lien entre les pièces pour ne pas instancier l'objet une seconde fois
                     Noeud<RectangleInfo2d>.EnleverLienRéciproque(smallerRoom, biggerRoom);

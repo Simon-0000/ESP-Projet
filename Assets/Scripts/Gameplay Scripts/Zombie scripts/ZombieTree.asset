@@ -29,7 +29,7 @@ MonoBehaviour:
   treeState: 0
   blackboard:
     moveToPosition: {x: 0, y: 0, z: 0}
-  viewPosition: {x: 746.4, y: -29.6, z: 0}
+  viewPosition: {x: 696, y: 296, z: 0}
   viewScale: {x: 1, y: 1, z: 1}
   references:
     version: 2

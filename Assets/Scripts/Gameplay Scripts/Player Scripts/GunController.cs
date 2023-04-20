@@ -7,7 +7,7 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
-
+using Assets;
 
 public class GunController : MonoBehaviour
 {
@@ -153,9 +153,9 @@ public class GunController : MonoBehaviour
         RaycastHit hit;
         Ray ray = Camera.main.ScreenPointToRay(new Vector3(Screen.width / 2f, Screen.height / 2f));
         if (Physics.Raycast(ray, out hit))
-        { 
+        {
             gun.LookAt(hit.point);
-           boucheDeCanon.LookAt(hit.point);
+            boucheDeCanon.LookAt(hit.point);
         }
         else
         {

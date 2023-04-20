@@ -146,10 +146,10 @@ public class ProceduralObject : Procedural
         if (repositionAtCollision)
         {
             Collider[] colliders = Physics.OverlapBox(obj.transform.position, objLocalDimensions * 0.5f - Vector3.one * GameConstants.OVERLAP_TOLERANCE, obj.transform.rotation);
-
+            //BuildBox(null, obj.transform.position, objLocalDimensions, obj.transform.rotation);
             for (int i = 0; i < colliders.Length; ++i)
             {
-                if (Algos.IsColliderOverlaping(Algos.GetColliderOverlap((obj.transform.position,objLocalDimensions), colliders[i])))
+                if (Algos.IsColliderOverlaping(Algos.GetColliderOverlap(obj, colliders[i])))
                 {
 
                     BoundsManager colliderParentBoundsManager = colliders[i].gameObject.GetComponent<BoundsManager>();

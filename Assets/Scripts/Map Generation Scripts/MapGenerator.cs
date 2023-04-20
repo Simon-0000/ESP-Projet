@@ -5,7 +5,7 @@ using UnityEngine;
 using System.Collections.Generic;
 using System.Collections;
 using UnityEngine.Events;
-
+using UnityEngine.AI;
 namespace Assets
 {
     public class MapGenerator : MonoBehaviour
@@ -64,6 +64,11 @@ namespace Assets
             yield return 0;//Attendre 1 frame avant de finaliser la map
             mapIsLoaded.Invoke();
             isLoaded = true;
+        }
+        public void UpdateNavMesh()
+        {
+            NavMeshSurface nm = GameObject.FindObjectOfType<NavMeshSurface>();
+            nm.UpdateNavMesh(nm.navMeshData);
         }
     }
 }

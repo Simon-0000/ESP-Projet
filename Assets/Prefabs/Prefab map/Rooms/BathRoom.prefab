@@ -63,7 +63,7 @@ GameObject:
   - component: {fileID: 6083584432078699225}
   - component: {fileID: 7328155059994315458}
   - component: {fileID: 6088786914816179284}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Wall
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -159,7 +159,7 @@ GameObject:
   - component: {fileID: 8383618131504135746}
   - component: {fileID: 3183394960504068209}
   - component: {fileID: 1018625573218568548}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Walls
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -396,7 +396,7 @@ GameObject:
   - component: {fileID: 1334472322166136969}
   - component: {fileID: 7271430624650593193}
   - component: {fileID: 5560650536591786425}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: BathRoom
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -881,7 +881,7 @@ GameObject:
   - component: {fileID: 771336094768449879}
   - component: {fileID: 5822020640490654837}
   - component: {fileID: 4565775234866824239}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Floor
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1224,7 +1224,7 @@ GameObject:
   - component: {fileID: 4090937446901269468}
   - component: {fileID: 1902440217402886749}
   - component: {fileID: 2956627328167554219}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Floors
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1526,6 +1526,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Toilet_1
       objectReference: {fileID: 0}
+    - target: {fileID: 193732, guid: 003efb3587f76014688a1190cee2c8c9, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 417248, guid: 003efb3587f76014688a1190cee2c8c9, type: 3}
       propertyPath: m_RootOrder
       value: 0
@@ -1599,6 +1603,10 @@ PrefabInstance:
     - target: {fileID: 110918, guid: 59799fa2671678946a502e2ca01da4a6, type: 3}
       propertyPath: m_Name
       value: Sink_1
+      objectReference: {fileID: 0}
+    - target: {fileID: 110918, guid: 59799fa2671678946a502e2ca01da4a6, type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 492288, guid: 59799fa2671678946a502e2ca01da4a6, type: 3}
       propertyPath: m_RootOrder

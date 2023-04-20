@@ -11,6 +11,5 @@ namespace Assets
         public const float ACCEPTABLE_ZERO_VALUE = 0.00001f;
         public const int MAX_ITERATIONS = 100;
         public const float ROOM_HEIGHT = 4f;
-
     }
 }

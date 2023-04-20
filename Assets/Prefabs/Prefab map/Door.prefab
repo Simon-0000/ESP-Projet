@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 4455083754387116477}
   - component: {fileID: 8288681953122495582}
   - component: {fileID: 1560658599421546568}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Frame (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -108,7 +108,7 @@ GameObject:
   - component: {fileID: 4995584254943338898}
   - component: {fileID: 3513094810292328447}
   - component: {fileID: 8001725621022159313}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Door
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -149,7 +149,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   objectBoundsWorld:
     m_Center: {x: 0, y: 0.060624957, z: 0}
-    m_Extent: {x: 1, y: 1.303125, z: 0.2}
+    m_Extent: {x: 1, y: 1.303125, z: 0.20000002}
   objectBoundsLocal:
     m_Center: {x: 0, y: 0.060624957, z: 0}
     m_Extent: {x: 1, y: 1.303125, z: 0.2}
@@ -182,7 +182,7 @@ GameObject:
   - component: {fileID: 5006152772450115250}
   - component: {fileID: 8110475139072721815}
   - component: {fileID: 8421007839428792303}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Frame (3)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -279,7 +279,7 @@ GameObject:
   - component: {fileID: 5328393911809394185}
   - component: {fileID: 6352321942082604526}
   - component: {fileID: 2391247457350910388}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Frame (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -376,7 +376,7 @@ GameObject:
   - component: {fileID: 3170509393971509770}
   - component: {fileID: 9035421307257120272}
   - component: {fileID: 2866859350394198298}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Frame
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -473,7 +473,7 @@ GameObject:
   - component: {fileID: 1405355875635973395}
   - component: {fileID: 565325519457075427}
   - component: {fileID: 341099807598523174}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: HollowCube
   m_TagString: Untagged
   m_Icon: {fileID: 0}

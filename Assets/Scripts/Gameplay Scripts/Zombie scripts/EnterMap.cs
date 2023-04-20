@@ -13,21 +13,30 @@ public class EnterMap : ActionNode
 
     protected override void OnStop() {
     }
-
+    bool hasStartedVaulting,hasReachedWindow;
     protected override State OnUpdate() {
-        if (!host.canUseWindow)
+        if (!hasReachedWindow)
         {
-            host.ManageMapEntry();
+            if (host.HasReachedPath())
+            {
+                hasReachedWindow = true;
+                host.agent.SetDestination(host.entryLocation.exitWaypoint.position);
+            }
         }
-           
-
-        if(host.CanEnterMap())
+        else if (hasReachedWindow && host.agent.hasPath && !hasStartedVaulting)
         {
-            host.transform.LookAt(host.entryLocation.entryWaypoint);
+            host.transform.LookAt(host.entryLocation.exitWaypoint);
             host.animator.SetBool("vault", true);
+            hasStartedVaulting = true;
+        }
+        else if (hasReachedWindow && hasStartedVaulting &&  host.HasReachedPath())
+        {
             return State.Success;
         }
+       
+
         
+
 
         return State.Running;
     }

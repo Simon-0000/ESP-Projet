@@ -79,7 +79,7 @@ public class ProceduralTiledCubeObject : ProceduralObject
             if (obj != colliders[i].gameObject)
             {
                 
-                Vector3 roomOverlap = Algos.GetColliderOverlap((obj.transform.position,obj.GetComponent<BoundsManager>().objectBoundsLocal.size), colliders[i]);
+                Vector3 roomOverlap = Algos.GetColliderOverlap(obj, colliders[i]);
                 if (!Algos.IsColliderOverlaping(roomOverlap)) 
                     continue;
                 HollowOutMesh(obj, colliders[i].gameObject);
