@@ -8,7 +8,7 @@ using System;
 
 public class BoundsManager : MonoBehaviour
 {
-    public Bounds objectBoundsWorld,objectBoundsLocal;
+    public Bounds objectBoundsParent,objectBoundsLocal, objectBoundsWorld;
 
     public bool centerMesh = false;
 
@@ -24,24 +24,29 @@ public class BoundsManager : MonoBehaviour
         Quaternion objRotationWorld = transform.rotation;
         Quaternion objRotationParent = transform.localRotation;
 
+        //Centrer le mesh avant de prendre des mesures
+        if (centerMesh == true)
+        {
+            Algos.ChangePivotPosition(gameObject.transform, Algos.GetRendererBounds(gameObject).center);
+        }
 
+        //Prendre le Bounds locale
         transform.rotation = Quaternion.identity;
         objectBoundsLocal = Algos.GetRendererBounds(gameObject);
         objectBoundsLocal.size += roomBoundsOffset.size;
+        objectBoundsLocal.center = transform.position;
+
+        //Prendre le Bounds relatif au parent 
         transform.rotation = objRotationParent;
-        objectBoundsWorld = TransformBounds(transform, objectBoundsLocal);
+        objectBoundsParent = TransformBounds(transform, objectBoundsLocal);
+
+        //Retourner à la rotation initiale
         transform.rotation = objRotationWorld;
+        objectBoundsWorld = TransformBounds(transform, objectBoundsLocal);
 
-
-        if (centerMesh == true)
-        {
-            Algos.ChangePivotPosition(gameObject.transform, objectBoundsWorld.center);
-        }
-        objectBoundsWorld.center = objectBoundsLocal.center;
-        
         //objectBoundsWorld.size = transform.TransformVector(transform.InverseTransformVector(objectBoundsWorld.size) + roomBoundsOffset.size);
-        
-        return objectBoundsWorld;
+
+        return objectBoundsParent;
     }
     public static Bounds TransformBounds( Transform _transform, Bounds _localBounds )
     {
@@ -134,6 +139,59 @@ public class BoundsManager : MonoBehaviour
 
         //objectBoundsWorld.size = transform.TransformVector(transform.InverseTransformVector(objectBoundsWorld.size) + roomBoundsOffset.size);
         
+        return objectBoundsWorld;
+    }
+
+
+
+
+
+LATEST: 
+
+    {
+        Quaternion objRotationWorld = transform.rotation;
+        Quaternion objRotationParent = transform.localRotation;
+
+
+        transform.rotation = Quaternion.identity;
+        objectBoundsLocal = Algos.GetRendererBounds(gameObject);
+        objectBoundsLocal.size += roomBoundsOffset.size;
+        transform.rotation = objRotationParent;
+        objectBoundsWorld = TransformBounds(transform, objectBoundsLocal);
+        transform.rotation = objRotationWorld;
+
+
+        if (centerMesh == true)
+        {
+            Algos.ChangePivotPosition(gameObject.transform, objectBoundsWorld.center);
+        }
+        
+        //objectBoundsWorld.size = transform.TransformVector(transform.InverseTransformVector(objectBoundsWorld.size) + roomBoundsOffset.size);
+        
+        return objectBoundsWorld;
+    }
+WORKING WITH BATHROOM AND LIVING: 
+    public Bounds RefreshBounds()
+    {
+        Quaternion objRotationWorld = transform.rotation;
+        Quaternion objRotationParent = transform.localRotation;
+
+
+        transform.rotation = Quaternion.identity;
+        objectBoundsLocal = Algos.GetRendererBounds(gameObject);
+        objectBoundsLocal.size += roomBoundsOffset.size;
+        transform.rotation = objRotationParent;
+        objectBoundsWorld = TransformBounds(transform, objectBoundsLocal);
+        transform.rotation = objRotationWorld;
+
+
+        if (centerMesh == true)
+        {
+            Algos.ChangePivotPosition(gameObject.transform, Algos.GetRendererBounds(gameObject).center);
+        }
+
+        //objectBoundsWorld.size = transform.TransformVector(transform.InverseTransformVector(objectBoundsWorld.size) + roomBoundsOffset.size);
+
         return objectBoundsWorld;
     }
  */

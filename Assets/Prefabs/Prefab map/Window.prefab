@@ -406,10 +406,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a1c5b2013afcebb408ced8b3497c35e1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  objectBoundsWorld:
+  objectBoundsParent:
     m_Center: {x: -3.4393187, y: 11.922397, z: 11.439268}
     m_Extent: {x: 1.25, y: 1.875, z: 0.19999933}
   objectBoundsLocal:
+    m_Center: {x: -3.4393187, y: 11.922397, z: 11.439268}
+    m_Extent: {x: 1.25, y: 1.875, z: 0.19999933}
+  objectBoundsWorld:
     m_Center: {x: -3.4393187, y: 11.922397, z: 11.439268}
     m_Extent: {x: 1.25, y: 1.875, z: 0.19999933}
   centerMesh: 1
@@ -443,7 +446,7 @@ OffMeshLink:
   m_AgentTypeID: 0
   m_Start: {fileID: 3626949779556525705}
   m_End: {fileID: 6639166103851150001}
-  m_CostOverride: 10000
+  m_CostOverride: -1
   m_BiDirectional: 0
   m_Activated: 1
   m_AutoUpdatePositions: 1

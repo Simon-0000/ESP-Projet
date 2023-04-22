@@ -74,7 +74,7 @@ public class ProceduralObject : Procedural
         TrySetRandomRelativePlacement(ref obj, parentWorldDimensions, Enumerable.Range(0, positions.Length).ToArray());
 
 
-    public void TrySetRandomRelativePlacement(ref GameObject obj, Vector3 parentWorldDimensions, int[] placementIndexes)
+    public void TrySetRandomRelativePlacement(ref GameObject obj, Vector3 parentLocalDimensions, int[] placementIndexes)
     {
         int iterationAttemps = 0;
         bool invalidLocation;
@@ -82,7 +82,7 @@ public class ProceduralObject : Procedural
         do
         {
             int placementIndex = placementIndexes[Random.Range(0, placementIndexes.Length)];
-            invalidLocation = TrySetRandomRelativePlacement(ref obj, parentWorldDimensions, (positions[placementIndex], orientations[placementIndex], offsets[placementIndex]));
+            invalidLocation = TrySetRandomRelativePlacement(ref obj, parentLocalDimensions, (positions[placementIndex], orientations[placementIndex], offsets[placementIndex]));
             ++iterationAttemps;
         }
         while (invalidLocation == true && iterationAttemps <= GameConstants.MAX_ITERATIONS);
@@ -99,10 +99,11 @@ public class ProceduralObject : Procedural
     }
 
 
-    private bool TrySetRandomRelativePlacement(ref GameObject obj, Vector3 parentWorldDimensions, (VectorRange position, VectorRange orientation, VectorRange offset) placement)
+    private bool TrySetRandomRelativePlacement(ref GameObject obj, Vector3 parentLocalDimensions, (VectorRange position, VectorRange orientation, VectorRange offset) placement)
     {
         bool invalidLocation = false;
-        Vector3 objLocalDimensions,objWorldDimensions;
+        obj.GetComponent<BoundsManager>().RefreshBounds();
+        BoundsManager objBounds = obj.GetComponent<BoundsManager>();
 
         //les lignes de codes avec Physics.autoSimulation et Physics.Simulate ont été prises par Pablo Lanza et derHugo
         //https://stackoverflow.com/questions/69055600/bad-usage-of-physics-overlapbox
@@ -121,22 +122,20 @@ public class ProceduralObject : Procedural
         //mais on ne peut pas le tourner pour le moment, sinon un mouvement par rapport aux axes x,y,z (local) ne sera pas valide
         obj.transform.localRotation = Quaternion.Euler(relativeOrientation.x, relativeOrientation.y, relativeOrientation.z);//-------
         obj.GetComponent<BoundsManager>().RefreshBounds();
-        objWorldDimensions = obj.GetComponent<BoundsManager>().objectBoundsWorld.size;
-        objLocalDimensions = obj.GetComponent<BoundsManager>().objectBoundsLocal.size;
         obj.transform.localRotation = Quaternion.identity;
 
 
         //Placer l'objet relativement à son parent
-        obj.transform.localPosition = TryConstrainRelativePosition(objWorldDimensions, parentWorldDimensions, new Vector3(parentWorldDimensions.x * relativePosition.x,
-            parentWorldDimensions.y * relativePosition.y,
-            parentWorldDimensions.z * relativePosition.z));
+        obj.transform.localPosition = TryConstrainRelativePosition(objBounds.objectBoundsParent.size, parentLocalDimensions, new Vector3(parentLocalDimensions.x * relativePosition.x,
+            parentLocalDimensions.y * relativePosition.y,
+            parentLocalDimensions.z * relativePosition.z));
 
         //Décaler l'objet
         offset.Scale(Algos.GetVectorSign(obj.transform.localPosition));
         obj.transform.localPosition += offset;
 
         ////Prendre les dimensions sans la rotation pour que les enfants qui dépendent de cet objet soient bien positionnés 
-       // obj.GetComponent<BoundsManager>().RefreshBounds();
+        // obj.GetComponent<BoundsManager>().RefreshBounds();
 
         //Tourner l'objet
         obj.transform.localRotation = Quaternion.Euler(relativeOrientation.x, relativeOrientation.y, relativeOrientation.z);
@@ -145,11 +144,11 @@ public class ProceduralObject : Procedural
         //Repositionner l'objet s'il rentre en collision avec d'autres objets
         if (repositionAtCollision)
         {
-            Collider[] colliders = Physics.OverlapBox(obj.transform.position, objLocalDimensions * 0.5f - Vector3.one * GameConstants.OVERLAP_TOLERANCE, obj.transform.rotation);
-            //BuildBox(null, obj.transform.position, objLocalDimensions, obj.transform.rotation);
+            Collider[] colliders = Physics.OverlapBox(obj.transform.position, objBounds.objectBoundsLocal.size * 0.5f - Vector3.one * GameConstants.OVERLAP_TOLERANCE, obj.transform.rotation);
+
             for (int i = 0; i < colliders.Length; ++i)
             {
-                if (Algos.IsColliderOverlaping(Algos.GetColliderOverlap(obj, colliders[i])))
+                if (Algos.IsColliderOverlaping(Algos.GetColliderOverlap((obj.transform.position, objBounds.objectBoundsWorld.size), colliders[i])))
                 {
 
                     BoundsManager colliderParentBoundsManager = colliders[i].gameObject.GetComponent<BoundsManager>();
@@ -161,7 +160,8 @@ public class ProceduralObject : Procedural
                         GameObject parentProcedural = colliderParentBoundsManager.gameObject;
                         if (parentProcedural != obj && parentProcedural != obj.transform.parent.gameObject)
                         {
-                           // Debug.Log("Collider: " + obj.name + " With: " + colliders[i].gameObject.name + "OBJ Size: " +  "Overlap = " + Algos.GetColliderOverlap(obj, colliders[i]));
+                            
+                            Debug.Log("Collider: " + obj.name + " With: " + colliderParentBoundsManager.gameObject.name + "OBJ Size: " +  "Overlap = " + Algos.GetColliderOverlap(obj, colliders[i]));
                             invalidLocation = true;
                             break;
                         }
@@ -171,7 +171,7 @@ public class ProceduralObject : Procedural
             }
             Physics.autoSimulation = true;
         }
-        
+
         return invalidLocation;
     }
     

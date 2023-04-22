@@ -15,12 +15,13 @@ public class EnterMap : ActionNode
     }
     bool hasStartedVaulting,hasReachedWindow;
     protected override State OnUpdate() {
+        Debug.Log("OnUpdate");
         if (!hasReachedWindow)
         {
             if (host.HasReachedPath())
             {
                 hasReachedWindow = true;
-                host.agent.SetDestination(host.entryLocation.exitWaypoint.position);
+                host.agent.destination = host.entryLocation.exitWaypoint.position;
             }
         }
         else if (hasReachedWindow && host.agent.hasPath && !hasStartedVaulting)

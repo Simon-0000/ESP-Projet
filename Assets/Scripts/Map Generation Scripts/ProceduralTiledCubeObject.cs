@@ -44,20 +44,23 @@ public class ProceduralTiledCubeObject : ProceduralObject
     }
     public override GameObject InstanciateProcedural(Transform parent)
     {
+        GameObject obj = Instantiate(objectVariations[Random.Range(0, objectVariations.Length)], parent);
+
         BoundsManager parentBoundsManager = parent.gameObject.GetComponent<BoundsManager>();
         if (parentBoundsManager != null)
-            return InstantiateProceduralTiledObject(parent, parent.gameObject.GetComponent<BoundsManager>().objectBoundsWorld.size, Random.Range(0, objectVariations.Length), Random.Range(0, scales.Length));
+            InstantiateProceduralTiledObject(ref obj, parentBoundsManager.objectBoundsLocal.size);
         else
-            return InstantiateProceduralTiledObject(parent, Algos.GetRendererBounds(parent.gameObject).size, Random.Range(0, objectVariations.Length), Random.Range(0, scales.Length));
+            InstantiateProceduralTiledObject(ref obj, Algos.GetRendererBounds(parent.gameObject).size);
+        return obj;
     }
-    public GameObject InstantiateProceduralTiledObject(Transform parent, Vector3 parentDimensions,int variationIndex)
+    public GameObject InstantiateProceduralTiledObject(ref GameObject obj, Vector3 parentDimensions)
     {
-        return InstantiateProceduralTiledObject(parent,parentDimensions,variationIndex,Random.Range(0,scales.Length));
+        return InstantiateProceduralTiledObject(ref obj, parentDimensions, Enumerable.Range(0, positions.Length).ToArray());
     }
-    public GameObject InstantiateProceduralTiledObject(Transform parent, Vector3 parentDimensions, int variationIndex,int placementIndex)
+    public GameObject InstantiateProceduralTiledObject(Transform parent, Vector3 parentDimensions, int variationIndex, int placementIndex)
     {
         GameObject tuileObject = Instantiate(objectVariations[variationIndex], parent);
-        Vector3 tileSize = Vector3.Scale(scales[placementIndex].GetRandomVector(),parentDimensions) + scaleOffsets[placementIndex].GetRandomVector();
+        Vector3 tileSize = Vector3.Scale(scales[placementIndex].GetRandomVector(), parentDimensions) + scaleOffsets[placementIndex].GetRandomVector();
         TileUvs(tuileObject, tileSize);
         StretchVertices(tuileObject, tileSize);
         TrySetRandomRelativePlacement(ref tuileObject, parentDimensions, new int[] { placementIndex });
@@ -65,9 +68,19 @@ public class ProceduralTiledCubeObject : ProceduralObject
             WrapMesh(tuileObject, tileSize);
 
         return tuileObject;
-        
     }
+    public GameObject InstantiateProceduralTiledObject(ref GameObject obj, Vector3 parentDimensions, int[] placementIndexes)
+    {
+        int placementIndex = placementIndexes[Random.Range(0, placementIndexes.Length)];
+        Vector3 tileSize = Vector3.Scale(scales[placementIndex].GetRandomVector(), parentDimensions) + scaleOffsets[placementIndex].GetRandomVector();
+        TileUvs(obj, tileSize);
+        StretchVertices(obj, tileSize);
+        TrySetRandomRelativePlacement(ref obj, parentDimensions, new int[1]{ placementIndex});
+        if (wrapsAround == true)
+            WrapMesh(obj, tileSize);
 
+        return obj;
+       }
 
     //WrapMesh permet de trouver tous les objets valides qui rentre en collision avec obj afin de modifier
     //le mesh de obj aux objets trouvés

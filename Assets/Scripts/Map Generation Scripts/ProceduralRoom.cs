@@ -53,14 +53,13 @@ namespace Assets
 
             //Instancier le sol:
             int floorVariation = Random.Range(0, floorObject.GetComponent<ProceduralObject>().objectVariations.Length);
-            floorObject.InstantiateProceduralTiledObject(roomObj.transform, roomDimensions, floorVariation);
+            floorObject.InstantiateProceduralTiledObject(roomObj.transform, roomDimensions, floorVariation,0);
 
             //Instancier le plafond (pas implémenté pour les tests)
 
             //Garder la grandeur de la pièce en mémoire
             roomObj.GetComponent<BoundsManager>().RefreshBounds();
-            roomObj.GetComponent<BoundsManager>().objectBoundsLocal.size = roomObj.GetComponent<BoundsManager>().objectBoundsWorld.size;
-            Debug.Log(roomObj.GetComponent<BoundsManager>().objectBoundsWorld.size + " ROOM VERSUS " + roomObj.GetComponent<BoundsManager>().objectBoundsLocal.size);
+            roomObj.GetComponent<BoundsManager>().objectBoundsLocal.size = roomObj.GetComponent<BoundsManager>().objectBoundsParent.size;
 
             //Instancier les objets de la pièce
             InstantiateHierarchies(roomObj.transform,Algos.GetVector3Volume(roomDimensions) * roomFillPercentage);

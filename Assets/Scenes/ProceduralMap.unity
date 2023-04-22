@@ -26,7 +26,7 @@ RenderSettings:
   m_AmbientIntensity: 1
   m_AmbientMode: 0
   m_SubtractiveShadowColor: {r: 0.42, g: 0.478, b: 0.627, a: 1}
-  m_SkyboxMaterial: {fileID: 2100000, guid: 9b7d5374d36ba6740915999875ea48a2, type: 2}
+  m_SkyboxMaterial: {fileID: 2100000, guid: fda75ee068f25414782d7c1708e1fd27, type: 2}
   m_HaloStrength: 0.5
   m_FlareStrength: 1
   m_FlareFadeSpeed: 3
@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.0021652796, g: 0.0011488601, b: 0.00006365499, a: 1}
+  m_IndirectSpecularColor: {r: 0.52110195, g: 0.1569427, b: 0.03951533, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -1125,7 +1125,7 @@ Light:
   m_Type: 1
   m_Shape: 0
   m_Color: {r: 0.58431375, g: 0.40784314, b: 0, a: 1}
-  m_Intensity: 2
+  m_Intensity: 0
   m_Range: 10
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
@@ -1239,8 +1239,9 @@ MonoBehaviour:
   wallSizeMin: 8
   wallSizeMax: 16
   roomObjects:
-  - {fileID: 7271430624650593193, guid: 945526a975cac21448d1acd660c156b5, type: 3}
+  - {fileID: 7271430624650593193, guid: 08a019d532fdb29409b4cccf443b7a6a, type: 3}
   - {fileID: 7271430624650593193, guid: 4bd8a423c45ccd849a53013ab7ad1f41, type: 3}
+  - {fileID: 7271430624650593193, guid: 945526a975cac21448d1acd660c156b5, type: 3}
   doorObject: {fileID: 2430739564790736020, guid: 21b28f3efd218ab4a8ea5a7c522c44ad, type: 3}
   windowObject: {fileID: 7842764880825554952, guid: b8fd88299b70a31479c54aa878d14e58, type: 3}
   mapIsLoaded:

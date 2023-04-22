@@ -73,7 +73,7 @@ public class ProceduralHierarchy : Procedural
         {
             hierarchyObj.TryAddComponent<BoundsManager>();
             hierarchyObj.GetComponent<BoundsManager>().centerMesh = true;
-            hierarchyObj.GetComponent<BoundsManager>().objectBoundsWorld = rootParent.GetComponent<BoundsManager>().objectBoundsWorld;
+            hierarchyObj.GetComponent<BoundsManager>().objectBoundsParent = rootParent.GetComponent<BoundsManager>().objectBoundsParent;
             hierarchyObj.GetComponent<BoundsManager>().objectBoundsLocal = rootParent.GetComponent<BoundsManager>().objectBoundsLocal;
 
         }
@@ -129,7 +129,7 @@ public class ProceduralHierarchy : Procedural
                         }
                         //On diminue le volume et on Peek au cas où il existe un noeud enfant qui se trouve en haut du stack
                         if(proceduralObj.valeur.InstantiatedObj.GetComponent<BoundsManager>() != null)
-                            hierarchyVolume -= Algos.GetVector3Volume(proceduralObj.valeur.InstantiatedObj.GetComponent<BoundsManager>().objectBoundsWorld.size);
+                            hierarchyVolume -= Algos.GetVector3Volume(proceduralObj.valeur.InstantiatedObj.GetComponent<BoundsManager>().objectBoundsParent.size);
                         proceduralObj = proceduralsStack.Peek();
                     }
                 }

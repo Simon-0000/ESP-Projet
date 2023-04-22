@@ -149,6 +149,7 @@ namespace Assets
             for(int i =0; i < objTransform.childCount; ++i)
                 objTransform.GetChild(i).position += centerOffset;
             objTransform.position = newPivotPosition;
+            
         }
 
 
@@ -164,7 +165,15 @@ namespace Assets
             return -new Vector3(distance.x - (sizeObj.x + sizeCollider.x) / 2,
                 distance.y - (sizeObj.y + sizeCollider.y) / 2, distance.z - (sizeObj.z + sizeCollider.z) / 2);
         }
-        
+        public static Vector3 GetColliderOverlap((Vector3 position, Vector3 size) obj, Collider collider)
+        {
+            Vector3 distance = Algos.GetVectorAbs(obj.position - collider.transform.position);
+            Vector3 sizeObj = obj.size;
+            Vector3 sizeCollider = collider.bounds.size;
+            return -new Vector3(distance.x - (sizeObj.x + sizeCollider.x) / 2,
+                distance.y - (sizeObj.y + sizeCollider.y) / 2, distance.z - (sizeObj.z + sizeCollider.z) / 2);
+        }
+
         //IsColliderOverlaping détermine si chaque axe (x,y,z) d'un chevauchement est assez grand pour les considérés
         //comme étant un chevauchement physique en 3d
         public static bool IsColliderOverlaping(Vector3 overlap) =>

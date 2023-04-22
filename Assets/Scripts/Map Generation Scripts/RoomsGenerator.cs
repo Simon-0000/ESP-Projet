@@ -25,7 +25,7 @@ namespace Assets
             mapDimensions = new RectangleInfo2d(mapSize, Vector2.zero);
             doorObject = door;
             doorObject.TryAddComponent<BoundsManager>().Awake();
-            doorBounds = doorObject.GetComponent<BoundsManager>().objectBoundsWorld;
+            doorBounds = doorObject.GetComponent<BoundsManager>().objectBoundsParent;
         }
         public List<Noeud<RectangleInfo2d>> GenerateRooms()
         {
@@ -295,7 +295,7 @@ namespace Assets
             List<Noeud<AStarAlgorithm.AStarNodeValue>> nodesToDeleteOnObjects = new();
 
 
-            Vector3 roomDimensions3d = room.transform.InverseTransformVector(room.GetComponent<BoundsManager>().objectBoundsWorld.size);
+            Vector3 roomDimensions3d = room.transform.InverseTransformVector(room.GetComponent<BoundsManager>().objectBoundsParent.size);
             Vector2 roomDimensions = new Vector2(roomDimensions3d.x, roomDimensions3d.z);
 
             Vector2Int mainNodeAmount = new Vector2Int((int)(roomDimensions.x / ASTAR_NODE_SIZE), (int)(roomDimensions.y / ASTAR_NODE_SIZE));
@@ -371,7 +371,6 @@ namespace Assets
             for (int i = 0; i < startEndObjects.Count; ++i)
             {
                 closestNode = (10000,10000);
-                Bounds objectBounds = startEndObjects[i].GetComponent<BoundsManager>().objectBoundsLocal;
                 for (int j = 0; j < nodesToDeleteOnObjects.Count; ++j)
                 {
                     Vector3 nodePosition = room.transform.TransformPoint( new Vector3(nodesToDeleteOnObjects[j].valeur.position.x, 0, nodesToDeleteOnObjects[j].valeur.position.y));
@@ -441,7 +440,7 @@ namespace Assets
                         startEndObjectBounds.size += startEndObjects[j].transform.forward * ASTAR_NODE_SIZE;
                         for (int k = 0; k < possibleObjectsToDelete.Length; ++k)
                         {
-                            if (startEndObjectBounds.Intersects(Algos.GetRendererBounds(possibleObjectsToDelete[k])))
+                            if (startEndObjectBounds.Intersects(possibleObjectsToDelete[k].GetComponent<BoundsManager>().objectBoundsWorld))
                             {
                                 //Debug.Log("POSSIBLE" + possibleObjectsToDelete[k].name);
                                 //GameObject cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
