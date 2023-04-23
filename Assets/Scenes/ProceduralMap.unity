@@ -8,8 +8,8 @@ OcclusionCullingSettings:
     smallestOccluder: 5
     smallestHole: 0.25
     backfaceThreshold: 100
-  m_SceneGUID: 00000000000000000000000000000000
-  m_OcclusionCullingData: {fileID: 0}
+  m_SceneGUID: 9fc0d4010bbf28b4594072e72b8655ab
+  m_OcclusionCullingData: {fileID: 36300000, guid: d64b6398863e507448748c267fbf988d, type: 2}
 --- !u!104 &2
 RenderSettings:
   m_ObjectHideFlags: 0
@@ -1239,9 +1239,10 @@ MonoBehaviour:
   wallSizeMin: 8
   wallSizeMax: 16
   roomObjects:
-  - {fileID: 7271430624650593193, guid: 08a019d532fdb29409b4cccf443b7a6a, type: 3}
-  - {fileID: 7271430624650593193, guid: 4bd8a423c45ccd849a53013ab7ad1f41, type: 3}
   - {fileID: 7271430624650593193, guid: 945526a975cac21448d1acd660c156b5, type: 3}
+  - {fileID: 7271430624650593193, guid: 4bd8a423c45ccd849a53013ab7ad1f41, type: 3}
+  - {fileID: 7271430624650593193, guid: 08a019d532fdb29409b4cccf443b7a6a, type: 3}
+  - {fileID: 7271430624650593193, guid: 00e589ddb2901164eb9f9af0ce1ff794, type: 3}
   doorObject: {fileID: 2430739564790736020, guid: 21b28f3efd218ab4a8ea5a7c522c44ad, type: 3}
   windowObject: {fileID: 7842764880825554952, guid: b8fd88299b70a31479c54aa878d14e58, type: 3}
   mapIsLoaded:
@@ -1254,6 +1255,18 @@ MonoBehaviour:
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 0}
+        m_TargetAssemblyTypeName: Assets.MapGenerator, Assembly-CSharp
+        m_MethodName: 
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: 
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 

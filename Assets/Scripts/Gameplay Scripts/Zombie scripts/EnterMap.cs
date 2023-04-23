@@ -15,7 +15,6 @@ public class EnterMap : ActionNode
     }
     bool hasStartedVaulting,hasReachedWindow;
     protected override State OnUpdate() {
-        Debug.Log("OnUpdate");
         if (!hasReachedWindow)
         {
             if (host.HasReachedPath())

@@ -2154,10 +2154,10 @@ MonoBehaviour:
   - startAt: {x: 1, y: 1, z: 0}
     endAt: {x: 1, y: 1, z: 0}
   scaleOffsets:
-  - startAt: {x: 0, y: 0, z: 2}
-    endAt: {x: 0, y: 0, z: 2}
-  - startAt: {x: 0, y: 0, z: 2}
-    endAt: {x: 0, y: 0, z: 2}
+  - startAt: {x: 0, y: 0, z: 1}
+    endAt: {x: 0, y: 0, z: 1}
+  - startAt: {x: 0, y: 0, z: 1}
+    endAt: {x: 0, y: 0, z: 1}
   wrapsAround: 0
 --- !u!1 &8984118363891546242
 GameObject:
@@ -2297,6 +2297,10 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 6
       objectReference: {fileID: 0}
+    - target: {fileID: 193732, guid: 003efb3587f76014688a1190cee2c8c9, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 417248, guid: 003efb3587f76014688a1190cee2c8c9, type: 3}
       propertyPath: m_RootOrder
       value: 0
@@ -2374,6 +2378,10 @@ PrefabInstance:
     - target: {fileID: 110918, guid: 59799fa2671678946a502e2ca01da4a6, type: 3}
       propertyPath: m_Layer
       value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 110918, guid: 59799fa2671678946a502e2ca01da4a6, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 492288, guid: 59799fa2671678946a502e2ca01da4a6, type: 3}
       propertyPath: m_RootOrder
