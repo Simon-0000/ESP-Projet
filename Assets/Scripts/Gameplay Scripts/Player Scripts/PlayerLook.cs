@@ -13,10 +13,12 @@ public class PlayerLook : MonoBehaviour
      public  float ySensitivity =30;
      [SerializeField] private Slider xslider;
      [SerializeField] private Slider yslider;
+   
 
     private void Awake()
     {
         SetCursor();
+        
         
     }
 

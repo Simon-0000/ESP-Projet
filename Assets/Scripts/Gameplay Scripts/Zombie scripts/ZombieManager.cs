@@ -38,7 +38,7 @@ public class ZombieManager : MonoBehaviour
 
         for(int i = 0; i < ActiveZombies.Count; ++i)
         {
-            if (ActiveZombies[i].GetComponent<ZombieBehaviour>().isChasingTarget)
+            if (ActiveZombies[i].GetComponent<ZombieBehaviour>().isChasingTarget && !AttackingZombies.Contains(ActiveZombies[i]))
                 AttackingZombies.Add(ActiveZombies[i]);
         }
 

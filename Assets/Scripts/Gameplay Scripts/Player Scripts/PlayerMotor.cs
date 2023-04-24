@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+[RequireComponent(typeof(Transform))]
 public class PlayerMotor : MonoBehaviour
 {
     private CharacterController controller;
@@ -13,6 +13,7 @@ public class PlayerMotor : MonoBehaviour
 
      public float speed = 5f;
      public float jumpHeigth;
+     
 
     
     
@@ -20,7 +21,7 @@ public class PlayerMotor : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-      
+       
         controller = GetComponent<CharacterController>();
         
     }
