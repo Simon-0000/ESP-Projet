@@ -8,7 +8,6 @@ using Assets;
 
 //using Pixelplacement;
 using Unity.VisualScripting;
-using UnityEditor.TextCore.Text;
 using Random = UnityEngine.Random;
 
 public class DroneBehaviour : MonoBehaviour {
@@ -23,13 +22,14 @@ public class DroneBehaviour : MonoBehaviour {
     public VectorRange possibleSplineSize;
     private Queue<Vector3> splinePoints = new(); // les points pour la spline
     private int splineDirection = 1; // -1 à droite, 1 à gauche
-    const int KBN = 5; // multiplicateur des vecteurs bi-normaux
+    [SerializeField] private int largeurSplineMax = 5; // multiplicateur des vecteurs bi-normaux
     public float ptParMetre = 3.0f;
     private Hashtable args;
     private bool restartSplines = true;
     private Vector3 lastPLayerPoint;
     private Vector3 vecteurY;
     private int rnd;
+    [SerializeField] private DroneTurret turret;
 
     void Awake()
     {
@@ -56,12 +56,36 @@ public class DroneBehaviour : MonoBehaviour {
             
         int nbrPoints = 2*((int) (distanceObjet.magnitude / Mathf.Min(ptParMetre, distanceObjet.magnitude / 2 - GameConstants.ACCEPTABLE_ZERO_VALUE)) / 2) * 2;
         distanceObjet /= nbrPoints;
-        Vector3 binormal = Vector3.Cross(distanceObjet, transform.up).normalized * KBN;
+        Vector3 binormal = Vector3.Cross(distanceObjet, transform.up).normalized * largeurSplineMax;
         List<Vector3> points = new List<Vector3>();
         for (int i = 0; i < nbrPoints; i++)
         {
-            splineDirection *= -1;
+            Vector3 ptSommet;
+            int j = 0;
             newPosition += distanceObjet;
+            while (j < largeurSplineMax) // ça va crash si 9.5, à résoudre
+            {
+                binormal = Vector3.Cross(distanceObjet, transform.up).normalized * (largeurSplineMax - j);
+                ptSommet = newPosition + splineDirection * binormal;
+                RaycastHit hit;
+                Debug.Log("Bro for real ?");
+                Debug.DrawRay(ptSommet,
+                    (newPosition - distanceObjet) - ptSommet, Color.green, 10, true); print("Hit");
+                if (Physics.Raycast(ptSommet,
+                        (newPosition - distanceObjet) - ptSommet, ((newPosition - distanceObjet) - ptSommet).magnitude) || Physics.Raycast(ptSommet,
+                        (newPosition + distanceObjet) - ptSommet, ((newPosition + distanceObjet) - ptSommet).magnitude))
+                {
+                    j++;
+                }
+                else
+                {
+                    break;
+                    
+                }
+            }
+            Debug.Log(j + "," + largeurSplineMax + "," + binormal);
+
+            splineDirection *= -1;
             //newPosition = new Vector3(newPosition.x, rnd, newPosition.z);
             points.Add(newPosition - distanceObjet / 2 + splineDirection * binormal / 2);
             points.Add(newPosition + splineDirection * binormal);
@@ -114,6 +138,7 @@ public class DroneBehaviour : MonoBehaviour {
 
     public void FollowPlayer ()
     {
+        Debug.Log("Allo");
         if (//Algos.GetVectorAbs(transform.position - lastPt).magnitude <= GameConstants.OVERLAP_TOLERANCE &&
             Algos.GetVectorAbs(target.transform.position - lastPLayerPoint).magnitude > maximumDistance)
             
@@ -126,5 +151,12 @@ public class DroneBehaviour : MonoBehaviour {
                 
         
         
+    }
+
+    void Update()
+    {
+        FollowPlayer();
+        if (target2 != null)
+            turret.TryToAttack(target2);
     }
 }
