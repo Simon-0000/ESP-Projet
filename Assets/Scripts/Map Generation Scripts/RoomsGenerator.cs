@@ -25,7 +25,7 @@ namespace Assets
             mapDimensions = new RectangleInfo2d(mapSize, Vector2.zero);
             doorObject = door;
             doorObject.TryAddComponent<BoundsManager>().Awake();
-            doorBounds = doorObject.GetComponent<BoundsManager>().objectBoundsParent;
+            doorBounds = doorObject.GetComponent<BoundsManager>().objectBoundsLocal;
         }
         public List<Noeud<RectangleInfo2d>> GenerateRooms()
         {
@@ -285,6 +285,8 @@ namespace Assets
 
         public void UseAStarOnRoom(GameObject room, List<GameObject> objectsToConnect)
         {
+            //les lignes de codes avec Physics.autoSimulation et Physics.Simulate ont été prises par Pablo Lanza et derHugo
+            //https://stackoverflow.com/questions/69055600/bad-usage-of-physics-overlapbox
             Physics.autoSimulation = false;
             Physics.Simulate(Time.deltaTime);
 
@@ -295,7 +297,7 @@ namespace Assets
             List<Noeud<AStarAlgorithm.AStarNodeValue>> nodesToDeleteOnObjects = new();
 
 
-            Vector3 roomDimensions3d = room.transform.InverseTransformVector(room.GetComponent<BoundsManager>().objectBoundsParent.size);
+            Vector3 roomDimensions3d = room.GetComponent<BoundsManager>().objectBoundsLocal.size;
             Vector2 roomDimensions = new Vector2(roomDimensions3d.x, roomDimensions3d.z);
 
             Vector2Int mainNodeAmount = new Vector2Int((int)(roomDimensions.x / ASTAR_NODE_SIZE), (int)(roomDimensions.y / ASTAR_NODE_SIZE));
@@ -344,10 +346,10 @@ namespace Assets
                     if (i != 0)
                     {
                         dictionaryNodesToConnect.Add((i - 1) * (nodeAmount.y) + j);//top
-                        if (j != 0)
-                            dictionaryNodesToConnect.Add((i - 1) * (nodeAmount.y) + (j - 1));//top left
-                        if (j != nodeAmount.y - 1)
-                            dictionaryNodesToConnect.Add((i - 1) * (nodeAmount.y) + (j + 1));//top right
+                        //if (j != 0)
+                        //    dictionaryNodesToConnect.Add((i - 1) * (nodeAmount.y) + (j - 1));//top left
+                        //if (j != nodeAmount.y - 1)
+                        //    dictionaryNodesToConnect.Add((i - 1) * (nodeAmount.y) + (j + 1));//top right
                     }
                     if (j != 0)
                     {
@@ -437,10 +439,11 @@ namespace Assets
                     for (int j = 0; j < startEndObjects.Count; ++j)
                     {
                         Bounds startEndObjectBounds = startEndObjects[j].GetComponent<BoundsManager>().objectBoundsWorld;
-                        startEndObjectBounds.size += startEndObjects[j].transform.forward * ASTAR_NODE_SIZE;
+                        startEndObjectBounds.size += startEndObjects[j].transform.forward.normalized * ASTAR_NODE_SIZE;
                         for (int k = 0; k < possibleObjectsToDelete.Length; ++k)
                         {
-                            if (startEndObjectBounds.Intersects(possibleObjectsToDelete[k].GetComponent<BoundsManager>().objectBoundsWorld))
+                            Bounds possibleObjToDeleteBounds = possibleObjectsToDelete[k].GetComponent<BoundsManager>().objectBoundsWorld;
+                            if (startEndObjectBounds.Intersects(possibleObjToDeleteBounds))
                             {
                                 //Debug.Log("POSSIBLE" + possibleObjectsToDelete[k].name);
                                 //GameObject cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
@@ -450,7 +453,8 @@ namespace Assets
                                 //cube.transform.position = room.transform.TransformPoint(position3d);
                                 //cube.transform.localScale = new Vector3(nodeSize.x, ASTAR_NODE_HEIGHT, nodeSize.y);
                                 //cube.GetComponent<Renderer>().material.color = Color.blue;
-                                
+                                Debug.Log("NAMEEE");
+
                                 GameObject.Destroy(possibleObjectsToDelete[k]);
                                 //GameObject cube2 = GameObject.CreatePrimitive(PrimitiveType.Cube);
                                 //cube2.transform.position = possibleObjectsToDelete[k].transform.position;
@@ -526,7 +530,7 @@ namespace Assets
 
                     //Instancier l'objet
                     objects.Add(GameObject.Instantiate(templateObject, Algos.Vector2dTo3dVector(smallerRoom.valeur.coordinates, 0) + centerOffset, doorRotation, parent));
-
+                    objects[objects.Count - 1].TryAddComponent<BoundsManager>().RefreshBounds();
 
                     //On enlève le lien entre les pièces pour ne pas instancier l'objet une seconde fois
                     Noeud<RectangleInfo2d>.EnleverLienRéciproque(smallerRoom, biggerRoom);

@@ -18,17 +18,16 @@ public class BoundsManager : MonoBehaviour
     public void Awake()
     {
         RefreshBounds();
+        if (centerMesh == true)
+        {
+            Algos.ChangePivotPosition(gameObject.transform, Algos.GetRendererBounds(gameObject).center);
+        }
     }
     public Bounds RefreshBounds()
     {
         Quaternion objRotationWorld = transform.rotation;
         Quaternion objRotationParent = transform.localRotation;
 
-        //Centrer le mesh avant de prendre des mesures
-        if (centerMesh == true)
-        {
-            Algos.ChangePivotPosition(gameObject.transform, Algos.GetRendererBounds(gameObject).center);
-        }
 
         //Prendre le Bounds locale
         transform.rotation = Quaternion.identity;
@@ -45,6 +44,9 @@ public class BoundsManager : MonoBehaviour
         objectBoundsWorld = TransformBounds(transform, objectBoundsLocal);
 
         //objectBoundsWorld.size = transform.TransformVector(transform.InverseTransformVector(objectBoundsWorld.size) + roomBoundsOffset.size);
+        objectBoundsLocal.center = transform.position;
+        objectBoundsParent.center = transform.position;
+        objectBoundsWorld.center = transform.position;
 
         return objectBoundsParent;
     }

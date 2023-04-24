@@ -204,10 +204,10 @@ MonoBehaviour:
   - startAt: {x: -0.1, y: -1, z: -0.1}
     endAt: {x: 0.1, y: -1, z: 0.1}
   orientations:
-  - startAt: {x: 0, y: 0, z: 0}
-    endAt: {x: 0, y: 0, z: 0}
-  - startAt: {x: 0, y: 90, z: 0}
-    endAt: {x: 0, y: 90, z: 0}
+  - startAt: {x: 0, y: -15, z: 0}
+    endAt: {x: 0, y: 15, z: 0}
+  - startAt: {x: 0, y: 75, z: 0}
+    endAt: {x: 0, y: 105, z: 0}
   offsets:
   - startAt: {x: 0, y: 0, z: 0}
     endAt: {x: 0, y: 0, z: 0}
@@ -229,10 +229,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a1c5b2013afcebb408ced8b3497c35e1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  objectBoundsWorld:
+  objectBoundsParent:
     m_Center: {x: 0, y: 0, z: 0}
     m_Extent: {x: 0, y: 0, z: 0}
   objectBoundsLocal:
+    m_Center: {x: 0, y: 0, z: 0}
+    m_Extent: {x: 0, y: 0, z: 0}
+  objectBoundsWorld:
     m_Center: {x: 0, y: 0, z: 0}
     m_Extent: {x: 0, y: 0, z: 0}
   centerMesh: 1
@@ -1161,10 +1164,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a1c5b2013afcebb408ced8b3497c35e1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  objectBoundsWorld:
+  objectBoundsParent:
     m_Center: {x: 0, y: 0, z: 0}
     m_Extent: {x: 0, y: 0, z: 0}
   objectBoundsLocal:
+    m_Center: {x: 0, y: 0, z: 0}
+    m_Extent: {x: 0, y: 0, z: 0}
+  objectBoundsWorld:
     m_Center: {x: 0, y: 0, z: 0}
     m_Extent: {x: 0, y: 0, z: 0}
   centerMesh: 0
@@ -1543,10 +1549,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a1c5b2013afcebb408ced8b3497c35e1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  objectBoundsWorld:
+  objectBoundsParent:
     m_Center: {x: 0, y: 0, z: 0}
     m_Extent: {x: 0, y: 0, z: 0}
   objectBoundsLocal:
+    m_Center: {x: 0, y: 0, z: 0}
+    m_Extent: {x: 0, y: 0, z: 0}
+  objectBoundsWorld:
     m_Center: {x: 0, y: 0, z: 0}
     m_Extent: {x: 0, y: 0, z: 0}
   centerMesh: 0
@@ -1743,10 +1752,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a1c5b2013afcebb408ced8b3497c35e1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  objectBoundsWorld:
+  objectBoundsParent:
     m_Center: {x: 0, y: 0, z: 0}
     m_Extent: {x: 0, y: 0, z: 0}
   objectBoundsLocal:
+    m_Center: {x: 0, y: 0, z: 0}
+    m_Extent: {x: 0, y: 0, z: 0}
+  objectBoundsWorld:
     m_Center: {x: 0, y: 0, z: 0}
     m_Extent: {x: 0, y: 0, z: 0}
   centerMesh: 0
@@ -2051,7 +2063,7 @@ MonoBehaviour:
   - noeudsEnfants:
     - noeudsEnfants: []
       valeur:
-        likelyhood: 50
+        likelyhood: 10
         proceduralComponent: {fileID: 2023608494565940968}
         proceduralComponentAmount: 4
     - noeudsEnfants: []
@@ -2306,10 +2318,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a1c5b2013afcebb408ced8b3497c35e1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  objectBoundsWorld:
+  objectBoundsParent:
     m_Center: {x: 0, y: 0, z: 0}
     m_Extent: {x: 0, y: 0, z: 0}
   objectBoundsLocal:
+    m_Center: {x: 0, y: 0, z: 0}
+    m_Extent: {x: 0, y: 0, z: 0}
+  objectBoundsWorld:
     m_Center: {x: 0, y: 0, z: 0}
     m_Extent: {x: 0, y: 0, z: 0}
   centerMesh: 1
@@ -2947,10 +2962,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a1c5b2013afcebb408ced8b3497c35e1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  objectBoundsWorld:
+  objectBoundsParent:
     m_Center: {x: 0, y: 0, z: 0}
     m_Extent: {x: 0, y: 0, z: 0}
   objectBoundsLocal:
+    m_Center: {x: 0, y: 0, z: 0}
+    m_Extent: {x: 0, y: 0, z: 0}
+  objectBoundsWorld:
     m_Center: {x: 0, y: 0, z: 0}
     m_Extent: {x: 0, y: 0, z: 0}
   centerMesh: 1
@@ -3006,10 +3024,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a1c5b2013afcebb408ced8b3497c35e1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  objectBoundsWorld:
+  objectBoundsParent:
     m_Center: {x: 0, y: 0, z: 0}
     m_Extent: {x: 0, y: 0, z: 0}
   objectBoundsLocal:
+    m_Center: {x: 0, y: 0, z: 0}
+    m_Extent: {x: 0, y: 0, z: 0}
+  objectBoundsWorld:
     m_Center: {x: 0, y: 0, z: 0}
     m_Extent: {x: 0, y: 0, z: 0}
   centerMesh: 1
@@ -3159,10 +3180,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a1c5b2013afcebb408ced8b3497c35e1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  objectBoundsWorld:
+  objectBoundsParent:
     m_Center: {x: 0, y: 0, z: 0}
     m_Extent: {x: 0, y: 0, z: 0}
   objectBoundsLocal:
+    m_Center: {x: 0, y: 0, z: 0}
+    m_Extent: {x: 0, y: 0, z: 0}
+  objectBoundsWorld:
     m_Center: {x: 0, y: 0, z: 0}
     m_Extent: {x: 0, y: 0, z: 0}
   centerMesh: 1
@@ -3228,10 +3252,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a1c5b2013afcebb408ced8b3497c35e1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  objectBoundsWorld:
+  objectBoundsParent:
     m_Center: {x: 0, y: 0, z: 0}
     m_Extent: {x: 0, y: 0, z: 0}
   objectBoundsLocal:
+    m_Center: {x: 0, y: 0, z: 0}
+    m_Extent: {x: 0, y: 0, z: 0}
+  objectBoundsWorld:
     m_Center: {x: 0, y: 0, z: 0}
     m_Extent: {x: 0, y: 0, z: 0}
   centerMesh: 1
@@ -3947,10 +3974,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a1c5b2013afcebb408ced8b3497c35e1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  objectBoundsWorld:
+  objectBoundsParent:
     m_Center: {x: 0, y: 0, z: 0}
     m_Extent: {x: 0, y: 0, z: 0}
   objectBoundsLocal:
+    m_Center: {x: 0, y: 0, z: 0}
+    m_Extent: {x: 0, y: 0, z: 0}
+  objectBoundsWorld:
     m_Center: {x: 0, y: 0, z: 0}
     m_Extent: {x: 0, y: 0, z: 0}
   centerMesh: 1
@@ -4140,10 +4170,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a1c5b2013afcebb408ced8b3497c35e1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  objectBoundsWorld:
+  objectBoundsParent:
     m_Center: {x: 0, y: 0, z: 0}
     m_Extent: {x: 0, y: 0, z: 0}
   objectBoundsLocal:
+    m_Center: {x: 0, y: 0, z: 0}
+    m_Extent: {x: 0, y: 0, z: 0}
+  objectBoundsWorld:
     m_Center: {x: 0, y: 0, z: 0}
     m_Extent: {x: 0, y: 0, z: 0}
   centerMesh: 1
@@ -4546,10 +4579,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a1c5b2013afcebb408ced8b3497c35e1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  objectBoundsWorld:
+  objectBoundsParent:
     m_Center: {x: 0, y: 0, z: 0}
     m_Extent: {x: 0, y: 0, z: 0}
   objectBoundsLocal:
+    m_Center: {x: 0, y: 0, z: 0}
+    m_Extent: {x: 0, y: 0, z: 0}
+  objectBoundsWorld:
     m_Center: {x: 0, y: 0, z: 0}
     m_Extent: {x: 0, y: 0, z: 0}
   centerMesh: 1
@@ -4700,10 +4736,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a1c5b2013afcebb408ced8b3497c35e1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  objectBoundsWorld:
+  objectBoundsParent:
     m_Center: {x: 0, y: 0, z: 0}
     m_Extent: {x: 0, y: 0, z: 0}
   objectBoundsLocal:
+    m_Center: {x: 0, y: 0, z: 0}
+    m_Extent: {x: 0, y: 0, z: 0}
+  objectBoundsWorld:
     m_Center: {x: 0, y: 0, z: 0}
     m_Extent: {x: 0, y: 0, z: 0}
   centerMesh: 1
@@ -5106,10 +5145,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a1c5b2013afcebb408ced8b3497c35e1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  objectBoundsWorld:
+  objectBoundsParent:
     m_Center: {x: 0, y: 0, z: 0}
     m_Extent: {x: 0, y: 0, z: 0}
   objectBoundsLocal:
+    m_Center: {x: 0, y: 0, z: 0}
+    m_Extent: {x: 0, y: 0, z: 0}
+  objectBoundsWorld:
     m_Center: {x: 0, y: 0, z: 0}
     m_Extent: {x: 0, y: 0, z: 0}
   centerMesh: 1
@@ -5437,10 +5479,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a1c5b2013afcebb408ced8b3497c35e1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  objectBoundsWorld:
+  objectBoundsParent:
     m_Center: {x: 0, y: 0, z: 0}
     m_Extent: {x: 0, y: 0, z: 0}
   objectBoundsLocal:
+    m_Center: {x: 0, y: 0, z: 0}
+    m_Extent: {x: 0, y: 0, z: 0}
+  objectBoundsWorld:
     m_Center: {x: 0, y: 0, z: 0}
     m_Extent: {x: 0, y: 0, z: 0}
   centerMesh: 1
@@ -6118,10 +6163,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a1c5b2013afcebb408ced8b3497c35e1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  objectBoundsWorld:
+  objectBoundsParent:
     m_Center: {x: 0, y: 0, z: 0}
     m_Extent: {x: 0, y: 0, z: 0}
   objectBoundsLocal:
+    m_Center: {x: 0, y: 0, z: 0}
+    m_Extent: {x: 0, y: 0, z: 0}
+  objectBoundsWorld:
     m_Center: {x: 0, y: 0, z: 0}
     m_Extent: {x: 0, y: 0, z: 0}
   centerMesh: 1
@@ -7082,6 +7130,10 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 6
       objectReference: {fileID: 0}
+    - target: {fileID: 184304, guid: 84b3095a92ec27d448532647a747bbf9, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 499684, guid: 84b3095a92ec27d448532647a747bbf9, type: 3}
       propertyPath: m_RootOrder
       value: 0
@@ -7147,6 +7199,10 @@ PrefabInstance:
     - target: {fileID: 197846, guid: 2e56118484113a44faa3c8e83481b418, type: 3}
       propertyPath: m_Layer
       value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 197846, guid: 2e56118484113a44faa3c8e83481b418, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 422290, guid: 2e56118484113a44faa3c8e83481b418, type: 3}
       propertyPath: m_RootOrder
@@ -7214,6 +7270,10 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 6
       objectReference: {fileID: 0}
+    - target: {fileID: 113604, guid: 08a5f3a4f1a5afa47b54e6eddc350ddc, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 409950, guid: 08a5f3a4f1a5afa47b54e6eddc350ddc, type: 3}
       propertyPath: m_RootOrder
       value: 0
@@ -7279,6 +7339,10 @@ PrefabInstance:
     - target: {fileID: 127242, guid: 2145aca4677bd374bb41e3f80a5b53d6, type: 3}
       propertyPath: m_Layer
       value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 127242, guid: 2145aca4677bd374bb41e3f80a5b53d6, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 420958, guid: 2145aca4677bd374bb41e3f80a5b53d6, type: 3}
       propertyPath: m_RootOrder
@@ -7346,6 +7410,10 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 6
       objectReference: {fileID: 0}
+    - target: {fileID: 175830, guid: 76ad0c5c9efae324b940fda5e601d62c, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 428598, guid: 76ad0c5c9efae324b940fda5e601d62c, type: 3}
       propertyPath: m_RootOrder
       value: 0
@@ -7411,6 +7479,10 @@ PrefabInstance:
     - target: {fileID: 104078, guid: 57a32613b8338fb46b75889d19358690, type: 3}
       propertyPath: m_Layer
       value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 104078, guid: 57a32613b8338fb46b75889d19358690, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 491612, guid: 57a32613b8338fb46b75889d19358690, type: 3}
       propertyPath: m_RootOrder

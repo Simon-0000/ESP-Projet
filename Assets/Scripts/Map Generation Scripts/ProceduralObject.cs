@@ -10,7 +10,8 @@ using System.Linq;
 using UnityEngine;
 using Random = UnityEngine.Random;
 using Assets;
-using UnityEditor;
+using System.Collections;
+
 using Quaternion = UnityEngine.Quaternion;
 using Vector3 = UnityEngine.Vector3;
 
@@ -76,16 +77,31 @@ public class ProceduralObject : Procedural
 
     public void TrySetRandomRelativePlacement(ref GameObject obj, Vector3 parentLocalDimensions, int[] placementIndexes)
     {
+
         int iterationAttemps = 0;
         bool invalidLocation;
-        obj.TryAddComponent<BoundsManager>().RefreshBounds();
+
+        //les lignes de codes avec Physics.autoSimulation et Physics.Simulate ont été prises par Pablo Lanza et derHugo
+        //https://stackoverflow.com/questions/69055600/bad-usage-of-physics-overlapbox
+        if (repositionAtCollision)
+        {
+            Physics.autoSimulation = false;
+            Physics.Simulate(Time.deltaTime);
+        }
+
+        obj.TryAddComponent<BoundsManager>().Awake();
         do
         {
+
             int placementIndex = placementIndexes[Random.Range(0, placementIndexes.Length)];
             invalidLocation = TrySetRandomRelativePlacement(ref obj, parentLocalDimensions, (positions[placementIndex], orientations[placementIndex], offsets[placementIndex]));
-            ++iterationAttemps;
+            ++iterationAttemps;                
         }
         while (invalidLocation == true && iterationAttemps <= GameConstants.MAX_ITERATIONS);
+        if (repositionAtCollision)
+        {
+            Physics.autoSimulation = true;
+        }
         if (invalidLocation == true)// condition qui est vraie si on n'a pas pu repositionner l'objet après 100 essais
         {
             Destroy(obj);
@@ -98,20 +114,12 @@ public class ProceduralObject : Procedural
         }
     }
 
-
     private bool TrySetRandomRelativePlacement(ref GameObject obj, Vector3 parentLocalDimensions, (VectorRange position, VectorRange orientation, VectorRange offset) placement)
     {
         bool invalidLocation = false;
         obj.GetComponent<BoundsManager>().RefreshBounds();
         BoundsManager objBounds = obj.GetComponent<BoundsManager>();
 
-        //les lignes de codes avec Physics.autoSimulation et Physics.Simulate ont été prises par Pablo Lanza et derHugo
-        //https://stackoverflow.com/questions/69055600/bad-usage-of-physics-overlapbox
-        if (repositionAtCollision)
-        {
-            Physics.autoSimulation = false;
-            Physics.Simulate(Time.deltaTime);
-        }
 
 
         Vector3 relativePosition = placement.position.GetRandomVector();
@@ -155,6 +163,8 @@ public class ProceduralObject : Procedural
                     if (colliderParentBoundsManager == null)
                         colliderParentBoundsManager = colliders[i].gameObject.GetComponentInParent<BoundsManager>();
 
+
+
                     if (colliderParentBoundsManager != null)
                     {
                         GameObject parentProcedural = colliderParentBoundsManager.gameObject;
@@ -169,7 +179,7 @@ public class ProceduralObject : Procedural
 
                 }
             }
-            Physics.autoSimulation = true;
+
         }
 
         return invalidLocation;
