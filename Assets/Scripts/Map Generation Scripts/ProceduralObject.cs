@@ -6,22 +6,24 @@
 
 using System;
 using System.Numerics;
+using System.Linq;
 using UnityEngine;
 using Random = UnityEngine.Random;
 using Assets;
-using UnityEditor;
+using System.Collections;
+
 using Quaternion = UnityEngine.Quaternion;
 using Vector3 = UnityEngine.Vector3;
 
 public class ProceduralObject : Procedural
 {
-    
+
     //Pour «positions», «orientations» et «offsets», il doit y avoir autant d'éléments dans chaque array,
     //puisque la position 1 correspond à l'orientation 1 et le décalage 1 (ces trois composantes forme le
     //positionnement de l'objet)
-    
+
     public GameObject[] objectVariations;//Les différentes variations de l'objet
-    
+
     public VectorRange[] positions;// Les valeurs de positions sont utilisées comme des uvs où 0 se
                                    //trouve au centre de son parent, 0.5 à une extrémité et -0.5 à l'autre extrémité 
 
@@ -49,124 +51,171 @@ public class ProceduralObject : Procedural
                      positions.Length != 0 &&
                      orientations.Length != 0 &&
                      offsets.Length != 0);
-        
+
         //Il doit y avoir autant de position que d'orientation et de décalage
-        Debug.Assert(positions.Length == orientations.Length&& positions.Length == offsets.Length);
+        Debug.Assert(positions.Length == orientations.Length && positions.Length == offsets.Length);
     }
 
     public override GameObject InstanciateProcedural(Transform parentTransform)//Instancier l'objet relatif à un parent
     {
-        GameObject obj =  Instantiate(objectVariations[Random.Range(0, objectVariations.Length)], parentTransform);
+        GameObject obj = Instantiate(objectVariations[Random.Range(0, objectVariations.Length)], parentTransform);
 
         //Si on a accès à l'information du "bounds" donnée par le parent, on l'utilise, sinon on obtient cette
         //information manuellement
         BoundsManager parentBoundsManager = parentTransform.gameObject.GetComponent<BoundsManager>();
         if (parentBoundsManager != null)
-             SetRandomRelativePlacement(ref obj, parentBoundsManager.objectBounds.size);
+            TrySetRandomRelativePlacement(ref obj, parentBoundsManager.objectBoundsLocal.size);
         else
-            SetRandomRelativePlacement(ref obj, Algos.GetRendererBounds(parentTransform.gameObject).size);
+            TrySetRandomRelativePlacement(ref obj, Algos.GetRendererBounds(parentTransform.gameObject).size);
         return obj;
+
     }
 
-    public void SetRandomRelativePlacement(ref GameObject obj, Vector3 parentDimensions) =>
-        SetRandomRelativePlacement(ref obj, parentDimensions, Random.Range(0, positions.Length));
+    public void TrySetRandomRelativePlacement(ref GameObject obj, Vector3 parentWorldDimensions) =>
+        TrySetRandomRelativePlacement(ref obj, parentWorldDimensions, Enumerable.Range(0, positions.Length).ToArray());
 
-    public void SetRandomRelativePlacement(ref GameObject obj, Vector3 parentDimensions,int placementIndex)=>
-        SetRandomRelativePlacement(ref obj, parentDimensions,(positions[placementIndex],orientations[placementIndex], offsets[placementIndex]));
 
-    public void SetRandomRelativePlacement(ref GameObject obj, Vector3 parentDimensions, (VectorRange position, VectorRange orientation, VectorRange offset) placement)
+    public void TrySetRandomRelativePlacement(ref GameObject obj, Vector3 parentLocalDimensions, int[] placementIndexes)
     {
-        bool reposition;
+
         int iterationAttemps = 0;
-        obj.TryAddComponent<BoundsManager>().Awake();
-        Vector3 objDimensions;
+        bool invalidLocation;
 
         //les lignes de codes avec Physics.autoSimulation et Physics.Simulate ont été prises par Pablo Lanza et derHugo
         //https://stackoverflow.com/questions/69055600/bad-usage-of-physics-overlapbox
-        Physics.autoSimulation = false;
-        Physics.Simulate(Time.deltaTime);
+        if (repositionAtCollision)
+        {
+            Physics.autoSimulation = false;
+            Physics.Simulate(Time.deltaTime);
+        }
+
+        obj.TryAddComponent<BoundsManager>().Awake();
         do
         {
-            Vector3 relativePosition = placement.position.GetRandomVector();
-            Vector3 relativeOrientation = placement.orientation.GetRandomVector();
-            Vector3 offset = placement.offset.GetRandomVector();
 
-            //On doit prendre les mesures de l'objet après la rotation (pour le bougé adéquatement),
-            //mais on ne peut pas le tourner pour le moment, sinon un mouvement par rapport aux axes x,y,z (local) ne sera pas valide
-            obj.transform.localRotation = Quaternion.Euler(relativeOrientation.x, relativeOrientation.y, relativeOrientation.z);//-------
-            obj.GetComponent<BoundsManager>().Awake();//----------
-            objDimensions = obj.GetComponent<BoundsManager>().objectBounds.size;
-            obj.transform.localRotation = Quaternion.identity;//-------
-
-            //Placer l'objet relativement à son parent
-            obj.transform.localPosition = TryConstrainRelativePosition(objDimensions, parentDimensions, new Vector3(parentDimensions.x * relativePosition.x,
-                parentDimensions.y * relativePosition.y,
-                parentDimensions.z * relativePosition.z));
-            if (obj.transform.localPosition.x > parentDimensions.x || obj.transform.localPosition.y > parentDimensions.y || obj.transform.localPosition.z > parentDimensions.z)
-                Debug.Log("Must have been the wind: "+ obj.name + obj.transform.localPosition + ", " + parentDimensions);
-                
-            
-            //Décaler l'objet
-                offset.Scale(Algos.GetVectorSign(obj.transform.localPosition));
-            obj.transform.localPosition += offset;
-
-            //Prendre les dimensions sans la rotation pour que les enfants qui dépendent de cet objet soient bien positionnés 
-            obj.GetComponent<BoundsManager>().Awake();
-
-            //Tourner l'objet
-            obj.transform.localRotation = Quaternion.Euler(relativeOrientation.x, relativeOrientation.y, relativeOrientation.z);
-
-
-            //Repositionner l'objet s'il rentre en collision avec d'autres objets
-            reposition = false;
-            if (repositionAtCollision)
-            {
-                Collider[] colliders = Physics.OverlapBox(obj.transform.position, (objDimensions*0.5f ),obj.transform.rotation);
-                for (int i = 0; i < colliders.Length; ++i)
-                {
-                    if (Algos.IsColliderOverlaping(Algos.GetColliderOverlap(obj,colliders[i])))
-                    {
-                        Transform colliderProceduralParent = Algos.FindFirstParentInstance(colliders[i].gameObject, p => p.gameObject.GetComponent<BoundsManager>() != null);
-                        if (colliderProceduralParent != null && colliderProceduralParent.gameObject != obj && colliderProceduralParent.gameObject != obj.transform.parent.gameObject)
-                        {
-                            Debug.Log("Collider: " + obj.name + " With: " + colliders[i].gameObject.name + "OBJ Size: " + objDimensions * 0.5f + "Overlap = " + Algos.GetColliderOverlap(obj, colliders[i]));
-                            reposition = true;
-                            break;
-                        }    
-                    }
-                }
-
-            }
-            ++iterationAttemps;
-        } while (reposition == true && iterationAttemps <= GameConstants.MAX_ITERATIONS);
-        if (reposition == true)// condition qui est vraie si on n'a pas pu repositionner l'objet après 100 essais
+            int placementIndex = placementIndexes[Random.Range(0, placementIndexes.Length)];
+            invalidLocation = TrySetRandomRelativePlacement(ref obj, parentLocalDimensions, (positions[placementIndex], orientations[placementIndex], offsets[placementIndex]));
+            ++iterationAttemps;                
+        }
+        while (invalidLocation == true && iterationAttemps <= GameConstants.MAX_ITERATIONS);
+        if (repositionAtCollision)
+        {
+            Physics.autoSimulation = true;
+        }
+        if (invalidLocation == true)// condition qui est vraie si on n'a pas pu repositionner l'objet après 100 essais
         {
             Destroy(obj);
             obj = null;
         }
-        Physics.autoSimulation = true;
+        else
+        {
+            //Prendre les dimensions sans la rotation pour que les enfants qui dépendent de cet objet soient bien positionnés 
+            obj.GetComponent<BoundsManager>().RefreshBounds();
+        }
+    }
 
+    private bool TrySetRandomRelativePlacement(ref GameObject obj, Vector3 parentLocalDimensions, (VectorRange position, VectorRange orientation, VectorRange offset) placement)
+    {
+        bool invalidLocation = false;
+        obj.GetComponent<BoundsManager>().RefreshBounds();
+        BoundsManager objBounds = obj.GetComponent<BoundsManager>();
+
+
+
+        Vector3 relativePosition = placement.position.GetRandomVector();
+        Vector3 relativeOrientation = placement.orientation.GetRandomVector();
+        Vector3 offset = placement.offset.GetRandomVector();
+
+        //On doit prendre les mesures de l'objet après la rotation (pour le bougé adéquatement),
+        //mais on ne peut pas le tourner pour le moment, sinon un mouvement par rapport aux axes x,y,z (local) ne sera pas valide
+        obj.transform.localRotation = Quaternion.Euler(relativeOrientation.x, relativeOrientation.y, relativeOrientation.z);//-------
+        obj.GetComponent<BoundsManager>().RefreshBounds();
+        obj.transform.localRotation = Quaternion.identity;
+
+
+        //Placer l'objet relativement à son parent
+        obj.transform.localPosition = TryConstrainRelativePosition(objBounds.objectBoundsParent.size, parentLocalDimensions, new Vector3(parentLocalDimensions.x * relativePosition.x,
+            parentLocalDimensions.y * relativePosition.y,
+            parentLocalDimensions.z * relativePosition.z));
+
+        //Décaler l'objet
+        offset.Scale(Algos.GetVectorSign(obj.transform.localPosition));
+        obj.transform.localPosition += offset;
+
+        ////Prendre les dimensions sans la rotation pour que les enfants qui dépendent de cet objet soient bien positionnés 
+        // obj.GetComponent<BoundsManager>().RefreshBounds();
+
+        //Tourner l'objet
+        obj.transform.localRotation = Quaternion.Euler(relativeOrientation.x, relativeOrientation.y, relativeOrientation.z);
+
+
+        //Repositionner l'objet s'il rentre en collision avec d'autres objets
+        if (repositionAtCollision)
+        {
+            Collider[] colliders = Physics.OverlapBox(obj.transform.position, objBounds.objectBoundsLocal.size * 0.5f - Vector3.one * GameConstants.OVERLAP_TOLERANCE, obj.transform.rotation);
+
+            for (int i = 0; i < colliders.Length; ++i)
+            {
+                if (Algos.IsColliderOverlaping(Algos.GetColliderOverlap((obj.transform.position, objBounds.objectBoundsWorld.size), colliders[i])))
+                {
+
+                    BoundsManager colliderParentBoundsManager = colliders[i].gameObject.GetComponent<BoundsManager>();
+                    if (colliderParentBoundsManager == null)
+                        colliderParentBoundsManager = colliders[i].gameObject.GetComponentInParent<BoundsManager>();
+
+
+
+                    if (colliderParentBoundsManager != null)
+                    {
+                        GameObject parentProcedural = colliderParentBoundsManager.gameObject;
+                        if (parentProcedural != obj && parentProcedural != obj.transform.parent.gameObject)
+                        {
+                            
+                            Debug.Log("Collider: " + obj.name + " With: " + colliderParentBoundsManager.gameObject.name + "OBJ Size: " +  "Overlap = " + Algos.GetColliderOverlap(obj, colliders[i]));
+                            invalidLocation = true;
+                            break;
+                        }
+                    }
+
+                }
+            }
+
+        }
+
+        return invalidLocation;
+    }
+    
+    GameObject BuildBox(Transform parent,Vector3 position, Vector3 size, Quaternion rotation) {
+        GameObject box = GameObject.CreatePrimitive(PrimitiveType.Cube); // Create a new cube game object
+        //box.transform.parent = parent;
+        box.transform.position = position + Vector3.forward*8; // Set the position of the box
+        box.transform.localScale = size; // Set the size of the box
+        box.transform.rotation = rotation; // Set the rotation of the box
+        
+        Destroy(box.GetComponent<BoxCollider>());
+        //box.transform.parent = null;
+        return box;
     }
 
     //TryConstrainRelativePosition retourne une position relative qui ne dépasse pas les limites XYZ de son parent si
     // xyz «IsConstrained» = true 
-    private Vector3 TryConstrainRelativePosition(Vector3 objDimensions, Vector3 parentDimensions, Vector3 relativePosition) =>
-            TryConstrainRelativePosition(objDimensions, parentDimensions, relativePosition, XIsConstrained, YIsConstrained, ZIsConstrained);
+    private Vector3 TryConstrainRelativePosition(Vector3 objWorldDimensions, Vector3 parentWorldDimensions, Vector3 relativePosition) =>
+            TryConstrainRelativePosition(objWorldDimensions, parentWorldDimensions, relativePosition, XIsConstrained, YIsConstrained, ZIsConstrained);
 
     private static Vector3 TryConstrainRelativePosition(Vector3 objDimensions, Vector3 parentDimensions, Vector3 relativePosition, bool xIsConstrained, bool yIsConstrained, bool zIsConstrained)
     {
         Vector3 cornerPosition = objDimensions / 2 + Algos.GetVectorAbs(relativePosition);
         Vector3 relativePositionSign = Algos.GetVectorSign(relativePosition);
 
-        if (cornerPosition.x > parentDimensions.x/2 && xIsConstrained)
-            relativePosition.x = relativePositionSign.x * ((parentDimensions.x - objDimensions.x)/2) ;
+        if (cornerPosition.x > parentDimensions.x / 2 + GameConstants.OVERLAP_TOLERANCE && xIsConstrained)
+            relativePosition.x = relativePositionSign.x * ((parentDimensions.x - objDimensions.x) / 2 + GameConstants.ACCEPTABLE_ZERO_VALUE);
 
-        if (cornerPosition.y > parentDimensions.y/2 && yIsConstrained)
-            relativePosition.y = relativePositionSign.y * (parentDimensions.y - objDimensions.y) / 2;
+        if (cornerPosition.y > parentDimensions.y / 2 + GameConstants.OVERLAP_TOLERANCE && yIsConstrained)
+            relativePosition.y = relativePositionSign.y * ((parentDimensions.y - objDimensions.y) / 2 + GameConstants.ACCEPTABLE_ZERO_VALUE);
 
-        if (cornerPosition.z > parentDimensions.z/2 && zIsConstrained)
-            relativePosition.z = relativePositionSign.z * (parentDimensions.z - objDimensions.z) / 2;
-        
+        if (cornerPosition.z > parentDimensions.z / 2 + GameConstants.OVERLAP_TOLERANCE && zIsConstrained)
+            relativePosition.z = relativePositionSign.z * ((parentDimensions.z - objDimensions.z) / 2 + GameConstants.ACCEPTABLE_ZERO_VALUE);
+
         return relativePosition;
     }
 }

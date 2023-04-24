@@ -7,7 +7,7 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
-
+using Assets;
 
 public class GunController : MonoBehaviour
 {
@@ -34,6 +34,8 @@ public class GunController : MonoBehaviour
     [Header("crosshair")] 
     [SerializeField] private Image crosshair;
     [SerializeField] private RawImage aimedcrosshair;
+    
+    [SerializeField] AudioSource gunShoot;
 
 
     private int ammo;
@@ -119,6 +121,7 @@ public class GunController : MonoBehaviour
         if (ammo > 0)
         {
             Instantiate(bullet, boucheDeCanon.position, boucheDeCanon.rotation);
+            gunShoot.Play();
             ammo -= 1;
         }
 
@@ -150,9 +153,9 @@ public class GunController : MonoBehaviour
         RaycastHit hit;
         Ray ray = Camera.main.ScreenPointToRay(new Vector3(Screen.width / 2f, Screen.height / 2f));
         if (Physics.Raycast(ray, out hit))
-        { 
+        {
             gun.LookAt(hit.point);
-           boucheDeCanon.LookAt(hit.point);
+            boucheDeCanon.LookAt(hit.point);
         }
         else
         {

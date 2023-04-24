@@ -5,6 +5,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 using System;
+using Pixelplacement.TweenSystem;
 using Random = UnityEngine.Random;
 namespace Assets
 {
@@ -32,6 +33,16 @@ namespace Assets
         public static Vector2 GetVectorAbs(Vector2 src)
         {
             return new Vector2(Mathf.Abs(src.x), Mathf.Abs(src.y));
+        }
+
+        public static Vector3 GetVectorMod(this Vector3 src, float mod)
+        {
+            return new Vector3(src.x % mod, src.y % mod, src.z % mod);
+        }
+
+        public static Vector2 GetVectorMod(this Vector2 src,float mod)
+        {
+            return new Vector2(src.x % mod, src.y % mod);
         }
 
         public static Vector3 Vector2dTo3dVector(Vector2 vector2)
@@ -138,15 +149,26 @@ namespace Assets
             for(int i =0; i < objTransform.childCount; ++i)
                 objTransform.GetChild(i).position += centerOffset;
             objTransform.position = newPivotPosition;
+            
         }
 
 
         //GetColliderOverlap donne un vecteur (en valeur absolue) qui représente le chevauchement entre un objet et
         //un collider
+
+
         public static Vector3 GetColliderOverlap(GameObject obj, Collider collider)
         {
             Vector3 distance = Algos.GetVectorAbs(obj.transform.position - collider.transform.position);
             Vector3 sizeObj = Algos.GetRendererBounds(obj).size;
+            Vector3 sizeCollider = collider.bounds.size;
+            return -new Vector3(distance.x - (sizeObj.x + sizeCollider.x) / 2,
+                distance.y - (sizeObj.y + sizeCollider.y) / 2, distance.z - (sizeObj.z + sizeCollider.z) / 2);
+        }
+        public static Vector3 GetColliderOverlap((Vector3 position, Vector3 size) obj, Collider collider)
+        {
+            Vector3 distance = Algos.GetVectorAbs(obj.position - collider.transform.position);
+            Vector3 sizeObj = obj.size;
             Vector3 sizeCollider = collider.bounds.size;
             return -new Vector3(distance.x - (sizeObj.x + sizeCollider.x) / 2,
                 distance.y - (sizeObj.y + sizeCollider.y) / 2, distance.z - (sizeObj.z + sizeCollider.z) / 2);

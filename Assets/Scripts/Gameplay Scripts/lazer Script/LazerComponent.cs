@@ -8,7 +8,7 @@ using UnityEngine.UI;
 using Assets;
 using Unity.VisualScripting;
 using UnityEngine.PlayerLoop;
-
+using Random = UnityEngine.Random;
 [RequireComponent(typeof(Rigidbody))]
 public class LazerComponent : MonoBehaviour
 {
@@ -16,7 +16,8 @@ public class LazerComponent : MonoBehaviour
     private int damage=75;
     
     private ZombieBehaviour zombie;
-    
+    private TrailRenderer trail;
+
     private const float n1 = 1f;
    private float n2;
    
@@ -27,9 +28,12 @@ public class LazerComponent : MonoBehaviour
    
    private float time;
    
+   
    private const float speed = 500f;
    
    [SerializeField] private int[] layers;
+   int bounce = 0;
+   private int framecount = 0;
    
 
 
@@ -40,32 +44,50 @@ public class LazerComponent : MonoBehaviour
        rig = GetComponent<Rigidbody>();
        rig.AddRelativeForce(Vector3.forward);
        rig.velocity = transform.forward*speed;
+       trail = GetComponentInChildren<TrailRenderer>();
+    }
 
-   }
 
-   private void Update()
+    private void Update()
    {
        
        time += Time.deltaTime;
-       if(time>10f || damage<1)
-           Destroy(gameObject);
-       
+      
+       if(time>10f || damage < 1)
+        {
+            DestroyLazer();
+        }
+        framecount++; 
+      // if(framecount>1) 
+          // GetComponentInChildren<SphereCollider>().enabled = true;
+                       
+
    }
 
    private void LateUpdate()
    {
        lastVel = rig.velocity;
-   }
+    }
+      
 
 
    private void OnCollisionEnter(Collision collision)
    {
+       
        for (int i = 0; i < layers.Length; i++)
        {
          if (collision.contacts[0].otherCollider.gameObject.layer == layers[i])
-         { 
+         {
              Bounce(collision);
-             AdjustDammageToShlick(collision);
+
+            float shlickPercentage = AdjustDammageToShlick(collision);
+             Debug.Log(++bounce);
+             framecount = 0;
+             if (trail != null)
+             {
+                trail.AddPosition(transform.position);
+                trail.startColor = new Color(trail.startColor.r, trail.startColor.g, trail.startColor.b, trail.startColor.a * shlickPercentage);
+             }
              break;
 
 
@@ -91,24 +113,28 @@ public class LazerComponent : MonoBehaviour
 
    }
 
-   void AdjustDammageToShlick(Collision collision)
+   float AdjustDammageToShlick(Collision collision)
    {
-       var smoothness=collision.contacts[0].otherCollider.GetComponent<MeshRenderer>().materials[0].GetFloat("_Glossiness");
+       float shlickPercentage;
+       var smoothness=collision.contacts[0].otherCollider.GetComponentInChildren<MeshRenderer>().materials[0].GetFloat("_Glossiness");
        if (smoothness <= GameConstants.ACCEPTABLE_ZERO_VALUE)
        { damage = 0;
-           return; }
+           return 0; }
        n2 = 1 + smoothness;
         angelInDeg = MathF.Abs(90-Vector3.Angle(rig.velocity, collision.contacts[0].normal));
-       floatDamage *= Schlick(n1, n2, angelInDeg); 
+        Debug.Log(angelInDeg);
+        shlickPercentage = Schlick(n1, n2, angelInDeg);
+       floatDamage *= shlickPercentage; 
        damage = (int)floatDamage;
-       Debug.Log((damage));
+       return shlickPercentage;
+
    }
 
    void DoDamageToZombie(Collision collision)
    {
-       zombie= collision.contacts[0].otherCollider.GetComponent<ZombieBehaviour>();
+       zombie= collision.contacts[0].otherCollider.GetComponentInParent<ZombieBehaviour>();
        zombie.TakeDamage(damage);
-       Destroy(gameObject);
+       DestroyLazer();
    }
    public static float Schlick(float n1, float n2, float angle)
    {
@@ -117,7 +143,20 @@ public class LazerComponent : MonoBehaviour
            float x = 1 - cosTheta;
            float val = r0 + (1 - r0) * Mathf.Pow(x,5);
            return Mathf.Clamp(val*2,0,1) ;
-           // on retourne la valuer x2 puisuqe selon shlick, le dommage aurait été minime et 
+           // on retourne la valeur x2 puisque selon shlick, le dommage aurait été minime et 
            // défie le principe de notre jeu 
-       }
+   }
+    void DestroyLazer()
+    {
+        //if (trail != null)
+        //{
+        //  // trail.transform.parent = null;
+        //    trail.autodestruct = true;
+        //}
+        ////Destroy(trail.gameObject, trail.time);
+        gameObject.layer = GameConstants.INVISIBLE_LAYER;
+        rig.velocity = Vector3.zero ;
+        GetComponentInChildren<Renderer>().enabled = false;
+        Destroy(gameObject,trail.time);
+    }
 }

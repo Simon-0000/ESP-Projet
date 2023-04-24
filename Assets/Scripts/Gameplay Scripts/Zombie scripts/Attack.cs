@@ -16,6 +16,8 @@ public class Attack : ActionNode
     }
 
     protected override State OnUpdate() {
+        context.animator.SetBool("attack",true);
+        
         host.Attack();
         return State.Success;
     }

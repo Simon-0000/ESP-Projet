@@ -23,11 +23,14 @@ MonoBehaviour:
   - rid: 710362776824971269
   - rid: 710362776824971270
   - rid: 710362776824971271
+  - rid: 6658596522572382208
+  - rid: 6658596522572382209
+  - rid: 4710396172188778496
   treeState: 0
   blackboard:
     moveToPosition: {x: 0, y: 0, z: 0}
-  viewPosition: {x: 408, y: 247.2, z: 0}
-  viewScale: {x: 0.7561437, y: 0.7561437, z: 1}
+  viewPosition: {x: 696, y: 296, z: 0}
+  viewScale: {x: 1, y: 1, z: 1}
   references:
     version: 2
     RefIds:
@@ -50,7 +53,7 @@ MonoBehaviour:
         state: 0
         started: 0
         guid: 3545ba78c949a7f4eb01832bab26fb3c
-        position: {x: -504.40057, y: 62.39999}
+        position: {x: -392.00012, y: 188.66666}
         blackboard:
           moveToPosition: {x: 0, y: 0, z: 0}
         description: "\xE9tat de patrouille"
@@ -61,13 +64,13 @@ MonoBehaviour:
         state: 0
         started: 0
         guid: 7c38adf0739918c4a9a58450be1f43da
-        position: {x: -119.333374, y: -85}
+        position: {x: -119.33335, y: -78.05417}
         blackboard:
           moveToPosition: {x: 0, y: 0, z: 0}
         description: sequencer pour le comportement
         drawGizmos: 0
         children:
-        - rid: 710362776824971265
+        - rid: 6658596522572382208
         - rid: 710362776824971267
     - rid: 710362776824971267
       type: {class: Repeat, ns: TheKiwiCoder, asm: Assembly-CSharp}
@@ -102,7 +105,7 @@ MonoBehaviour:
         state: 0
         started: 0
         guid: 5135b5b2867ef0a40bceb468673455c5
-        position: {x: -30.666687, y: 359.66672}
+        position: {x: -29.344183, y: 359.99997}
         blackboard:
           moveToPosition: {x: 0, y: 0, z: 0}
         description: "\xE9tat de attack"
@@ -134,3 +137,41 @@ MonoBehaviour:
         description: "temps de repos apr\xE8s avoir frapp\xE9 le joueur"
         drawGizmos: 0
         duration: 2
+    - rid: 4710396172188778496
+      type: {class: Wait, ns: TheKiwiCoder, asm: Assembly-CSharp}
+      data:
+        state: 0
+        started: 0
+        guid: afaa1199c79910140807c25dd801c986
+        position: {x: -513.8, y: 274.2}
+        blackboard:
+          moveToPosition: {x: 0, y: 0, z: 0}
+        description: 
+        drawGizmos: 0
+        duration: 0.2
+    - rid: 6658596522572382208
+      type: {class: Sequencer, ns: TheKiwiCoder, asm: Assembly-CSharp}
+      data:
+        state: 0
+        started: 0
+        guid: 97900b668a47d8144ae25850519fd1dc
+        position: {x: -498.00595, y: 63.33334}
+        blackboard:
+          moveToPosition: {x: 0, y: 0, z: 0}
+        description: 
+        drawGizmos: 0
+        children:
+        - rid: 6658596522572382209
+        - rid: 4710396172188778496
+        - rid: 710362776824971265
+    - rid: 6658596522572382209
+      type: {class: EnterMap, ns: , asm: Assembly-CSharp}
+      data:
+        state: 0
+        started: 0
+        guid: 5ef3693e804bbe04ebbe04dd7091205a
+        position: {x: -624.006, y: 188.66666}
+        blackboard:
+          moveToPosition: {x: 0, y: 0, z: 0}
+        description: "\xE9tat pour rentrer dans la carte de jeu"
+        drawGizmos: 0

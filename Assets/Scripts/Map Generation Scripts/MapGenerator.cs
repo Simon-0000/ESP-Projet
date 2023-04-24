@@ -4,8 +4,8 @@
 using UnityEngine;
 using System.Collections.Generic;
 using System.Collections;
-
-
+using UnityEngine.Events;
+using UnityEngine.AI;
 namespace Assets
 {
     public class MapGenerator : MonoBehaviour
@@ -16,14 +16,17 @@ namespace Assets
         float wallSizeMin, wallSizeMax;
         [SerializeField]
         ProceduralRoom[] roomObjects;
-
+        
         [SerializeField]
         GameObject doorObject;
 
         [SerializeField]
         GameObject windowObject;
 
-        bool mapHasRefreshed = true;
+        [SerializeField]
+        private UnityEvent mapIsLoaded;
+
+        bool isLoaded = true;
         void Awake()
         {
             Debug.Assert(roomObjects.Length != 0);
@@ -33,12 +36,11 @@ namespace Assets
             Debug.Assert(wallSizeMax + GameConstants.ACCEPTABLE_ZERO_VALUE >= wallSizeMin * 2);
             RefreshMap();
         }
-
         public void RefreshMap()
         {
-            if (mapHasRefreshed == false)
+            if (!isLoaded)
                 return;
-
+            isLoaded = false;
             //On détruit la carte précédente
             for (int i = 0; i < transform.childCount; ++i)
                 Destroy(transform.GetChild(i).gameObject);
@@ -47,11 +49,9 @@ namespace Assets
         }
         IEnumerator CreateMap()
         {
-            mapHasRefreshed = false;
-
-            yield return new WaitForSeconds(0.25f);
+            yield return 0;
             //On instancie le RoomsGenerator
-            RoomsGenerator bspPièces = new RoomsGenerator(new RectangleInfo2d(new Vector2(longueurMap, largeurMap), transform.position), wallSizeMin, wallSizeMax, doorObject);
+            RoomsGenerator bspPièces = new RoomsGenerator(new Vector2(longueurMap, largeurMap), wallSizeMin, wallSizeMax, doorObject);
 
             //On génère les pièces
             List<Noeud<RectangleInfo2d>> noeudsPièces = bspPièces.GenerateRooms();
@@ -60,13 +60,15 @@ namespace Assets
             //On instancie les pièces
             bspPièces.InstantiateRooms(noeudsPièces, transform, roomObjects, doorObject, windowObject);
 
-            //On roule l'algorithme A* (pas implémenté)
 
-            //On crée le NavMesh (pas implémenté)
-
-
-            mapHasRefreshed = true;
-
+            yield return 0;//Attendre 1 frame avant de finaliser la map
+            mapIsLoaded.Invoke();
+            isLoaded = true;
+        }
+        public void UpdateNavMesh()
+        {
+            NavMeshSurface nm = GameObject.FindObjectOfType<NavMeshSurface>();
+            nm.UpdateNavMesh(nm.navMeshData);
         }
     }
 }

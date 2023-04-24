@@ -65,13 +65,25 @@ public class ProceduralHierarchy : Procedural
 
         if (!TryConnectToNewParentHierarchy(rootParent))
             return null;
+        GameObject hierarchyObj = new GameObject(gameObject.name);
+        hierarchyObj.transform.parent = rootParent;
+        hierarchyObj.transform.localPosition = Vector3.zero;
+        hierarchyObj.transform.localRotation = Quaternion.identity;
+        if (rootParent.GetComponent<BoundsManager>() != null)
+        {
+            hierarchyObj.TryAddComponent<BoundsManager>();
+            hierarchyObj.GetComponent<BoundsManager>().centerMesh = false;
+            hierarchyObj.GetComponent<BoundsManager>().objectBoundsParent = rootParent.GetComponent<BoundsManager>().objectBoundsParent;
+            hierarchyObj.GetComponent<BoundsManager>().objectBoundsLocal = rootParent.GetComponent<BoundsManager>().objectBoundsLocal;
+            hierarchyObj.GetComponent<BoundsManager>().objectBoundsWorld = rootParent.GetComponent<BoundsManager>().objectBoundsWorld;
 
+        }
         //Le volume max de cette hiérarchie correspond au volume du parent, lorsque la génération de la hiérarchie sera terminée,
         //on met à jour la valeur de volume du parent
         hierarchyVolume = parentHierarchy.hierarchyVolume;
-        InstantiateHierarchy(rootParent);
+        InstantiateHierarchy(hierarchyObj.transform);
         parentHierarchy.hierarchyVolume = hierarchyVolume;
-        return null;
+        return hierarchyObj.gameObject;
     }
     private void InstantiateHierarchy(Transform rootParent)
     {
@@ -94,15 +106,18 @@ public class ProceduralHierarchy : Procedural
     {
         Noeud<ProceduralHierarchyNodeValue> proceduralObj;
         float objSize;
+         
         while (proceduralsStack.Count > 0)// Pour chaque noeuds qui peut être instancié
         {
             proceduralObj = proceduralsStack.Peek();
+
             while (proceduralObj.valeur.proceduralComponentCount > 0 && hierarchyVolume > 0)//Pour chaque instance du même "Procedural" d'un noeud
             {
                 --proceduralObj.valeur.proceduralComponentCount;
 
                 if (proceduralObj.valeur.likelyhood > 0 && Random.Range(0, 100) < proceduralObj.valeur.likelyhood)//Condition qui est vraie si on pige le "Procedural" d'un noeud 
                 {
+
                     proceduralObj.valeur.InstantiatedObj = proceduralObj.valeur.proceduralComponent.InstanciateProcedural(proceduralObj.Parent.valeur.InstantiatedObj.transform);
                     if (proceduralObj.valeur.InstantiatedObj != null)//condition qui est vraie si on a pu instancier le Procedural
                     {
@@ -113,13 +128,16 @@ public class ProceduralHierarchy : Procedural
                             proceduralObj.noeudsEnfants[i].valeur.proceduralComponentCount = proceduralObj.noeudsEnfants[i].valeur.proceduralComponentAmount;
                         }
                         //On diminue le volume et on Peek au cas où il existe un noeud enfant qui se trouve en haut du stack
-                        hierarchyVolume -= Algos.GetVector3Volume(proceduralObj.valeur.InstantiatedObj.GetComponent<BoundsManager>().objectBounds.size);
+                        if(proceduralObj.valeur.InstantiatedObj.GetComponent<BoundsManager>() != null)
+                            hierarchyVolume -= Algos.GetVector3Volume(proceduralObj.valeur.InstantiatedObj.GetComponent<BoundsManager>().objectBoundsParent.size);
                         proceduralObj = proceduralsStack.Peek();
                     }
                 }
             }
             parentHierarchy.hierarchyVolume = hierarchyVolume;
+
             proceduralsStack.Pop();
         }
     }
+
 }

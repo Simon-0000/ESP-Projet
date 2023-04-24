@@ -52,6 +52,21 @@ namespace Assets
             return unconnectedNodes;
         }
 
+        static public void ForEachHierarchieChildren(Noeud<T>node, List<Noeud<T>> visitedNodes,Action<Noeud<T>> nodeFunction)
+        {
+            if(visitedNodes == null)
+              visitedNodes = new();
+            visitedNodes.Add(node);
+            nodeFunction(node);
+
+            for (int i = 0; i < node.noeudsEnfants.Count; ++i)
+            {
+                if(!visitedNodes.Exists(n=>n==node.noeudsEnfants[i]))
+                {
+                    ForEachHierarchieChildren(node.noeudsEnfants[i],visitedNodes,nodeFunction);
+                }
+            }
+        }
         static public List<Noeud<T>> GetParents(Noeud<T> node) =>
             GetParents(node, GameConstants.MAX_ITERATIONS);
         static public List<Noeud<T>> GetParents(Noeud<T> node, int iterationAttempts)

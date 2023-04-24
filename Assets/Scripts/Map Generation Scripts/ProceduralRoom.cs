@@ -31,20 +31,20 @@ namespace Assets
 
 
             //Instancier la pièce
-            GameObject roomObj = new GameObject(ROOM_NAME);
+            GameObject roomObj = new GameObject(ROOM_NAME + Random.Range(0,10000));
             roomObj.transform.parent = parentTransform;
-            roomObj.transform.position = Algos.Vector2dTo3dVector(roomNode.valeur.coordinates);
+            roomObj.transform.localPosition = Algos.Vector2dTo3dVector(roomNode.valeur.coordinates);
+            roomObj.transform.localRotation = Quaternion.identity;
+
             BoundsManager defaultBounds = GetComponent<BoundsManager>();
             if (defaultBounds != null)
                 Algos.CopyComponent(defaultBounds, roomObj);
             else
                 roomObj.TryAddComponent<BoundsManager>();
 
-            roomObj.GetComponent<BoundsManager>().objectBounds.center = roomObj.transform.position;
-
             //On transforme la grandeur 2d du «RectangleInfo2d» de «roomNode» en une grandeur 3d
             Vector3 roomDimensions = Algos.Vector2dTo3dVector(roomNode.valeur.size, GameConstants.ROOM_HEIGHT);
-            roomObj.GetComponent<BoundsManager>().objectBounds.size = roomDimensions;
+
 
             //Instancier les murs:
             int wallVariation = Random.Range(0, wallObject.GetComponent<ProceduralObject>().objectVariations.Length);
@@ -53,12 +53,13 @@ namespace Assets
 
             //Instancier le sol:
             int floorVariation = Random.Range(0, floorObject.GetComponent<ProceduralObject>().objectVariations.Length);
-            floorObject.InstantiateProceduralTiledObject(roomObj.transform, roomDimensions, floorVariation);
+            floorObject.InstantiateProceduralTiledObject(roomObj.transform, roomDimensions, floorVariation,0);
 
             //Instancier le plafond (pas implémenté pour les tests)
 
             //Garder la grandeur de la pièce en mémoire
-            roomObj.GetComponent<BoundsManager>().Awake();
+            roomObj.GetComponent<BoundsManager>().RefreshBounds();
+            roomObj.GetComponent<BoundsManager>().objectBoundsLocal.size = roomObj.GetComponent<BoundsManager>().objectBoundsWorld.size;
 
             //Instancier les objets de la pièce
             InstantiateHierarchies(roomObj.transform,Algos.GetVector3Volume(roomDimensions) * roomFillPercentage);

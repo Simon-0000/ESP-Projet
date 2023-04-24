@@ -34,18 +34,7 @@ public class PlayerLook : MonoBehaviour
         }
     }
 
-    public void XSetSensitivity (float x)
-    { 
-        xSensitivity = x;
-       
-
-    }
-    public void YSetSensitivity (float y)
-    {
-        ySensitivity = y;
-       
-
-    }
+    
    
 
     public void ProcessLook(Vector2 input)

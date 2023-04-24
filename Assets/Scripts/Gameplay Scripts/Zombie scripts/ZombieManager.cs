@@ -11,19 +11,20 @@ public class ZombieManager : MonoBehaviour
     [SerializeField] private int nbWantedZombies = 50;
     private int nbActiveZombies;
     private List<GameObject> ActiveZombies;
+    public List<GameObject> AttackingZombies;
     [SerializeField] private GameObject zombie;
-    [SerializeField] private Vector3 spawnPoint;
+    [SerializeField] private SpawnLocation[] spawnPoints;
     [SerializeField] public GameObject player;
     private float ellapsedTime = 0;
     private GameObject CreateNewZombie()
     {
-        return Instantiate(zombie, spawnPoint,new Quaternion(0,0,0,0));
+        return Instantiate(zombie, spawnPoints[Random.Range(0,spawnPoints.Length)].spawnLocation,new Quaternion(0,0,0,0));
     }
 
     void Awake()
     {
         ActiveZombies = new List<GameObject>(nbWantedZombies);
-        spawnPoint = transform.position;
+        spawnPoints = FindObjectsOfType<SpawnLocation>();
     }
 
     // Update is called once per frame
@@ -33,6 +34,12 @@ public class ZombieManager : MonoBehaviour
         {
             if (!ActiveZombies[i].GetComponent<ZombieBehaviour>().isActive)
                 ActiveZombies.Remove(ActiveZombies[i]);
+        }
+
+        for(int i = 0; i < ActiveZombies.Count; ++i)
+        {
+            if (ActiveZombies[i].GetComponent<ZombieBehaviour>().isChasingTarget)
+                AttackingZombies.Add(ActiveZombies[i]);
         }
 
         ellapsedTime += Time.deltaTime;
