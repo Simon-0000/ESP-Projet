@@ -64,7 +64,7 @@ public class ProceduralTiledCubeObject : ProceduralObject
         TileUvs(tuileObject, tileSize);
         StretchVertices(tuileObject, tileSize);
         TrySetRandomRelativePlacement(ref tuileObject, parentDimensions, new int[] { placementIndex });
-        if (wrapsAround == true)
+        if (wrapsAround == true && tuileObject != null)
             WrapMesh(tuileObject, tileSize);
 
         return tuileObject;
@@ -76,7 +76,7 @@ public class ProceduralTiledCubeObject : ProceduralObject
         TileUvs(obj, tileSize);
         StretchVertices(obj, tileSize);
         TrySetRandomRelativePlacement(ref obj, parentDimensions, new int[1]{ placementIndex});
-        if (wrapsAround == true)
+        if (wrapsAround == true && obj != null)
             WrapMesh(obj, tileSize);
 
         return obj;

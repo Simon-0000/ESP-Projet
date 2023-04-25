@@ -169,7 +169,7 @@ public class ZombieBehaviour : MonoBehaviour
         agent.isStopped=true;
         if (isLeader)
             ManageLeaderDeath();
-        FindObjectOfType<ZombieManager>().AttackingZombies.Remove(  gameObject);
+        FindObjectOfType<ZombieManager>().RemoveAttackingZombie(gameObject);
         gameObject.layer = GameConstants.INVISIBLE_LAYER;
         for (int i = 0; i < GetComponentsInChildren<BoxCollider>().Length; i++)
             GetComponentsInChildren<BoxCollider>()[i].enabled = false;

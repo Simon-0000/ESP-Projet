@@ -87,12 +87,12 @@ public class ProceduralObject : Procedural
         {
             Physics.autoSimulation = false;
             Physics.Simulate(Time.deltaTime);
+
         }
 
         obj.TryAddComponent<BoundsManager>().Awake();
         do
         {
-
             int placementIndex = placementIndexes[Random.Range(0, placementIndexes.Length)];
             invalidLocation = TrySetRandomRelativePlacement(ref obj, parentLocalDimensions, (positions[placementIndex], orientations[placementIndex], offsets[placementIndex]));
             ++iterationAttemps;                
@@ -109,8 +109,12 @@ public class ProceduralObject : Procedural
         }
         else
         {
+            Physics.autoSimulation = false;
+            Physics.Simulate(Time.deltaTime);
             //Prendre les dimensions sans la rotation pour que les enfants qui dépendent de cet objet soient bien positionnés 
             obj.GetComponent<BoundsManager>().RefreshBounds();
+            Physics.autoSimulation = true;
+
         }
     }
 
@@ -153,7 +157,7 @@ public class ProceduralObject : Procedural
         if (repositionAtCollision)
         {
             Collider[] colliders = Physics.OverlapBox(obj.transform.position, objBounds.objectBoundsLocal.size * 0.5f - Vector3.one * GameConstants.OVERLAP_TOLERANCE, obj.transform.rotation);
-
+            //BuildBox(obj.transform,obj.transform.position, objBounds.objectBoundsLocal.size, obj.transform.rotation);
             for (int i = 0; i < colliders.Length; ++i)
             {
                 if (Algos.IsColliderOverlaping(Algos.GetColliderOverlap((obj.transform.position, objBounds.objectBoundsWorld.size), colliders[i])))
@@ -186,8 +190,9 @@ public class ProceduralObject : Procedural
     }
     
     GameObject BuildBox(Transform parent,Vector3 position, Vector3 size, Quaternion rotation) {
+        
         GameObject box = GameObject.CreatePrimitive(PrimitiveType.Cube); // Create a new cube game object
-        //box.transform.parent = parent;
+        box.transform.parent = parent;
         box.transform.position = position + Vector3.forward*8; // Set the position of the box
         box.transform.localScale = size; // Set the size of the box
         box.transform.rotation = rotation; // Set the rotation of the box

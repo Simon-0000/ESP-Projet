@@ -59,7 +59,6 @@ namespace Assets
 
             //Garder la grandeur de la pièce en mémoire
             roomObj.GetComponent<BoundsManager>().RefreshBounds();
-            roomObj.GetComponent<BoundsManager>().objectBoundsLocal.size = roomObj.GetComponent<BoundsManager>().objectBoundsWorld.size;
 
             //Instancier les objets de la pièce
             InstantiateHierarchies(roomObj.transform,Algos.GetVector3Volume(roomDimensions) * roomFillPercentage);

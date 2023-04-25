@@ -453,8 +453,6 @@ namespace Assets
                                 //cube.transform.position = room.transform.TransformPoint(position3d);
                                 //cube.transform.localScale = new Vector3(nodeSize.x, ASTAR_NODE_HEIGHT, nodeSize.y);
                                 //cube.GetComponent<Renderer>().material.color = Color.blue;
-                                Debug.Log("NAMEEE");
-
                                 GameObject.Destroy(possibleObjectsToDelete[k]);
                                 //GameObject cube2 = GameObject.CreatePrimitive(PrimitiveType.Cube);
                                 //cube2.transform.position = possibleObjectsToDelete[k].transform.position;
