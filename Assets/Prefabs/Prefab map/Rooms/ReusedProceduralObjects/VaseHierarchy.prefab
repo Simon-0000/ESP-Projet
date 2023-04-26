@@ -1695,8 +1695,8 @@ MonoBehaviour:
   - startAt: {x: 0, y: 0, z: 0}
     endAt: {x: 0, y: 360, z: 0}
   offsets:
-  - startAt: {x: 0, y: 0.5, z: 0}
-    endAt: {x: 0, y: 0.5, z: 0}
+  - startAt: {x: 0, y: 0.48, z: 0}
+    endAt: {x: 0, y: 0.48, z: 0}
   repositionAtCollision: 1
   XIsConstrained: 1
   YIsConstrained: 0
