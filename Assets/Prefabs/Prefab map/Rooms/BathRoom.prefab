@@ -303,7 +303,7 @@ GameObject:
   - component: {fileID: 5704889422984916381}
   - component: {fileID: 4227371178806752473}
   - component: {fileID: 1661771963899023730}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Cylinder
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -667,7 +667,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5715671667784864463}
   - component: {fileID: 4886130676349731682}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: ShowerHeadModel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1628,7 +1628,7 @@ GameObject:
   - component: {fileID: 6409747058804364646}
   - component: {fileID: 1108078770498309665}
   - component: {fileID: 2123191711831108081}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Sphere
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2025,7 +2025,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2676452451131645387}
   - component: {fileID: 1515372420068261137}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: ShowerHeadObject
   m_TagString: Untagged
   m_Icon: {fileID: 0}

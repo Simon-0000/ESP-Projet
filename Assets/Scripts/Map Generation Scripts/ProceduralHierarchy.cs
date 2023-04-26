@@ -75,7 +75,6 @@ public class ProceduralHierarchy : Procedural
             hierarchyObj.GetComponent<BoundsManager>().centerMesh = false;
             hierarchyObj.GetComponent<BoundsManager>().objectBoundsParent = rootParent.GetComponent<BoundsManager>().objectBoundsParent;
             hierarchyObj.GetComponent<BoundsManager>().objectBoundsLocal = rootParent.GetComponent<BoundsManager>().objectBoundsLocal;
-            hierarchyObj.GetComponent<BoundsManager>().objectBoundsWorld = rootParent.GetComponent<BoundsManager>().objectBoundsWorld;
 
         }
         //Le volume max de cette hiérarchie correspond au volume du parent, lorsque la génération de la hiérarchie sera terminée,

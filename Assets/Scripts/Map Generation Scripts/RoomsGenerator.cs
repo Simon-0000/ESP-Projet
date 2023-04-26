@@ -109,6 +109,9 @@ namespace Assets
                 }
             }
         }
+
+        //GetEmptyWindowRooms permet de connecter quelques pièces de la carte à une pièce fantôme (s'il c'est adéquat) puisque cette connexion représente
+        //l'endroit où une fenêtre pourrait être placée
         List<Noeud<RectangleInfo2d>> GetEmptyWindowRooms(List<Noeud<RectangleInfo2d>> roomConnections)
         {
             List<Noeud<RectangleInfo2d>> fullRoomConnections = Noeud<RectangleInfo2d>.GetUnconnectedNodesCopy(roomConnections);
@@ -246,11 +249,7 @@ namespace Assets
                 {
                     ProceduralRoom childProceduralRoomType = nodeToRoomTypeDictionary.GetValueOrDefault(roomsNodes[i].noeudsEnfants[j], null);
                     if (childProceduralRoomType != null)
-                    {
                         availableRooms.Remove(childProceduralRoomType);
-                        Debug.Log("Removed");
-
-                    }
                 }
 
                 ProceduralRoom proceduralRoomType;
@@ -278,25 +277,29 @@ namespace Assets
         const float ASTAR_NODE_SIZE = 1.5f;
         const float ASTAR_NODE_HEIGHT = 2;
         const float ASTAR_OBJECT_COST_PER_CUBE = 100;
-        const int ASTAR_INERMEDIATE_NODES = 4;//représente le nombre de noeuds intermédiaire qui doivent être utiliser
-                                              //entre chaque noeud principale, est utilisé pour rendre l'algorithme
-                                              //plus précis et préférable éviter de détruire des objets qui se
-                                              //trouvera à la limite d'un noeud 
+        const int ASTAR_INERMEDIATE_NODES = 4;//représente le nombre de noeuds intermédiaire qui doivent être utilisé
+                                              //entre chaque noeud principal. Permet de rendre l'algorithme
+                                              //plus précis pour éviter de détruire des objets qui se
+                                              //trouveraient légèrement dans un noeud
 
         public void UseAStarOnRoom(GameObject room, List<GameObject> objectsToConnect)
         {
-            //les lignes de codes avec Physics.autoSimulation et Physics.Simulate ont été prises par Pablo Lanza et derHugo
-            //https://stackoverflow.com/questions/69055600/bad-usage-of-physics-overlapbox
-            Physics.autoSimulation = false;
-            Physics.Simulate(Time.deltaTime);
+            Physics.SyncTransforms();
 
-            Dictionary<Noeud<AStarAlgorithm.AStarNodeValue>, GameObject[]> NodeToObjDictionary = new();
-            List<Noeud<AStarAlgorithm.AStarNodeValue>> startEndNodes = new();
-            List<GameObject> startEndObjects = new();
-            List<Noeud<AStarAlgorithm.AStarNodeValue>> nodesToDelete = new();
-            List<Noeud<AStarAlgorithm.AStarNodeValue>> nodesToDeleteOnObjects = new();
+            Dictionary<Noeud<AStarAlgorithm.AStarNodeValue>, GameObject[]> NodeToObjDictionary = new();//Dictionnaire qui permet d'associé un noeud à un tableau
+                                                                                                       //de GameObject (qui influencent le coût du noeud)
 
+            List<Noeud<AStarAlgorithm.AStarNodeValue>> startEndNodes = new();//Les noeuds de départ et d'arrivée utilisés par le A*
 
+            List<GameObject> startEndObjects = new();//Une liste des objets qui font partie de la liste objectsToConnect et de la pièce
+
+            List<Noeud<AStarAlgorithm.AStarNodeValue>> nodesToDelete = new();//La liste des noeuds trouvés par le A* dont les objets devront être détruits
+
+            List<Noeud<AStarAlgorithm.AStarNodeValue>> nodesToDeleteOnObjects = new();//La liste des noeuds qui touchent un objectsToConnect. Ils devront être
+                                                                                      //regarder afin de déterminer quelle GameObject devra être détruit pour
+                                                                                      //libérer de l'espace en avant du objectsToConnect
+
+            //On trouve les valeurs de grandeur et quantité qui fonctionnent avec la grandeur de la pièce
             Vector3 roomDimensions3d = room.GetComponent<BoundsManager>().objectBoundsLocal.size;
             Vector2 roomDimensions = new Vector2(roomDimensions3d.x, roomDimensions3d.z);
 
@@ -306,22 +309,23 @@ namespace Assets
             Vector2Int nodeAmount = Vector2Int.Scale(mainNodeAmount, Vector2Int.one * ASTAR_INERMEDIATE_NODES);
             nodeAmount.x -= ASTAR_INERMEDIATE_NODES - 1;
             nodeAmount.y -= ASTAR_INERMEDIATE_NODES - 1;
+
+            //On évalue les GameObject qui se trouvent à l'intérieur de chaque noeud
             for (int i = 0; i < nodeAmount.x; ++i)
             {
 
                 for (int j = 0; j < nodeAmount.y; ++j)
                 {
-
                     Vector2 position = roomCorner + Vector2.Scale(nodeSize, new Vector2(i * 1 / (float)ASTAR_INERMEDIATE_NODES, j * 1 / (float)ASTAR_INERMEDIATE_NODES));
-
                     Collider[] colliders = Physics.OverlapBox(room.transform.TransformPoint(new Vector3(position.x, -GameConstants.ROOM_HEIGHT / 2 + ASTAR_NODE_HEIGHT / 2, position.y)), new Vector3(nodeSize.x, ASTAR_NODE_HEIGHT, nodeSize.y) / 2 - Vector3.one * GameConstants.OVERLAP_TOLERANCE, room.transform.rotation);
-                    //Trouver tous les instances d'objets qui sont dans le noeud
+                    
+                    //Trouver toutes les instances d'objets qui sont dans le noeud
                     GameObject[] nodeObjects = colliders.Select(collider => collider.GetComponentInParent<BoundsManager>()).Where(boundManager => boundManager != null).Select(boundManager => boundManager.gameObject).Distinct().ToArray();
 
-                    //Trouver tous les instances d'obstacles parmi les objets du noeud
+                    //Trouver toutes les instances d'obstacles parmi les objets du noeud
                     GameObject[] nodeObstacles = nodeObjects.Where(obj => !objectsToConnect.Exists(o => o == obj)).ToArray();
-                    //nodeObstacles = nodeObstacles.Where(nodeObstacles.All(obj =>obj.GetComponentInParent<BoundsManager>()))
-                    //Trouver tous les instances des débuts/fins du A* parmi les objets du noeud
+
+                    //Trouver toutes les instances des débuts/fins du A* parmi les objets du noeud
                     bool isStartEndNode = false;
                     int oldconnectionCount = startEndObjects.Count;
 
@@ -330,7 +334,7 @@ namespace Assets
                         isStartEndNode = true;
                     startEndObjects = startEndObjects.Distinct().ToList();
 
-                    //Créer le noeud qui représente l'information récolté
+                    //Créer le noeud qui représente l'information récoltée
                     float cost = 0;
                     for (int k = 0; k < nodeObstacles.Length; ++k)
                     {
@@ -341,19 +345,15 @@ namespace Assets
                     }
                     Noeud<AStarAlgorithm.AStarNodeValue> gridNode = new(null, new(position, cost));
 
-                    //Connecter le noeud avec les noeuds collé à celui-ci
+                    //Connecter le noeud avec les noeuds qui sont physiquement collés à celui-ci
                     List<int> dictionaryNodesToConnect = new();
                     if (i != 0)
                     {
-                        dictionaryNodesToConnect.Add((i - 1) * (nodeAmount.y) + j);//top
-                        //if (j != 0)
-                        //    dictionaryNodesToConnect.Add((i - 1) * (nodeAmount.y) + (j - 1));//top left
-                        //if (j != nodeAmount.y - 1)
-                        //    dictionaryNodesToConnect.Add((i - 1) * (nodeAmount.y) + (j + 1));//top right
+                        dictionaryNodesToConnect.Add((i - 1) * (nodeAmount.y) + j);//index du noeud en haut
                     }
                     if (j != 0)
                     {
-                        dictionaryNodesToConnect.Add(i * (nodeAmount.y) + (j - 1));//left
+                        dictionaryNodesToConnect.Add(i * (nodeAmount.y) + (j - 1));//index du noeud à gauche
                     }
 
                     for (int n = 0; n < dictionaryNodesToConnect.Count; ++n)
@@ -361,12 +361,17 @@ namespace Assets
                         Noeud<AStarAlgorithm.AStarNodeValue>.TryFormerLienRéciproque(gridNode, NodeToObjDictionary.ElementAt(dictionaryNodesToConnect[n]).Key);
                     }
 
+                    //Associer le noeuds à ses obstacles
                     NodeToObjDictionary.Add(gridNode, nodeObstacles);
 
+                    //S'il y a lieu, ajouté le noeud qui se trouve près d'un objet de objectsToConnect pour être évalué plus tard dans le code
                     if (isStartEndNode)
                         nodesToDeleteOnObjects.Add(gridNode);
                 }
+
             }
+
+            //Choisir les noeuds de départ/arrivée (startEndNodes) qui devrait se trouver approximativement au centre de l'objet de départ/arrivée
             nodesToDeleteOnObjects = nodesToDeleteOnObjects.Distinct().ToList();
             startEndObjects = startEndObjects.Distinct().ToList();
             (float, int) closestNode;
@@ -385,52 +390,34 @@ namespace Assets
                 if (closestNode != (10000, 10000))
                     startEndNodes.Add(nodesToDeleteOnObjects[closestNode.Item2]);
             }
-            //Trouver le chemin
+
+            //Trouver les chemins A*
             for (int i = 0; i < startEndNodes.Count - 1; ++i)
             {
                 var nextObjectTodelete = AStarAlgorithm.GetPath(startEndNodes[i], startEndNodes[i + 1]);
+
+                //remettre les valeurs des noeuds à leurs valeurs par défaut
                 Noeud<AStarAlgorithm.AStarNodeValue>.ForEachHierarchieChildren(startEndNodes[i], null, n => n.Parent = null);
                 Noeud<AStarAlgorithm.AStarNodeValue>.ForEachHierarchieChildren(startEndNodes[i], null, n => n.valeur.visited = false);
 
-                //Elever le cout pour les objets qui seront détruit, afin de facilement repasser par ce noeud pour les prochains chemin
+                //Enlever le cout pour les objets qui seront détruits, afin de facilement repasser par ce noeud pour les prochains chemins A* qui seront générés 
                 nextObjectTodelete.ForEach(node => node.valeur.costOffset = 0);
-
-
-                //for (int j = 0; j < nextObjectTodelete.Count; ++j)
-                //{
-                //    GameObject cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
-                //    cube.transform.parent = room.transform;
-                //    Vector2 position2d = nextObjectTodelete[j].valeur.position;
-                //    Vector3 position3d = new Vector3(position2d.x, -ASTAR_NODE_HEIGHT / 2, position2d.y);
-                //    cube.transform.position = room.transform.TransformPoint(position3d);
-                //    cube.transform.localScale = new Vector3(nodeSize.x, ASTAR_NODE_HEIGHT, nodeSize.y);
-                //    cube.GetComponent<Renderer>().material.color = Color.black;
-                //}
-
                 nodesToDelete.AddRange(nextObjectTodelete);
             }
 
-            //Détruire les objets qui se trouve dans le chemin
+            //Détruire les objets associés aux noeuds du chemin trouvé par A*
             for (int i = 0; i < nodesToDelete.Count; ++i)
             {
                 GameObject[] objectToDelete;
                 NodeToObjDictionary.TryGetValue(nodesToDelete[i], out objectToDelete);
 
                 if (objectToDelete != null)
-                {
                     for (int j = 0; j < objectToDelete.Length; ++j)
                         if (objectToDelete[j] != null)
-                        {
                             GameObject.Destroy(objectToDelete[j]);
-                            //GameObject cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
-                            //cube.transform.parent = room.transform;
-                            //cube.transform.position = objectToDelete[j].transform.position;
-                            //cube.transform.localScale = new Vector3(nodeSize.x, ASTAR_NODE_HEIGHT, nodeSize.y);
-                            //cube.GetComponent<Renderer>().material.color = Color.red;
-                        }
-                }
             }
 
+            //Détruire les objets qui se trouvent à ASTAR_NODE_SIZE en avant de chaque objectsToConnect
             for (int i = 0; i < nodesToDeleteOnObjects.Count; ++i)
             {
                 GameObject[] possibleObjectsToDelete = NodeToObjDictionary.GetValueOrDefault(nodesToDeleteOnObjects[i], null);
@@ -445,34 +432,18 @@ namespace Assets
                             Bounds possibleObjToDeleteBounds = possibleObjectsToDelete[k].GetComponent<BoundsManager>().objectBoundsWorld;
                             if (startEndObjectBounds.Intersects(possibleObjToDeleteBounds))
                             {
-                                //Debug.Log("POSSIBLE" + possibleObjectsToDelete[k].name);
-                                //GameObject cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
-                                //cube.transform.parent = room.transform;
-                                //Vector2 position2d = nodesToDeleteOnObjects[i].valeur.position;
-                                //Vector3 position3d = new Vector3(position2d.x, -ASTAR_NODE_HEIGHT / 2, position2d.y);
-                                //cube.transform.position = room.transform.TransformPoint(position3d);
-                                //cube.transform.localScale = new Vector3(nodeSize.x, ASTAR_NODE_HEIGHT, nodeSize.y);
-                                //cube.GetComponent<Renderer>().material.color = Color.blue;
-                                Debug.Log("NAMEEE");
-
                                 GameObject.Destroy(possibleObjectsToDelete[k]);
-                                //GameObject cube2 = GameObject.CreatePrimitive(PrimitiveType.Cube);
-                                //cube2.transform.position = possibleObjectsToDelete[k].transform.position;
-                                //cube2.transform.localScale = new Vector3(nodeSize.x, ASTAR_NODE_HEIGHT, nodeSize.y);
-                                //cube2.transform.parent = possibleObjectsToDelete[k].transform;
-                                //cube2.GetComponent<Renderer>().material.color = Color.red;
                             }
                         }
                     }
                 }
             }
+            Physics.SyncTransforms();
 
-
-            Physics.autoSimulation = true;
         }
 
 
-        //InstantiateDoors s'occupe de placer des portes s'il y a une connexion entre deux pièces
+        //InstantiateObjectBetweenRooms s'occupe de placer un templateObject s'il y a une connexion entre deux pièces
         static private List<GameObject> InstantiateObjectBetweenRooms(List<Noeud<RectangleInfo2d>> roomsNodes, GameObject templateObject, Bounds templateBounds, Transform parent)
         {
             int j;

@@ -14,13 +14,10 @@ public class ZombieBehaviour : MonoBehaviour
 {
    // [SerializeField] public Zombie zombie;
     [SerializeField] public bool isActive = true;
-    [SerializeField] public bool isOnTeam;
-    [SerializeField] public bool isLeader;
     [SerializeField] public bool isChasingTarget = false;
     [SerializeField] private int health;
     [SerializeField] private int damage;
     [SerializeField] public int speed;
-    [SerializeField] public List<ZombieBehaviour> Team;
     [SerializeField] public List<Vector3> patrolLocations;
     [SerializeField] public EntryWaypoint entryLocation;
     [SerializeField] private float inactiveTime;
@@ -38,13 +35,10 @@ public class ZombieBehaviour : MonoBehaviour
     void Start()
     {
        
-        Team = new List<ZombieBehaviour>(3);
         health = BaseHealth;
         damage = BaseDamage;
         speed = BaseSpeed;
         isActive = true;
-        isOnTeam = false;
-        isLeader = false;
         EntryWaypoint[] entryLocations = FindObjectsOfType<EntryWaypoint>();
         entryLocation = entryLocations[UnityEngine.Random.Range(0, entryLocations.Length)];
         entryOffset = entryLocation.entryWaypoint.position;
@@ -76,17 +70,14 @@ public class ZombieBehaviour : MonoBehaviour
     private void DefinePatrolSequence()
     {
       
-        //trouver tout les GameObjects avec un EntryWaypoint ou DoorWaypoint
+        //trouver tout les GameObjects avec un DoorWaypoint component
         DoorWaypoint[] doors = FindObjectsOfType<DoorWaypoint>();
 
         //choisir un point d'entré random pour que le zombie entre dans la carte de jeux
         System.Random indexGenerator = new System.Random();
 
-        //ajouter la postion de l'entrée pour dans la liste de waypoints
         if(doors.Length > 0)
         {
-            //ajouter les points de patroulle pour le zombie en ordre aleatoire,
-            //on veut remplir la liste avec toutes les positions de toutes portes de la carte et une fenêtre de la carte
             do
             {
                 int randomIndex = indexGenerator.Next(doors.Length);
@@ -99,7 +90,6 @@ public class ZombieBehaviour : MonoBehaviour
 
     public void ManagePatrol()
     {
-       // Debug.Log("patrol update was made");
         if ((transform.position - agent.destination).magnitude < 2)
         {
             agent.destination = patrolLocations[patrolIndexCounter++];
@@ -167,14 +157,9 @@ public class ZombieBehaviour : MonoBehaviour
         animator.SetBool("dead",true);
         Destroy(GetComponent<BehaviourTreeRunner>());
         agent.isStopped=true;
-        if (isLeader)
-            ManageLeaderDeath();
-    }
-
-    public void ManageLeaderDeath()
-    {
-        Team.Remove(this);
-        if (Team.Count != 0)
-            Team[0].isLeader = true;
+        FindObjectOfType<ZombieManager>().RemoveAttackingZombie(gameObject);
+        gameObject.layer = GameConstants.INVISIBLE_LAYER;
+        for (int i = 0; i < GetComponentsInChildren<BoxCollider>().Length; i++)
+            GetComponentsInChildren<BoxCollider>()[i].enabled = false;
     }
 }

@@ -2,7 +2,7 @@
 using UnityEngine;
 namespace Assets
 {
-    static class AStarAlgorithm //Inspiré par le pseudocode de Sebastian Lague: https://www.youtube.com/watch?v=-L-WgKMFuhE
+    static class AStarAlgorithm //Inspiré par les 17 lignes de pseudocode de Sebastian Lague: https://youtu.be/-L-WgKMFuhE?t=475
     {
 
         public const float COST_PER_UNIT = 1;
@@ -78,7 +78,7 @@ namespace Assets
         }
 
         private static float GetNextPossibleStartCost(Noeud<AStarNodeValue> baseNode, Noeud<AStarNodeValue> nextNode) =>
-            baseNode.valeur.startCost + GetRelativePositionCost(baseNode, nextNode);//+ nextNode.valeur.costOffset
+            baseNode.valeur.startCost + GetRelativePositionCost(baseNode, nextNode);
 
         private static float GetRelativePositionCost(Noeud<AStarNodeValue> nodeA, Noeud<AStarNodeValue> nodeB)=>
             (nodeA.valeur.position - nodeB.valeur.position).magnitude * COST_PER_UNIT;

@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+// sergio abreo alvarez
+
 public class FlickeringLight : MonoBehaviour
 {
     // Start is called before the first frame update
