@@ -1,5 +1,5 @@
 ﻿//Auteurs: Simon Asmar et Michaël Bruneau
-//Explication: Cette classe est générique est a pour but d'être utilisé dans quelques algorithmes nécessitant
+//Explication: Cette classe est générique et a pour but d'être utilisé dans quelques algorithmes nécessitant
 //des nœuds (ex d'utilisation: BSP, DFS)
 
 using System.Collections.Generic;

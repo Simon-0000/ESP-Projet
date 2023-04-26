@@ -30,6 +30,7 @@ public class DroneBehaviour : MonoBehaviour {
     private Vector3 vecteurY;
     private int rnd;
     [SerializeField] private DroneTurret turret;
+    public List<GameObject> attackingZombies;
 
     void Awake()
     {
@@ -37,10 +38,12 @@ public class DroneBehaviour : MonoBehaviour {
     }
     void Start () {
         MakePath(target);
+        attackingZombies = FindObjectOfType<ZombieManager>().AttackingZombies;
     }
 
     void MakePath(Transform target)
     {
+        splineDirection *= -1;
         Debug.Log("QuelqueChose");
         // définir la hauteur du drone en Y
         //rnd = Random.Range(-2, 10);
@@ -60,9 +63,9 @@ public class DroneBehaviour : MonoBehaviour {
         List<Vector3> points = new List<Vector3>();
         for (int i = 0; i < nbrPoints; i++)
         {
+            splineDirection *= -1;
             Vector3 ptSommet;
             int j = 0;
-            newPosition += distanceObjet;
             while (j < largeurSplineMax) // ça va crash si 9.5, à résoudre
             {
                 binormal = Vector3.Cross(distanceObjet, transform.up).normalized * (largeurSplineMax - j);
@@ -70,11 +73,13 @@ public class DroneBehaviour : MonoBehaviour {
                 RaycastHit hit;
                 Debug.Log("Bro for real ?");
                 Debug.DrawRay(ptSommet,
-                    (newPosition - distanceObjet) - ptSommet, Color.green, 10, true); print("Hit");
+                    (newPosition - distanceObjet / 2) - ptSommet, Color.green, 10, true); print("Hit");
+                Debug.DrawRay(ptSommet, (newPosition + distanceObjet / 2) - ptSommet, Color.blue, 10, true);
                 if (Physics.Raycast(ptSommet,
-                        (newPosition - distanceObjet) - ptSommet, ((newPosition - distanceObjet) - ptSommet).magnitude) || Physics.Raycast(ptSommet,
-                        (newPosition + distanceObjet) - ptSommet, ((newPosition + distanceObjet) - ptSommet).magnitude))
+                        (newPosition - distanceObjet / 2) - ptSommet, Vector3.Distance((newPosition - distanceObjet / 2), ptSommet) + 1) || Physics.Raycast(ptSommet,
+                        (newPosition + distanceObjet / 2) - ptSommet, Vector3.Distance((newPosition + distanceObjet / 2) , ptSommet) + 1))
                 {
+                    Debug.Log("Collision imminente");
                     j++;
                 }
                 else
@@ -85,10 +90,10 @@ public class DroneBehaviour : MonoBehaviour {
             }
             Debug.Log(j + "," + largeurSplineMax + "," + binormal);
 
-            splineDirection *= -1;
             //newPosition = new Vector3(newPosition.x, rnd, newPosition.z);
             points.Add(newPosition - distanceObjet / 2 + splineDirection * binormal / 2);
             points.Add(newPosition + splineDirection * binormal);
+            newPosition += distanceObjet;
         }
         points.Add(newPosition);
         lastPLayerPoint = points[points.Count - 1];
@@ -158,5 +163,10 @@ public class DroneBehaviour : MonoBehaviour {
         FollowPlayer();
         if (target2 != null)
             turret.TryToAttack(target2);
+    }
+
+    void AttackZombie()
+    {
+        
     }
 }

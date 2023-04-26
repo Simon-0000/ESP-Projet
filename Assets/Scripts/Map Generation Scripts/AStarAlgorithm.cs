@@ -1,4 +1,8 @@
-﻿using System.Collections.Generic;
+﻿//Auteurs: Michaël Bruneau
+//Explication: Cette classe a pour but de créer des chemins entre les fenêtres et les portes
+// pour que les zombies puissent circuler d'une pièce à l'autre
+
+using System.Collections.Generic;
 using UnityEngine;
 namespace Assets
 {
