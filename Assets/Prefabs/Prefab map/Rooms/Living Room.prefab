@@ -1582,7 +1582,7 @@ MonoBehaviour:
   - noeudsEnfants:
     - noeudsEnfants: []
       valeur:
-        likelyhood: 10
+        likelyhood: 50
         proceduralComponent: {fileID: 7282651409851983268, guid: ff3429e5169869146aa7e32a0e1accb3, type: 3}
         proceduralComponentAmount: 4
     - noeudsEnfants: []
@@ -3367,9 +3367,9 @@ MonoBehaviour:
       proceduralComponentAmount: 3
   - noeudsEnfants: []
     valeur:
-      likelyhood: 100
+      likelyhood: 50
       proceduralComponent: {fileID: 6100173184701978359}
-      proceduralComponentAmount: 15
+      proceduralComponentAmount: 8
 --- !u!1 &5524937749205746646
 GameObject:
   m_ObjectHideFlags: 0
