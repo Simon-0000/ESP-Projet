@@ -290,11 +290,18 @@ namespace Assets
             Physics.autoSimulation = false;
             Physics.Simulate(Time.deltaTime);
 
-            Dictionary<Noeud<AStarAlgorithm.AStarNodeValue>, GameObject[]> NodeToObjDictionary = new();
-            List<Noeud<AStarAlgorithm.AStarNodeValue>> startEndNodes = new();
-            List<GameObject> startEndObjects = new();
-            List<Noeud<AStarAlgorithm.AStarNodeValue>> nodesToDelete = new();
-            List<Noeud<AStarAlgorithm.AStarNodeValue>> nodesToDeleteOnObjects = new();
+            Dictionary<Noeud<AStarAlgorithm.AStarNodeValue>, GameObject[]> NodeToObjDictionary = new();//Dictionnaire qui permet d'associé un noeud à un tableau
+                                                                                                       //de GameObject (qui influencent le coût du noeud)
+
+            List<Noeud<AStarAlgorithm.AStarNodeValue>> startEndNodes = new();//Les noeuds de départ et d'arrivé utilisé par le A*
+
+            List<GameObject> startEndObjects = new();//Une liste des objets qui font partie de la liste objectsToConnect
+
+            List<Noeud<AStarAlgorithm.AStarNodeValue>> nodesToDelete = new();//La liste des noeuds trouvés par le A* dont les objets devront être détruits
+
+            List<Noeud<AStarAlgorithm.AStarNodeValue>> nodesToDeleteOnObjects = new();//La liste des noeuds qui touchent un objectsToConnect. Ils devront être
+                                                                                      //regarder afin de déterminer quelle GameObject devra être détruit pour
+                                                                                      //libérer de l'espace en avant du objectsToConnect
 
 
             Vector3 roomDimensions3d = room.GetComponent<BoundsManager>().objectBoundsLocal.size;
@@ -346,10 +353,6 @@ namespace Assets
                     if (i != 0)
                     {
                         dictionaryNodesToConnect.Add((i - 1) * (nodeAmount.y) + j);//top
-                        //if (j != 0)
-                        //    dictionaryNodesToConnect.Add((i - 1) * (nodeAmount.y) + (j - 1));//top left
-                        //if (j != nodeAmount.y - 1)
-                        //    dictionaryNodesToConnect.Add((i - 1) * (nodeAmount.y) + (j + 1));//top right
                     }
                     if (j != 0)
                     {
@@ -385,52 +388,33 @@ namespace Assets
                 if (closestNode != (10000, 10000))
                     startEndNodes.Add(nodesToDeleteOnObjects[closestNode.Item2]);
             }
-            //Trouver le chemin
+            //Trouver le chemin A*
             for (int i = 0; i < startEndNodes.Count - 1; ++i)
             {
                 var nextObjectTodelete = AStarAlgorithm.GetPath(startEndNodes[i], startEndNodes[i + 1]);
+
+                //remettre les valeurs des noeuds à leur valeurs par défaut
                 Noeud<AStarAlgorithm.AStarNodeValue>.ForEachHierarchieChildren(startEndNodes[i], null, n => n.Parent = null);
                 Noeud<AStarAlgorithm.AStarNodeValue>.ForEachHierarchieChildren(startEndNodes[i], null, n => n.valeur.visited = false);
 
-                //Elever le cout pour les objets qui seront détruit, afin de facilement repasser par ce noeud pour les prochains chemin
+                //Enlever le cout pour les objets qui seront détruits, afin de facilement repasser par ce noeud pour les prochains chemins A* qui seront générés 
                 nextObjectTodelete.ForEach(node => node.valeur.costOffset = 0);
-
-
-                //for (int j = 0; j < nextObjectTodelete.Count; ++j)
-                //{
-                //    GameObject cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
-                //    cube.transform.parent = room.transform;
-                //    Vector2 position2d = nextObjectTodelete[j].valeur.position;
-                //    Vector3 position3d = new Vector3(position2d.x, -ASTAR_NODE_HEIGHT / 2, position2d.y);
-                //    cube.transform.position = room.transform.TransformPoint(position3d);
-                //    cube.transform.localScale = new Vector3(nodeSize.x, ASTAR_NODE_HEIGHT, nodeSize.y);
-                //    cube.GetComponent<Renderer>().material.color = Color.black;
-                //}
-
                 nodesToDelete.AddRange(nextObjectTodelete);
             }
 
-            //Détruire les objets qui se trouve dans le chemin
+            //Détruire les objets associés aux noeuds du chemin trouvé par A*
             for (int i = 0; i < nodesToDelete.Count; ++i)
             {
                 GameObject[] objectToDelete;
                 NodeToObjDictionary.TryGetValue(nodesToDelete[i], out objectToDelete);
 
                 if (objectToDelete != null)
-                {
                     for (int j = 0; j < objectToDelete.Length; ++j)
                         if (objectToDelete[j] != null)
-                        {
                             GameObject.Destroy(objectToDelete[j]);
-                            //GameObject cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
-                            //cube.transform.parent = room.transform;
-                            //cube.transform.position = objectToDelete[j].transform.position;
-                            //cube.transform.localScale = new Vector3(nodeSize.x, ASTAR_NODE_HEIGHT, nodeSize.y);
-                            //cube.GetComponent<Renderer>().material.color = Color.red;
-                        }
-                }
             }
 
+            //Détruire les objets qui se trouve à ASTAR_NODE_SIZE en avant de chaque objectsToConnect
             for (int i = 0; i < nodesToDeleteOnObjects.Count; ++i)
             {
                 GameObject[] possibleObjectsToDelete = NodeToObjDictionary.GetValueOrDefault(nodesToDeleteOnObjects[i], null);
@@ -445,20 +429,7 @@ namespace Assets
                             Bounds possibleObjToDeleteBounds = possibleObjectsToDelete[k].GetComponent<BoundsManager>().objectBoundsWorld;
                             if (startEndObjectBounds.Intersects(possibleObjToDeleteBounds))
                             {
-                                //Debug.Log("POSSIBLE" + possibleObjectsToDelete[k].name);
-                                //GameObject cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
-                                //cube.transform.parent = room.transform;
-                                //Vector2 position2d = nodesToDeleteOnObjects[i].valeur.position;
-                                //Vector3 position3d = new Vector3(position2d.x, -ASTAR_NODE_HEIGHT / 2, position2d.y);
-                                //cube.transform.position = room.transform.TransformPoint(position3d);
-                                //cube.transform.localScale = new Vector3(nodeSize.x, ASTAR_NODE_HEIGHT, nodeSize.y);
-                                //cube.GetComponent<Renderer>().material.color = Color.blue;
                                 GameObject.Destroy(possibleObjectsToDelete[k]);
-                                //GameObject cube2 = GameObject.CreatePrimitive(PrimitiveType.Cube);
-                                //cube2.transform.position = possibleObjectsToDelete[k].transform.position;
-                                //cube2.transform.localScale = new Vector3(nodeSize.x, ASTAR_NODE_HEIGHT, nodeSize.y);
-                                //cube2.transform.parent = possibleObjectsToDelete[k].transform;
-                                //cube2.GetComponent<Renderer>().material.color = Color.red;
                             }
                         }
                     }

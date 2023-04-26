@@ -1,4 +1,4 @@
-//Auteurs: Simon Asmar
+//Auteurs: Simon Asmar,  Michaël Bruneau
 //Explication: BoundsManager a pour but de garder en m�moire le bounds initial d'un GameObject peut importe les enfants qu'on
 //d�cide de lui ajout� suite � son instanciation. On peut aussi centrer le GameObject et donner un offset � sa grandeur.
 
@@ -43,14 +43,9 @@ public class BoundsManager : MonoBehaviour
         transform.rotation = objRotationWorld;
         objectBoundsWorld = TransformBounds(transform, objectBoundsLocal);
 
-        //objectBoundsWorld.size = transform.TransformVector(transform.InverseTransformVector(objectBoundsWorld.size) + roomBoundsOffset.size);
-        objectBoundsLocal.center = transform.position;
-        objectBoundsParent.center = transform.position;
-        objectBoundsWorld.center = transform.position;
-
         return objectBoundsParent;
     }
-    public static Bounds TransformBounds( Transform _transform, Bounds _localBounds )
+    public static Bounds TransformBounds( Transform _transform, Bounds _localBounds)//La fonction à été prise et modifiée de http://answers.unity.com/answers/1114000/view.html
     {
  
         // transform the local extents' axes
@@ -64,7 +59,7 @@ public class BoundsManager : MonoBehaviour
         extents.y = Mathf.Abs(axisX.y) + Mathf.Abs(axisY.y) + Mathf.Abs(axisZ.y);
         extents.z = Mathf.Abs(axisX.z) + Mathf.Abs(axisY.z) + Mathf.Abs(axisZ.z);
 
-        for (int i = 0; i < 3; ++i)
+        for (int i = 0; i < 3; ++i)//Cette partie a été ajoutée
             extents[i] /= _transform.localScale[i];
         return new Bounds { center = _localBounds.center, extents = extents };
     }

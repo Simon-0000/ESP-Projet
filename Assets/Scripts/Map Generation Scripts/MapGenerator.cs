@@ -65,7 +65,7 @@ namespace Assets
 
             mapIsLoaded.Invoke();
             isLoaded = true;
-            Physics.SyncTransforms();
+            Physics.SyncTransforms();//ligne de code nécessaire pour instancier le jeu
 
         }
     }
