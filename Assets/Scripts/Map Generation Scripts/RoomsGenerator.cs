@@ -1,4 +1,4 @@
-﻿//Auteurs: Simon Asmar
+﻿//Auteurs: Simon Asmar, Michael Bruneau, Sergio Abreo Alvarez, Olivier Castonguay
 //Explication: Cette classe a pour but de générer les pièces selon BSP et DFS. Ça permet aussi de trouver les
 //connexions physiques entre les pièces afin d'utiliser DFS pour choisir quelques portes qui permettront de
 //connecter toute la carte.
@@ -110,7 +110,7 @@ namespace Assets
             }
         }
 
-        //GetEmptyWindowRooms permet de connecter quelques pièces de la carte à une pièce fantôme (s'il c'est adéquat) puisque cette connexion représente
+        //GetEmptyWindowRooms permet de connecter des pièces à une pièce fantômes (si il s'agit d'un pièce extérieur) puisque cette connexion représente
         //l'endroit où une fenêtre pourrait être placée
         List<Noeud<RectangleInfo2d>> GetEmptyWindowRooms(List<Noeud<RectangleInfo2d>> roomConnections)
         {
@@ -244,6 +244,7 @@ namespace Assets
 
             for (int i = 0; i < roomsNodes.Count; ++i)
             {
+                //La logique ci dessous (avant GameObject room =...) permet d'instancier une pièce différente des pièces collée à celle-ci
                 List<ProceduralRoom> availableRooms = new(possibleRooms);
                 for (int j = 0; j < roomsNodes[i].noeudsEnfants.Count; ++j)
                 {
@@ -341,25 +342,18 @@ namespace Assets
                         BoundsManager[] boundsManagers = nodeObstacles[k].GetComponentsInChildren<BoundsManager>(); 
                         for(int l = 0; l < boundsManagers.Length; ++l)
                             cost += Algos.GetVector3Volume(boundsManagers[l].objectBoundsLocal.size) * ASTAR_OBJECT_COST_PER_CUBE;
-
                     }
                     Noeud<AStarAlgorithm.AStarNodeValue> gridNode = new(null, new(position, cost));
 
                     //Connecter le noeud avec les noeuds qui sont physiquement collés à celui-ci
                     List<int> dictionaryNodesToConnect = new();
                     if (i != 0)
-                    {
                         dictionaryNodesToConnect.Add((i - 1) * (nodeAmount.y) + j);//index du noeud en haut
-                    }
                     if (j != 0)
-                    {
                         dictionaryNodesToConnect.Add(i * (nodeAmount.y) + (j - 1));//index du noeud à gauche
-                    }
 
                     for (int n = 0; n < dictionaryNodesToConnect.Count; ++n)
-                    {
                         Noeud<AStarAlgorithm.AStarNodeValue>.TryFormerLienRéciproque(gridNode, NodeToObjDictionary.ElementAt(dictionaryNodesToConnect[n]).Key);
-                    }
 
                     //Associer le noeuds à ses obstacles
                     NodeToObjDictionary.Add(gridNode, nodeObstacles);
@@ -383,9 +377,7 @@ namespace Assets
                     Vector3 nodePosition = room.transform.TransformPoint( new Vector3(nodesToDeleteOnObjects[j].valeur.position.x, 0, nodesToDeleteOnObjects[j].valeur.position.y));
                     float nodeDistance = (startEndObjects[i].transform.position - nodePosition).magnitude;
                     if (nodeDistance < closestNode.Item1)
-                    {
                         closestNode = (nodeDistance, j);
-                    }
                 }
                 if (closestNode != (10000, 10000))
                     startEndNodes.Add(nodesToDeleteOnObjects[closestNode.Item2]);
@@ -422,7 +414,6 @@ namespace Assets
             {
                 GameObject[] possibleObjectsToDelete = NodeToObjDictionary.GetValueOrDefault(nodesToDeleteOnObjects[i], null);
                 if (possibleObjectsToDelete != null)
-                {
                     for (int j = 0; j < startEndObjects.Count; ++j)
                     {
                         Bounds startEndObjectBounds = startEndObjects[j].GetComponent<BoundsManager>().objectBoundsWorld;
@@ -431,12 +422,9 @@ namespace Assets
                         {
                             Bounds possibleObjToDeleteBounds = possibleObjectsToDelete[k].GetComponent<BoundsManager>().objectBoundsWorld;
                             if (startEndObjectBounds.Intersects(possibleObjToDeleteBounds))
-                            {
                                 GameObject.Destroy(possibleObjectsToDelete[k]);
-                            }
                         }
                     }
-                }
             }
             Physics.SyncTransforms();
 
