@@ -101,6 +101,7 @@ public class ZombieBehaviour : MonoBehaviour
     public void ManageChase()
     {
         agent.destination = target.transform.position;
+
     }
 
 
@@ -131,7 +132,10 @@ public class ZombieBehaviour : MonoBehaviour
         }
 
         if (isWithinRange && canSeeTarget)
+        {
+            FindObjectOfType<ZombieManager>().AddAttackingZombie(gameObject);
             return true;
+        }
 
         return false;
     }

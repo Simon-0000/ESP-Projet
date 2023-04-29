@@ -8,10 +8,11 @@ public class InitializeGame : MonoBehaviour
     private DoorWaypoint[] doors;
 
     [SerializeField] private GameObject player;
-    // Start is called before the first frame update
 
-    public void SpawnPlayerInDoor()
+
+    public void SpawnObjectInDoor()
     {
+        
         doors = FindObjectsOfType<DoorWaypoint>();
         Debug.Log("porte  "+doors.Length); 
         var door  = doors[UnityEngine.Random.Range(0, doors.Length)];

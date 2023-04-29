@@ -7,21 +7,25 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 918618916815058799}
     m_Modifications:
+    - target: {fileID: 6565127213905276027, guid: b6a8cb075d0023d45971765cb591392d, type: 3}
+      propertyPath: fireDelay
+      value: 0.33
+      objectReference: {fileID: 0}
     - target: {fileID: 7314913256692414104, guid: b6a8cb075d0023d45971765cb591392d, type: 3}
       propertyPath: m_RootOrder
       value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 7314913256692414104, guid: b6a8cb075d0023d45971765cb591392d, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0.4
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7314913256692414104, guid: b6a8cb075d0023d45971765cb591392d, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.1
+      value: -0.5
       objectReference: {fileID: 0}
     - target: {fileID: 7314913256692414104, guid: b6a8cb075d0023d45971765cb591392d, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 1.64
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7314913256692414104, guid: b6a8cb075d0023d45971765cb591392d, type: 3}
       propertyPath: m_LocalRotation.w
@@ -110,6 +114,18 @@ PrefabInstance:
     - target: {fileID: 5579699372444814116, guid: e746f881748d3a147949e70e5c570880, type: 3}
       propertyPath: m_RootOrder
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5579699372444814116, guid: e746f881748d3a147949e70e5c570880, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5579699372444814116, guid: e746f881748d3a147949e70e5c570880, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5579699372444814116, guid: e746f881748d3a147949e70e5c570880, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 0.2
       objectReference: {fileID: 0}
     - target: {fileID: 5579699372444814116, guid: e746f881748d3a147949e70e5c570880, type: 3}
       propertyPath: m_LocalPosition.x
@@ -220,15 +236,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 893aaaf9a2c76df4da4d9bb3a98acfd7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  target: {fileID: 0}
-  target2: {fileID: 0}
+  followTarget: {fileID: 0}
+  shootingTarget: {fileID: 0}
+  shootingTargets: []
   speed: 1
-  followDistance: 6
-  maximumDistance: 7
+  maximumDistance: 1
   possibleSplineSize:
     startAt: {x: 0, y: 0, z: 0}
     endAt: {x: 0, y: 0, z: 0}
-  ptParMetre: 0.2
+  largeurSplineMax: 3
+  ptParMetre: 2
   turret: {fileID: 8535804192750860977}
 --- !u!4 &918618916815058799 stripped
 Transform:
