@@ -422,7 +422,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &783063370
 Transform:
   m_ObjectHideFlags: 0
@@ -603,7 +603,7 @@ Transform:
   - {fileID: 1333405684}
   - {fileID: 1732643290}
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &993177415
 GameObject:
@@ -654,7 +654,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &993177418
 MonoBehaviour:
@@ -674,17 +674,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 918618916815058799, guid: 323885c14529a9142b1f9dbaabda8e4a, type: 3}
   m_PrefabInstance: {fileID: 8205394}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1000997197 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 1185422364624959977, guid: 323885c14529a9142b1f9dbaabda8e4a, type: 3}
-  m_PrefabInstance: {fileID: 8205394}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 893aaaf9a2c76df4da4d9bb3a98acfd7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &1035337812
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -710,11 +699,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1270997088669550291, guid: df59ce2af26605649a337c3ec26ab484, type: 3}
       propertyPath: m_AnchorMax.x
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1270997088669550291, guid: df59ce2af26605649a337c3ec26ab484, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1351738998861765245, guid: df59ce2af26605649a337c3ec26ab484, type: 3}
       propertyPath: m_Layer
@@ -1053,10 +1042,10 @@ MonoBehaviour:
   wallSizeMin: 8
   wallSizeMax: 16
   roomObjects:
-  - {fileID: 7271430624650593193, guid: 00e589ddb2901164eb9f9af0ce1ff794, type: 3}
   - {fileID: 7271430624650593193, guid: 08a019d532fdb29409b4cccf443b7a6a, type: 3}
-  - {fileID: 7271430624650593193, guid: 945526a975cac21448d1acd660c156b5, type: 3}
+  - {fileID: 7271430624650593193, guid: 00e589ddb2901164eb9f9af0ce1ff794, type: 3}
   - {fileID: 7271430624650593193, guid: 4bd8a423c45ccd849a53013ab7ad1f41, type: 3}
+  - {fileID: 7271430624650593193, guid: 945526a975cac21448d1acd660c156b5, type: 3}
   doorObject: {fileID: 2430739564790736020, guid: 21b28f3efd218ab4a8ea5a7c522c44ad, type: 3}
   windowObject: {fileID: 7842764880825554952, guid: b8fd88299b70a31479c54aa878d14e58, type: 3}
   mapIsLoaded:
@@ -1086,17 +1075,17 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 1000997197}
-        m_TargetAssemblyTypeName: DroneBehaviour, Assembly-CSharp
-        m_MethodName: Start
-        m_Mode: 1
+      - m_Target: {fileID: 783063369}
+        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+        m_MethodName: SetActive
+        m_Mode: 6
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
-          m_BoolArgument: 0
+          m_BoolArgument: 1
         m_CallState: 2
 --- !u!1 &1306422364
 GameObject:

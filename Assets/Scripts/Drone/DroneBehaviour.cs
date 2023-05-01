@@ -34,14 +34,7 @@ public class DroneBehaviour : MonoBehaviour
 
     public void Start()
     {
-        StartCoroutine(InstantiateDrone());
         shootingTargets = FindObjectOfType<ZombieManager>().AttackingZombies;
-
-    }
-    IEnumerator InstantiateDrone()
-    {
-        Physics.SyncTransforms();
-        yield return new WaitForSeconds(0.25f);
         lastPt = transform.position;
         MakePath(followTarget);
     }
