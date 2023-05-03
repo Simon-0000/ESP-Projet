@@ -1,6 +1,12 @@
 fileFormatVersion: 2
+<<<<<<<< HEAD:Assets/Prefabs/prefab character/lazer Drone.prefab.meta
 guid: dd77fe900a73e51449b92acf4f701f9e
 PrefabImporter:
+========
+guid: 23034a0615ee0fe4cb5639ac93e5a874
+folderAsset: yes
+DefaultImporter:
+>>>>>>>> b409a5ac276e2e16b49aca06dd504c6e826d396b:Assets/Ressources/Materials/Ceiling.meta
   externalObjects: {}
   userData: 
   assetBundleName: 

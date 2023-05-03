@@ -12,41 +12,42 @@ using Assets;
 [RequireComponent(typeof(NavMeshAgent))]
 public class ZombieBehaviour : MonoBehaviour
 {
-   // [SerializeField] public Zombie zombie;
     [SerializeField] public bool isActive = true;
-    [SerializeField] public bool isChasingTarget = false;
-    [SerializeField] private int health;
-    [SerializeField] private int damage;
-    [SerializeField] public int speed;
-    [SerializeField] public List<Vector3> patrolLocations;
-    [SerializeField] public EntryWaypoint entryLocation;
-    [SerializeField] private float inactiveTime;
-    [SerializeField] private float fieldOfView = 90;
-    [SerializeField] private GameObject target;
-    private Vector3 entryOffset;
+    public bool isChasingTarget = false;
+    private int health;
+    private int damage;
+    public int speed;
+    public List<Vector3> patrolLocations;
+    public EntryWaypoint entryLocation;
+    private float inactiveTime;
+    private float fieldOfView = 45;
+    private GameObject target;
+    private Vector3 entryDestination;
     public Animator animator;
     public NavMeshAgent agent;
+
     int patrolIndexCounter = 0;
     const int BaseHealth = 100;
     const int BaseDamage = 10;
     const int BaseSpeed = 3;
-    
- 
+    public const float AttackRange = 1.5f;
+    public const float SightRange = 6f;
+
+
     void Start()
     {
        
         health = BaseHealth;
         damage = BaseDamage;
         speed = BaseSpeed;
-        isActive = true;
         EntryWaypoint[] entryLocations = FindObjectsOfType<EntryWaypoint>();
         entryLocation = entryLocations[UnityEngine.Random.Range(0, entryLocations.Length)];
-        entryOffset = entryLocation.entryWaypoint.position;
+        entryDestination = entryLocation.entryWaypoint.position;
         DefinePatrolSequence();
         DefineTarget();
         agent = GetComponent<NavMeshAgent>();
         agent.speed = speed;
-        agent.destination = entryOffset;
+        agent.destination = entryDestination;
         animator = GetComponent<Animator>();
         animator.SetBool("walking", true);
     }
@@ -101,7 +102,6 @@ public class ZombieBehaviour : MonoBehaviour
     public void ManageChase()
     {
         agent.destination = target.transform.position;
-
     }
 
 
@@ -117,9 +117,9 @@ public class ZombieBehaviour : MonoBehaviour
         bool isWithinRange = false;
         bool canSeeTarget = false;
 
-        Vector3 direction =  target.transform.position - transform.position;
+        Vector3 direction = transform.position - target.transform.position;
         Vector3 offset = new(0, 1, 0);
-        if(Physics.Raycast(transform.position, direction.normalized, out hit, actionRange,7))
+        if(Physics.Raycast(transform.position, -direction.normalized, out hit, actionRange,7))
         {
             Debug.Log(hit.collider.gameObject);
             Debug.Log(direction.normalized);

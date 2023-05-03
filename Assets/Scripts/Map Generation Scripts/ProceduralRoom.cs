@@ -10,7 +10,7 @@ namespace Assets
     public class ProceduralRoom : MonoBehaviour
     {
         [SerializeField] ProceduralTiledCubeObject wallObject;
-        [SerializeField] ProceduralTiledCubeObject roofObject;
+        [SerializeField] ProceduralTiledCubeObject ceilingObject;
         [SerializeField] ProceduralTiledCubeObject floorObject;
         [SerializeField] ProceduralHierarchy[] roomHierarchyRoots;
 
@@ -47,15 +47,17 @@ namespace Assets
 
 
             //Instancier les murs:
-            int wallVariation = Random.Range(0, wallObject.GetComponent<ProceduralObject>().objectVariations.Length);
+            int wallVariation = Random.Range(0, wallObject.objectVariations.Length);
             for (int i = 0; i < wallObject.GetComponent<ProceduralObject>().positions.Length; ++i)
                 wallObject.InstantiateProceduralTiledObject(roomObj.transform, roomDimensions, wallVariation, i);
 
             //Instancier le sol:
-            int floorVariation = Random.Range(0, floorObject.GetComponent<ProceduralObject>().objectVariations.Length);
+            int floorVariation = Random.Range(0, floorObject.objectVariations.Length);
             floorObject.InstantiateProceduralTiledObject(roomObj.transform, roomDimensions, floorVariation,0);
 
             //Instancier le plafond (pas implémenté pour les tests)
+            int roofVariation = Random.Range(0, ceilingObject.objectVariations.Length);
+            ceilingObject.InstantiateProceduralTiledObject(roomObj.transform, roomDimensions, roofVariation, 0);
 
             //Garder la grandeur de la pièce en mémoire
             roomObj.GetComponent<BoundsManager>().RefreshBounds();
