@@ -7,6 +7,7 @@ using TheKiwiCoder;
 using Assets;
 
 //it is what it is
+//lajflsdakjs
 // sergio abreo alvarez
 //gestion d'un zombie. gestion de la vie, �tat actif, temps de destruction, point d'entr�e 
 [RequireComponent(typeof(NavMeshAgent))]
