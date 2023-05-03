@@ -30,6 +30,9 @@ public class GunController : MonoBehaviour
    
     
     private float timeelapse=0;
+    private bool isReloading;
+    private float reloadingTime = 2f;
+    private float TimeReloading;
 
     [Header("crosshair")] 
     [SerializeField] private Image crosshair;
@@ -55,52 +58,54 @@ public class GunController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (!PlayerManager.isPaused)
+        TimeReloading += Time.deltaTime;
+        if (TimeReloading > reloadingTime)
+            isReloading = false;
+
+        if (!isReloading)
         {
-            // ReSharper disable once Unity.PerformanceCriticalCodeInvocation
-            if (Input.GetMouseButton(1))
+            if (!PlayerManager.isPaused)
             {
-                timeelapse = 0;
-
-                
-                ZoomCamera(defaultFov / zoomMultiplier);
-                gun.localPosition = Vector3.MoveTowards(gun.localPosition, aimedposition, deplacement.magnitude / 100);
-                gun.rotation = new Quaternion(0f, 0f, 0f, 0f);
-                boucheDeCanon.rotation = new Quaternion(0f, 0f, 0f, 0f);
-                crosshair.enabled = false;
-                aimedcrosshair.enabled = true;
-                gun.GetComponent<MeshRenderer>().enabled = false;
-            }
-
-
-            else
-            {
-                if (timeelapse > 0.1f)
+                // ReSharper disable once Unity.PerformanceCriticalCodeInvocation
+                if (Input.GetMouseButton(1))
                 {
-                    gun.GetComponent<MeshRenderer>().enabled = true;
+                    timeelapse = 0;
+
+
+                    ZoomCamera(defaultFov / zoomMultiplier);
+                    aiming();
                 }
+
+
                 else
                 {
-                    timeelapse += Time.deltaTime;
+                    if (timeelapse > 0.1f)
+                    {
+                        gun.GetComponent<MeshRenderer>().enabled = true;
+                    }
+                    else
+                    {
+                        timeelapse += Time.deltaTime;
+                    }
+
+
+                    AimGun();
+                    gun.localPosition =
+                        Vector3.MoveTowards(gun.localPosition, unAimedPosition, deplacement.magnitude / 100);
+                    ZoomCamera(defaultFov);
+                    crosshair.enabled = true;
+                    aimedcrosshair.enabled = false;
+
+
+                    crosshair.color = Color.green;
+
                 }
 
-                
-                AimGun();
-                gun.localPosition =
-                    Vector3.MoveTowards(gun.localPosition, unAimedPosition, deplacement.magnitude / 100);
-                ZoomCamera(defaultFov);
-                crosshair.enabled = true;
-                aimedcrosshair.enabled = false;
-
-
-                crosshair.color = Color.green;
-
+                if (Input.GetMouseButtonDown(0))
+                    Shoot();
+                if (Input.GetKeyDown("r"))
+                    Reload();
             }
-
-            if (Input.GetMouseButtonDown(0))
-                Shoot();
-            if (Input.GetKeyDown("r"))
-                Reload();
         }
 
     }
@@ -131,10 +136,13 @@ public class GunController : MonoBehaviour
 
     void Reload()
     {
-
-        var currentAmmo = ammo;
+        isReloading = true;
+        TimeReloading = 0;
+        
+        var currentAmmo= ammo;
         var missingAmmo = maxAmmo - currentAmmo;
         ammo += missingAmmo;
+        
         text.text = ammo.ToString();
 
     }
@@ -169,5 +177,16 @@ public class GunController : MonoBehaviour
     void SetAmmo()
     { ammo = maxAmmo;
         text.text = ammo.ToString();}
+
+    void aiming()
+    {
+        gun.localPosition =
+            Vector3.MoveTowards(gun.localPosition, aimedposition, deplacement.magnitude / 100);
+        gun.rotation = new Quaternion(0f, 0f, 0f, 0f);
+        boucheDeCanon.rotation = new Quaternion(0f, 0f, 0f, 0f);
+        crosshair.enabled = false;
+        aimedcrosshair.enabled = true;
+        gun.GetComponent<MeshRenderer>().enabled = false;
+    }
 
 }
