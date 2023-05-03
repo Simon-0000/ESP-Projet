@@ -36,7 +36,7 @@ public class ZombieBehaviour : MonoBehaviour
 
     void Start()
     {
-       
+        isActive = true;
         health = BaseHealth;
         damage = BaseDamage;
         speed = BaseSpeed;
