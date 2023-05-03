@@ -12,7 +12,7 @@ using Random = UnityEngine.Random;
 [RequireComponent(typeof(Rigidbody))]
 public class LazerComponent : MonoBehaviour
 {
-    private float floatDamage = 75f;
+    public float floatDamage = 75f;
     private int damage=75;
     
     private ZombieBehaviour zombie;

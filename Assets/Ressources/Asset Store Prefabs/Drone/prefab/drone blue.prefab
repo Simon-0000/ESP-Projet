@@ -8,6 +8,10 @@ PrefabInstance:
     m_TransformParent: {fileID: 918618916815058799}
     m_Modifications:
     - target: {fileID: 6565127213905276027, guid: b6a8cb075d0023d45971765cb591392d, type: 3}
+      propertyPath: bullet
+      value: 
+      objectReference: {fileID: 7647688014677727486, guid: dd77fe900a73e51449b92acf4f701f9e, type: 3}
+    - target: {fileID: 6565127213905276027, guid: b6a8cb075d0023d45971765cb591392d, type: 3}
       propertyPath: fireDelay
       value: 0.33
       objectReference: {fileID: 0}

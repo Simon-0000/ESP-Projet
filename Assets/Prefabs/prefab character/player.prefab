@@ -2500,7 +2500,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 5
-  jumpHeigth: 9
+  jumpHeigth: 3
 --- !u!114 &6609024921178830964
 MonoBehaviour:
   m_ObjectHideFlags: 0
