@@ -19,7 +19,7 @@ public class Chase : ActionNode
 
     protected override State OnUpdate() {
         context.animator.SetBool("attack",false);
-        if (host.CanChangeState(1.5f))
+        if (host.CanChangeState(ZombieBehaviour.AttackRange))
             return State.Success;
 
         host.ManageChase();
