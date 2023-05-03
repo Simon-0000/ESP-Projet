@@ -5,14 +5,14 @@ using System.Collections;
 using System.Collections.Generic;
 using Assets;
 using System.Linq;
-
-
 //using Pixelplacement;
 using Unity.VisualScripting;
 using Random = UnityEngine.Random;
 
+[RequireComponent(typeof(BoundsManager))]
 public class DroneBehaviour : MonoBehaviour
 {
+    
 
     public Transform followTarget;// le joueur à suivre
     public Transform shootingTarget;
@@ -31,9 +31,11 @@ public class DroneBehaviour : MonoBehaviour
     private bool restartSplines = true;
     private Vector3 lastPLayerPoint;
     [SerializeField] private DroneTurret turret;
+    public Vector3 sizeOfDrone;
 
     public void Start()
     {
+        sizeOfDrone = GetComponent<BoundsManager>().objectBoundsLocal.size;
         shootingTargets = FindObjectOfType<ZombieManager>().AttackingZombies;
         lastPt = transform.position;
         MakePath(followTarget);
@@ -66,11 +68,11 @@ public class DroneBehaviour : MonoBehaviour
             while (j < largeurSplineMax) // ça va crash si 9.5, à résoudre
             {
                 binormal = Vector3.Cross(distanceObjet, transform.up).normalized * (largeurSplineMax - j);
-                ptSommet = newPosition + distanceObjet / 2 + splineDirection * binormal;
+                ptSommet = newPosition + distanceObjet / 2 + splineDirection * binormal - binormal.normalized * sizeOfDrone.x;
             //    RaycastHit hit;
-              //  Debug.DrawRay(ptSommet,
-               //  (newPosition) - ptSommet, Color.green, 10, true); 
-            //    Debug.DrawRay(ptSommet, (newPosition + distanceObjet) - ptSommet, Color.blue, 10, true);
+               Debug.DrawRay(ptSommet,
+                 (newPosition) - ptSommet, Color.green, 10, true); 
+                Debug.DrawRay(ptSommet, (newPosition + distanceObjet) - ptSommet, Color.blue, 10, true);
                 // if (Physics.Raycast(ptSommet,
                 //         (newPosition - distanceObjet / 2) - ptSommet, Vector3.Distance((newPosition - distanceObjet / 2), ptSommet) ) || Physics.Raycast(ptSommet,
                 //        (newPosition + distanceObjet / 2) - ptSommet, Vector3.Distance((newPosition + distanceObjet / 2) , ptSommet)))

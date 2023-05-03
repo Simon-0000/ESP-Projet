@@ -246,6 +246,9 @@ MonoBehaviour:
   exitPoint: {fileID: 7073938290257095988}
   bullet: {fileID: 270624336992509730, guid: f51c10b8fb561144185f21fdf6e39996, type: 3}
   fireDelay: 3
+  aimOffset:
+    startAt: {x: -0.1, y: 0.9, z: -0.1}
+    endAt: {x: 0.1, y: 1.1, z: 0.1}
 --- !u!1 &8549301281379461592
 GameObject:
   m_ObjectHideFlags: 0

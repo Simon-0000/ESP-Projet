@@ -11,6 +11,7 @@ public class DroneTurret : MonoBehaviour
     [SerializeField] private Transform pivotPoint, exitPoint;
     [SerializeField] private GameObject bullet;
     [SerializeField] private float fireDelay;
+    [SerializeField] private VectorRange aimOffset;
     private float timeSinceAttack;
     Hashtable rotatingHashArgs = new();
     // Update is called once per frame
@@ -20,9 +21,10 @@ public class DroneTurret : MonoBehaviour
     
     public bool TryToAttack(Transform target)
     {
+        Vector3 targetPosition = target.position + aimOffset.GetRandomVector();
         RaycastHit hit;
-        Physics.Raycast(pivotPoint.position, (target.position - pivotPoint.position).normalized, out hit,
-            (target.position - pivotPoint.position).magnitude);
+        Physics.Raycast(pivotPoint.position, (targetPosition - pivotPoint.position).normalized, out hit,
+            (targetPosition - pivotPoint.position).magnitude);
         if (hit.collider != null && hit.collider.gameObject.transform != target && Algos.FindFirstParentInstance(hit.collider.gameObject, t=> t == target) != target)
         {
             return false;
@@ -31,7 +33,7 @@ public class DroneTurret : MonoBehaviour
         //Vector3 newDirection = Vector3.RotateTowards(pivotPoint.forward, target.position - pivotPoint.position, 4*Time.deltaTime, 0.0f);
         //pivotPoint.rotation = Quaternion.LookRotation(newDirection);
         //pivotPoint.rotation = Quaternion.Euler(rotation);
-        var rotation = Quaternion.LookRotation(target.position - transform.position);
+        var rotation = Quaternion.LookRotation(targetPosition - transform.position);
         pivotPoint.rotation = rotation;
         // Si non, return false
         if (Time.time - timeSinceAttack > fireDelay)
