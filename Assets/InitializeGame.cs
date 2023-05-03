@@ -14,13 +14,13 @@ public class InitializeGame : MonoBehaviour
     {
         doors = FindObjectsOfType<DoorWaypoint>();
         Debug.Log("porte  "+doors.Length); 
-        var door  = doors[UnityEngine.Random.Range(0, doors.Length)];
+        var door  = doors[Random.Range(0, doors.Length)];
         player.transform.position = door.transform.position;
         player.transform.rotation = door.transform.rotation;
     }
     public void UpdateNavMesh()
     {
-        NavMeshSurface nm = GameObject.FindObjectOfType<NavMeshSurface>();
+        NavMeshSurface nm = FindObjectOfType<NavMeshSurface>();
         nm.UpdateNavMesh(nm.navMeshData);
     }
 }
