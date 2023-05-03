@@ -83,38 +83,24 @@ public class ProceduralObject : Procedural
         String objname = obj.name;
         //les lignes de codes avec Physics.autoSimulation et Physics.Simulate ont été prises par Pablo Lanza et derHugo
         //https://stackoverflow.com/questions/69055600/bad-usage-of-physics-overlapbox
-        if (repositionAtCollision)
-        {
-           // Physics.Simulate(Time.deltaTime);
-        }
 
         obj.TryAddComponent<BoundsManager>().Awake();
         do
         {
-            //Physics.Simulate(Time.deltaTime);
             Physics.SyncTransforms();
             int placementIndex = placementIndexes[Random.Range(0, placementIndexes.Length)];
             invalidLocation = TrySetRandomRelativePlacement(ref obj, parentLocalDimensions, (positions[placementIndex], orientations[placementIndex], offsets[placementIndex]));
             obj.name = objname + iterationAttemps;
-            ++iterationAttemps;                
+            ++iterationAttemps;
         }
         while (invalidLocation == true && iterationAttemps <= GameConstants.MAX_ITERATIONS);
-        if (repositionAtCollision)
-        {
-            Physics.autoSimulation = true;
-        }
+
         if (invalidLocation == true)// condition qui est vraie si on n'a pas pu repositionner l'objet après 100 essais
         {
             Destroy(obj);
             obj = null;
         }
-        else
-        {
-            //Physics.Simulate(Time.deltaTime);
-            //Prendre les dimensions sans la rotation pour que les enfants qui dépendent de cet objet soient bien positionnés 
-            obj.GetComponent<BoundsManager>().RefreshBounds();
 
-        }
         Physics.SyncTransforms();
     }
 
@@ -123,8 +109,6 @@ public class ProceduralObject : Procedural
         bool invalidLocation = false;
         obj.GetComponent<BoundsManager>().RefreshBounds();
         BoundsManager objBounds = obj.GetComponent<BoundsManager>();
-
-
 
         Vector3 relativePosition = placement.position.GetRandomVector();
         Vector3 relativeOrientation = placement.orientation.GetRandomVector();
@@ -146,9 +130,6 @@ public class ProceduralObject : Procedural
         offset.Scale(Algos.GetVectorSign(obj.transform.localPosition));
         obj.transform.localPosition += offset;
 
-        ////Prendre les dimensions sans la rotation pour que les enfants qui dépendent de cet objet soient bien positionnés 
-        // obj.GetComponent<BoundsManager>().RefreshBounds();
-
         //Tourner l'objet
         obj.transform.localRotation = Quaternion.Euler(relativeOrientation.x, relativeOrientation.y, relativeOrientation.z);
 
@@ -156,57 +137,32 @@ public class ProceduralObject : Procedural
         if (repositionAtCollision)
         {
             Physics.SyncTransforms();
-
             Collider[] colliders = Physics.OverlapBox(obj.transform.position, objBounds.objectBoundsLocal.size * 0.5f - Vector3.one * GameConstants.OVERLAP_TOLERANCE, obj.transform.rotation);
-
-
-            //Destroy(BuildBox(obj.transform, obj.transform.position,obj.transform.rotation, objBounds.objectBoundsLocal.size));
 
             for (int i = 0; i < colliders.Length; ++i)
             {
-               // if (Algos.IsColliderOverlaping(Algos.GetColliderOverlap((obj.transform.position, objBounds.objectBoundsWorld.size), colliders[i])))
-            //    {
+                BoundsManager colliderParentBoundsManager = colliders[i].gameObject.GetComponent<BoundsManager>();
+                if (colliderParentBoundsManager == null)
+                    colliderParentBoundsManager = colliders[i].gameObject.GetComponentInParent<BoundsManager>();
 
-                    BoundsManager colliderParentBoundsManager = colliders[i].gameObject.GetComponent<BoundsManager>();
-                    if (colliderParentBoundsManager == null)
-                        colliderParentBoundsManager = colliders[i].gameObject.GetComponentInParent<BoundsManager>();
-
-
-
-                    if (colliderParentBoundsManager != null)
+                if (colliderParentBoundsManager != null)
+                {
+                    GameObject parentProcedural = colliderParentBoundsManager.gameObject;
+                    if (parentProcedural != obj && parentProcedural != obj.transform.parent.gameObject)
                     {
 
-                        GameObject parentProcedural = colliderParentBoundsManager.gameObject;
-                        if (parentProcedural != obj && parentProcedural != obj.transform.parent.gameObject)
-                        {
-                            
-                           // Debug.Log("Collider: " + obj.name + " With: " + colliderParentBoundsManager.gameObject.name + "OBJ Size: " +  "Overlap = " + Algos.GetColliderOverlap(obj, colliders[i]));
-                            invalidLocation = true;
-                            break;
-                        }
+                        // Debug.Log("Collider: " + obj.name + " With: " + colliderParentBoundsManager.gameObject.name + "OBJ Size: " +  "Overlap = " + Algos.GetColliderOverlap(obj, colliders[i]));
+                        invalidLocation = true;
+                        break;
                     }
+                }
 
-               // }
-                
+
             }
         }
 
         return invalidLocation;
     }
-    GameObject BuildBox(Transform parent, Vector3 pos,Quaternion rot ,Vector3 size) {
-        
-        GameObject box = GameObject.CreatePrimitive(PrimitiveType.Cube); // Create a new cube game object
-        box.transform.parent = parent;
-        box.transform.position = pos;
-        box.transform.localScale = size;
-        box.transform.rotation = rot;
-        Debug.Log(box.GetComponent<BoxCollider>().size + " BIG BOY");
-      // It seems like the object needs a boxCollider in order to work
-        Destroy(box.GetComponent<BoxCollider>());
-
-        return box;
-    }
-
     //TryConstrainRelativePosition retourne une position relative qui ne dépasse pas les limites XYZ de son parent si
     // xyz «IsConstrained» = true 
     private Vector3 TryConstrainRelativePosition(Vector3 objWorldDimensions, Vector3 parentWorldDimensions, Vector3 relativePosition) =>

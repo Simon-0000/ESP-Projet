@@ -1,5 +1,5 @@
-﻿//Auteurs: Simon Asmar
-//Explication: Cette classe est générique est a pour but d'être utilisé dans quelques algorithmes nécessitant
+﻿//Auteurs: Simon Asmar et Michaël Bruneau
+//Explication: Cette classe est générique et a pour but d'être utilisé dans quelques algorithmes nécessitant
 //des nœuds (ex d'utilisation: BSP, DFS)
 
 using System.Collections.Generic;
@@ -67,6 +67,7 @@ namespace Assets
                 }
             }
         }
+        //CODE CI-DESSOUS FAIT PAR Michaël Bruneau
         static public List<Noeud<T>> GetParents(Noeud<T> node) =>
             GetParents(node, GameConstants.MAX_ITERATIONS);
         static public List<Noeud<T>> GetParents(Noeud<T> node, int iterationAttempts)
