@@ -13,7 +13,7 @@ public class ZombieManager : MonoBehaviour
     [Range(0,99)]
     [SerializeField] private int nbWantedZombies = 50;
     private int nbActiveZombies;
-    private List<GameObject> ActiveZombies;
+    [SerializeField] private List<GameObject> ActiveZombies;
     public List<GameObject> AttackingZombies;
     [SerializeField] private GameObject zombie;
     [SerializeField] private SpawnLocation[] spawnPoints;
@@ -36,8 +36,11 @@ public class ZombieManager : MonoBehaviour
     {
         for(int i = 0; i<ActiveZombies.Count; ++i)
         {
-            if (!ActiveZombies[i].GetComponent<ZombieBehaviour>().isActive){}
+            if (!ActiveZombies[i].GetComponent<ZombieBehaviour>().isActive) 
+            {
                 ActiveZombies.Remove(ActiveZombies[i]);
+            }
+               
         }
 
         for(int i = 0; i < ActiveZombies.Count; ++i)
@@ -49,6 +52,7 @@ public class ZombieManager : MonoBehaviour
         ellapsedTime += Time.deltaTime;
         if (ActiveZombies.Count < nbWantedZombies && ellapsedTime >= 4f)
         {
+            nbActiveZombies++;
             ActiveZombies.Add(CreateNewZombie());
             ActiveZombies.Last().GetComponent<NavMeshAgent>().avoidancePriority = nextInstanciatePriority;
             nextInstanciatePriority++;

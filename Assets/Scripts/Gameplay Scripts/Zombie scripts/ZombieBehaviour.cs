@@ -10,7 +10,7 @@ using Assets;
 // sergio abreo alvarez
 //gestion d'un zombie. gestion de la vie, �tat actif, temps de destruction, point d'entr�e 
 [RequireComponent(typeof(NavMeshAgent))]
-[RequireComponent(typeof(BehaviourTreeRunner))]
+
 public class ZombieBehaviour : MonoBehaviour
 {
     [SerializeField] public bool isActive = true;
@@ -118,9 +118,9 @@ public class ZombieBehaviour : MonoBehaviour
         bool isWithinRange = false;
         bool canSeeTarget = false;
 
-        Vector3 direction = transform.position - target.transform.position;
+        Vector3 direction =  target.transform.position - transform.position ;
         Vector3 offset = new(0, 1, 0);
-        if(Physics.Raycast(transform.position, -direction.normalized, out hit, actionRange,7))
+        if(Physics.Raycast(transform.position, direction.normalized, out hit, actionRange,7))
         {
             Debug.Log(hit.collider.gameObject);
             Debug.Log(direction.normalized);
@@ -128,7 +128,8 @@ public class ZombieBehaviour : MonoBehaviour
 
             if (hit.collider.gameObject.Equals(target) || Algos.FindFirstParentInstance(hit.collider.gameObject, p => p == target.transform) == target.transform)
                 canSeeTarget = true;
-            if (Vector3.Angle(direction, Algos.GetVectorAbs(transform.forward)) <= fieldOfView && direction.magnitude <= actionRange)
+
+            if ( (Vector3.Angle(direction, transform.forward) <= fieldOfView) && direction.magnitude <= actionRange)
                 isWithinRange = true;
         }
 
