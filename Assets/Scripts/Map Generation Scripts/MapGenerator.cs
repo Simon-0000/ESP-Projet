@@ -1,6 +1,6 @@
 //Auteurs: Simon Asmar
 //Explication: Ce script à pour but de regrouper tous les algorithmes utilisés pour générer les pièces, le navmesh,
-//             les spawn points,etc.
+//             les spawn points,etc...
 using UnityEngine;
 using System.Collections.Generic;
 using System.Collections;
