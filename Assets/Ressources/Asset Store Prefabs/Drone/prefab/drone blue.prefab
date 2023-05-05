@@ -249,8 +249,35 @@ MonoBehaviour:
     startAt: {x: 0, y: 0, z: 0}
     endAt: {x: 0, y: 0, z: 0}
   largeurSplineMax: 3
+  numberOfRaycastPerSpline: 6
   ptParMetre: 2
   turret: {fileID: 8535804192750860977}
+  splineOffset: 0
+--- !u!114 &7187017192365241198
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 573161827484528085}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a1c5b2013afcebb408ced8b3497c35e1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  objectBoundsParent:
+    m_Center: {x: 0, y: 0, z: 0}
+    m_Extent: {x: 0, y: 0, z: 0}
+  objectBoundsLocal:
+    m_Center: {x: 0, y: 0, z: 0}
+    m_Extent: {x: 0, y: 0, z: 0}
+  objectBoundsWorld:
+    m_Center: {x: 0, y: 0, z: 0}
+    m_Extent: {x: 0, y: 0, z: 0}
+  centerMesh: 1
+  roomBoundsOffset:
+    m_Center: {x: 0, y: 0, z: 0}
+    m_Extent: {x: 0, y: 0, z: 0}
 --- !u!4 &918618916815058799 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 5579699372444814116, guid: e746f881748d3a147949e70e5c570880, type: 3}
