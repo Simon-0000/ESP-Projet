@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UIElements;
  
 
@@ -23,15 +24,19 @@ public class PlayerHealth : MonoBehaviour
 
     private void Update()
     {
-       timeSpendBeetweenregen+= Time.deltaTime;
-       if (vie < viemax)
-           if(timeSpendBeetweenregen > 5f)
-           {
-               
-               RegenHealth();
-           }
-       if (vie <= 0)
+        timeSpendBeetweenregen += Time.deltaTime;
+        if (vie < viemax)
+            if (timeSpendBeetweenregen > 5f)
+            {
+
+                RegenHealth();
+            }
+
+        if (vie <= 0)
+        {
             Destroy(gameObject);
+            SceneManager.LoadScene("Scene");
+        }
     }
 
 

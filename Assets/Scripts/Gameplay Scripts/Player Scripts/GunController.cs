@@ -31,7 +31,7 @@ public class GunController : MonoBehaviour
     
     private float timeelapse=0;
     private bool isReloading;
-    private float reloadingTime = 2f;
+    private float reloadingTime = 1f;
     private float TimeReloading;
 
     [Header("crosshair")] 

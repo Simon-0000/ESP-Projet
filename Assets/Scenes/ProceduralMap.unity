@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.069235645, g: 0.020851662, b: 0.005249992, a: 1}
+  m_IndirectSpecularColor: {r: 0.06923564, g: 0.020851666, b: 0.0052499846, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -823,7 +823,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 00ab5ae2c8fb3fd4f967774a6e4318f7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  nbWantedZombies: 40
+  nbWantedZombies: 99
   ActiveZombies: []
   AttackingZombies: []
   zombie: {fileID: 5091242709008108106, guid: 6d30ae6f59058ea4790c0d9389de2ac9, type: 3}
@@ -1121,7 +1121,7 @@ Light:
   m_Type: 1
   m_Shape: 0
   m_Color: {r: 1, g: 0.06901497, b: 0, a: 1}
-  m_Intensity: 0
+  m_Intensity: 0.5
   m_Range: 10
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208

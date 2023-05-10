@@ -50,7 +50,7 @@ public class ZombieManager : MonoBehaviour
         }
 
         ellapsedTime += Time.deltaTime;
-        if (ActiveZombies.Count < nbWantedZombies && ellapsedTime >= 4f)
+        if (ActiveZombies.Count < nbWantedZombies && ellapsedTime >= 1f)
         {
             nbActiveZombies++;
             ActiveZombies.Add(CreateNewZombie());

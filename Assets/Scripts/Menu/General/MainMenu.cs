@@ -10,6 +10,7 @@ public class MainMenu : MonoBehaviour
 
     public void LoadScene()
     {
+        SceneManager.LoadScene("ProceduralMap");
 
     }
     public void QuitGame()
