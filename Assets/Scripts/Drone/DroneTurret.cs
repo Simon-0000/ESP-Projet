@@ -53,7 +53,8 @@ public class DroneTurret : MonoBehaviour
     void ShootInFront()
     {
         
-        Instantiate(bullet, exitPoint);
+        GameObject obj = Instantiate(bullet, exitPoint.transform.position, exitPoint.transform.rotation);
+
         timeSinceAttack = Time.time;
     }
 }

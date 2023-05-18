@@ -37,7 +37,9 @@ public class DroneBehaviour : MonoBehaviour
     public void Start()
     {
         splineOffset = GetComponent<BoundsManager>().objectBoundsLocal.size.x/2;
-        shootingTargets = FindObjectOfType<ZombieManager>().AttackingZombies;
+        if(FindObjectOfType<ZombieManager>() != null)
+            shootingTargets = FindObjectOfType<ZombieManager>().AttackingZombies;
+        Debug.Assert(followTarget != null);
         lastPt = transform.position;
         MakePath(followTarget);
     }
@@ -69,7 +71,7 @@ public class DroneBehaviour : MonoBehaviour
             RaycastHit firstSplineHit;
             if(Physics.Raycast(newPosition + distanceObjet/2, Vector3.Cross(distanceObjet, transform.up).normalized *splineDirection, out firstSplineHit, largeurSplineMax)) 
             {
-                splineSizeDecrement = largeurSplineMax - firstSplineHit.distance - GameConstants.ACCEPTABLE_ZERO_VALUE;
+                splineSizeDecrement = largeurSplineMax - firstSplineHit.distance + GameConstants.OVERLAP_TOLERANCE;
             }
             float splineDecrementValue = (largeurSplineMax - splineSizeDecrement) / numberOfRaycastPerSpline - GameConstants.ACCEPTABLE_ZERO_VALUE;
 

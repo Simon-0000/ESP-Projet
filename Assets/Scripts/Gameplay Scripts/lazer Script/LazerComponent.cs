@@ -9,6 +9,7 @@ using Assets;
 using Unity.VisualScripting;
 using UnityEngine.PlayerLoop;
 using Random = UnityEngine.Random;
+using System.Linq;
 [RequireComponent(typeof(Rigidbody))]
 public class LazerComponent : MonoBehaviour
 {
@@ -148,15 +149,11 @@ public class LazerComponent : MonoBehaviour
    }
     void DestroyLazer()
     {
-        //if (trail != null)
-        //{
-        //  // trail.transform.parent = null;
-        //    trail.autodestruct = true;
-        //}
-        ////Destroy(trail.gameObject, trail.time);
         gameObject.layer = GameConstants.INVISIBLE_LAYER;
         rig.velocity = Vector3.zero ;
         GetComponentInChildren<Renderer>().enabled = false;
+        rig.isKinematic = false;
+        Debug.Log("destroyLazer");
         Destroy(gameObject,trail.time);
     }
 }
