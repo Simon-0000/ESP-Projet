@@ -4,13 +4,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEditor;
+using Assets;
 public class MainMenu : MonoBehaviour
 
 {
 
     public void LoadScene()
     {
-        SceneManager.LoadScene("ProceduralMap");
+        SceneManager.LoadScene(GameConstants.MAIN_SCENE_NAME);
 
     }
     public void QuitGame()
