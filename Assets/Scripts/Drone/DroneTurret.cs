@@ -1,3 +1,7 @@
+//Auteurs: Michaël Bruneau
+//Explication: Cette classe a pour but d'attaquer un zombie avec le drone. Le drone va attaquer le zombie qui est
+//le plus près du joueur en mode poursuite et qui est visible pour le drone. 
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -15,9 +19,6 @@ public class DroneTurret : MonoBehaviour
     private float timeSinceAttack;
     Hashtable rotatingHashArgs = new();
     // Update is called once per frame
-    void Update()
-    {
-    }
     
     public bool TryToAttack(Transform target)
     {
@@ -29,24 +30,13 @@ public class DroneTurret : MonoBehaviour
         {
             return false;
         }
-        //Vector3 rotation = pivotPoint.rotation.eulerAngles;    
-        //Vector3 newDirection = Vector3.RotateTowards(pivotPoint.forward, target.position - pivotPoint.position, 4*Time.deltaTime, 0.0f);
-        //pivotPoint.rotation = Quaternion.LookRotation(newDirection);
-        //pivotPoint.rotation = Quaternion.Euler(rotation);
+        
         var rotation = Quaternion.LookRotation(targetPosition - transform.position);
         pivotPoint.rotation = rotation;
         // Si non, return false
         if (Time.time - timeSinceAttack > fireDelay)
         {
             ShootInFront();
-           /* rotatingHashArgs.Clear();
-            rotatingHashArgs.Add("rotation", target.position);
-            rotatingHashArgs.Add("time", 0.1f);//changer pour rad par sec
-            rotatingHashArgs.Add("oncomplete", "ShootInFront");
-
-            iTween.RotateTo(gameObject, rotatingHashArgs);
-           */
-
         }
         return true;
     }

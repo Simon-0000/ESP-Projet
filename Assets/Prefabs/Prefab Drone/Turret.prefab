@@ -244,7 +244,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   pivotPoint: {fileID: 4174350715564109339}
   exitPoint: {fileID: 7073938290257095988}
-  bullet: {fileID: 270624336992509730, guid: f51c10b8fb561144185f21fdf6e39996, type: 3}
+  bullet: {fileID: 7647688014677727486, guid: dd77fe900a73e51449b92acf4f701f9e, type: 3}
   fireDelay: 3
   aimOffset:
     startAt: {x: -0.5, y: 0.9, z: -0.5}
