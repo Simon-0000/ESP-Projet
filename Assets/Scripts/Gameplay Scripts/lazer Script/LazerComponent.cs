@@ -153,7 +153,6 @@ public class LazerComponent : MonoBehaviour
         rig.velocity = Vector3.zero ;
         GetComponentInChildren<Renderer>().enabled = false;
         rig.isKinematic = false;
-        Debug.Log("destroyLazer");
         Destroy(gameObject,trail.time);
     }
 }

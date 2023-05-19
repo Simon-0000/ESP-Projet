@@ -1,4 +1,4 @@
-//Auteurs: Simon Asmar
+//Auteurs: Simon Asmar, Olivier Castonguay
 //Explication: Ce script à pour but de regrouper tous les algorithmes utilisés pour générer les pièces, le navmesh,
 //             les spawn points,etc...
 using UnityEngine;

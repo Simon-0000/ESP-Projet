@@ -1,4 +1,4 @@
-﻿//Auteurs: Simon Asmar
+﻿//Auteurs: Sergio Abreo Alvarez, Simon Asmar, Michael Bruneau, Olivier Castonguay
 //Explication: Cette classe a pour but de contenir divers algorithmes simples qui sont utilisés dans les
 //             scripts.
 

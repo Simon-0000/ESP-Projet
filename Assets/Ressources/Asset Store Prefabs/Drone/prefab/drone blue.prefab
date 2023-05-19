@@ -215,19 +215,6 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 4.4, y: 0.8, z: 4.4}
   m_Center: {x: 0.0070108324, y: 0.00031320006, z: 0.07648116}
---- !u!114 &98817098071697797
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 573161827484528085}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 58c6f9b140a52a14881ec09eaebb66eb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  tree: {fileID: 11400000, guid: ae0f15e49abb1e44baf0bc819055d869, type: 2}
 --- !u!114 &1185422364624959977
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -245,14 +232,10 @@ MonoBehaviour:
   shootingTargets: []
   speed: 1
   maximumDistance: 1
-  possibleSplineSize:
-    startAt: {x: 0, y: 0, z: 0}
-    endAt: {x: 0, y: 0, z: 0}
   largeurSplineMax: 3
   numberOfRaycastPerSpline: 6
-  ptParMetre: 2
   turret: {fileID: 8535804192750860977}
-  splineOffset: 0
+  ptParMetre: 2
 --- !u!114 &7187017192365241198
 MonoBehaviour:
   m_ObjectHideFlags: 0

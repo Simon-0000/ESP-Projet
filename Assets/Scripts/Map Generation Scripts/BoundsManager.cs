@@ -167,7 +167,7 @@ LATEST:
         
         return objectBoundsWorld;
     }
-WORKING WITH BATHROOM AND LIVING: 
+
     public Bounds RefreshBounds()
     {
         Quaternion objRotationWorld = transform.rotation;

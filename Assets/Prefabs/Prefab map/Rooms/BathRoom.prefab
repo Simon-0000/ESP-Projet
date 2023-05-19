@@ -357,14 +357,14 @@ MonoBehaviour:
   - startAt: {x: 0, y: -90, z: 0}
     endAt: {x: 0, y: -90, z: 0}
   offsets:
-  - startAt: {x: 0, y: 0, z: -0.1}
-    endAt: {x: 0, y: 0, z: -0.1}
-  - startAt: {x: 0, y: 0, z: -0.1}
-    endAt: {x: 0, y: 0, z: -0.1}
-  - startAt: {x: -0.1, y: 0, z: 0}
-    endAt: {x: -0.1, y: 0, z: 0}
-  - startAt: {x: -0.1, y: 0, z: 0}
-    endAt: {x: -0.1, y: 0, z: 0}
+  - startAt: {x: 0, y: 0, z: 0}
+    endAt: {x: 0, y: 0, z: 0}
+  - startAt: {x: 0, y: 0, z: 0}
+    endAt: {x: 0, y: 0, z: 0}
+  - startAt: {x: 0, y: 0, z: 0}
+    endAt: {x: 0, y: 0, z: 0}
+  - startAt: {x: 0, y: 0, z: 0}
+    endAt: {x: 0, y: 0, z: 0}
   repositionAtCollision: 1
   XIsConstrained: 1
   YIsConstrained: 1
@@ -510,14 +510,14 @@ MonoBehaviour:
   - startAt: {x: 0, y: -90, z: 0}
     endAt: {x: 0, y: -90, z: 0}
   offsets:
-  - startAt: {x: 0, y: 0, z: -0.1}
-    endAt: {x: 0, y: 0, z: -0.1}
-  - startAt: {x: 0, y: 0, z: -0.1}
-    endAt: {x: 0, y: 0, z: -0.1}
-  - startAt: {x: -0.1, y: 0, z: 0}
-    endAt: {x: -0.1, y: 0, z: 0}
-  - startAt: {x: -0.1, y: 0, z: 0}
-    endAt: {x: -0.1, y: 0, z: 0}
+  - startAt: {x: 0, y: 0, z: 0}
+    endAt: {x: 0, y: 0, z: 0}
+  - startAt: {x: 0, y: 0, z: 0}
+    endAt: {x: 0, y: 0, z: 0}
+  - startAt: {x: 0, y: 0, z: 0}
+    endAt: {x: 0, y: 0, z: 0}
+  - startAt: {x: 0, y: 0, z: 0}
+    endAt: {x: 0, y: 0, z: 0}
   repositionAtCollision: 1
   XIsConstrained: 1
   YIsConstrained: 1

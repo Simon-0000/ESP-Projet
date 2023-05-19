@@ -93,8 +93,7 @@ public class DroneBehaviour : MonoBehaviour
 
                 }
             }
-            if (splineSizeDecrement >= largeurSplineMax)
-                Debug.Log("Erreur");
+
             points.Add(ptSommet - (binormal.normalized * (splineOffset * splineDirection)));
             points.Add(newPosition + distanceObjet);
 
