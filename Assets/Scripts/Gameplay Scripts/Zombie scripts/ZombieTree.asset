@@ -29,7 +29,7 @@ MonoBehaviour:
   treeState: 0
   blackboard:
     moveToPosition: {x: 0, y: 0, z: 0}
-  viewPosition: {x: 696, y: 296, z: 0}
+  viewPosition: {x: 751.3333, y: 298.66666, z: 0}
   viewScale: {x: 1, y: 1, z: 1}
   references:
     version: 2
@@ -53,7 +53,7 @@ MonoBehaviour:
         state: 0
         started: 0
         guid: 3545ba78c949a7f4eb01832bab26fb3c
-        position: {x: -392.00012, y: 188.66666}
+        position: {x: -308.33337, y: 188.66666}
         blackboard:
           moveToPosition: {x: 0, y: 0, z: 0}
         description: "\xE9tat de patrouille"
@@ -143,7 +143,7 @@ MonoBehaviour:
         state: 0
         started: 0
         guid: afaa1199c79910140807c25dd801c986
-        position: {x: -513.8, y: 274.2}
+        position: {x: -498.6667, y: 188.6666}
         blackboard:
           moveToPosition: {x: 0, y: 0, z: 0}
         description: 
@@ -170,7 +170,7 @@ MonoBehaviour:
         state: 0
         started: 0
         guid: 5ef3693e804bbe04ebbe04dd7091205a
-        position: {x: -624.006, y: 188.66666}
+        position: {x: -678.0534, y: 188.66666}
         blackboard:
           moveToPosition: {x: 0, y: 0, z: 0}
         description: "\xE9tat pour rentrer dans la carte de jeu"

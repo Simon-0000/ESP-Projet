@@ -8,7 +8,7 @@ using Assets;
 
 
 // sergio abreo alvarez
-//gestion d'un zombie. gestion de la vie, �tat actif, temps de destruction, point d'entr�e 
+//gestion d'un zombie. gestion de la vie, état actif, temps de destruction, point d'entrée 
 [RequireComponent(typeof(NavMeshAgent))]
 
 public class ZombieBehaviour : MonoBehaviour
